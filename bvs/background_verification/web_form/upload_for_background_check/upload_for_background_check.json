@@ -1,0 +1,59 @@
+{
+ "allow_comments": 1, 
+ "allow_delete": 1, 
+ "allow_edit": 1, 
+ "allow_multiple": 1, 
+ "creation": "2016-10-21 14:49:18.744042", 
+ "doc_type": "Document Upload", 
+ "docstatus": 0, 
+ "doctype": "Web Form", 
+ "idx": 0, 
+ "introduction_text": "Welcome to VHRS!!!\n\nYou can Upload the document.", 
+ "is_standard": 1, 
+ "login_required": 1, 
+ "modified": "2016-10-22 10:49:22.804929", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "upload-for-background-check", 
+ "owner": "Administrator", 
+ "published": 1, 
+ "route": "upload-for-background-check", 
+ "success_url": "/upload-for-background-check", 
+ "title": "Upload for Background Check", 
+ "web_form_fields": [
+  {
+   "description": "Select your Company", 
+   "fieldname": "customer", 
+   "fieldtype": "Link", 
+   "hidden": 0, 
+   "label": "Customer", 
+   "options": "Customer", 
+   "read_only": 0, 
+   "reqd": 0
+  }, 
+  {
+   "fieldname": "document_name", 
+   "fieldtype": "Data", 
+   "hidden": 0, 
+   "label": "Document Name", 
+   "read_only": 0, 
+   "reqd": 1
+  }, 
+  {
+   "fieldname": "attach", 
+   "fieldtype": "Attach", 
+   "hidden": 0, 
+   "label": "Attach", 
+   "read_only": 0, 
+   "reqd": 1
+  }, 
+  {
+   "fieldname": "remarks", 
+   "fieldtype": "Text", 
+   "hidden": 0, 
+   "label": "Remarks", 
+   "read_only": 0, 
+   "reqd": 0
+  }
+ ]
+}
