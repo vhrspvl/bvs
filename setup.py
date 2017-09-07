@@ -15,9 +15,9 @@ requirements = parse_requirements("requirements.txt", session="")
 setup(
 	name='bvs',
 	version=version,
-	description='Custom BVS App',
+	description='VHRS Background Verification Service',
 	author='VHRS',
-	author_email='abdulla.pi@voltechgroup.com',
+	author_email='erp@voltechgroup.com',
 	packages=find_packages(),
 	zip_safe=False,
 	include_package_data=True,

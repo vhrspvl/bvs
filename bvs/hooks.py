@@ -5,10 +5,10 @@ from . import __version__ as app_version
 app_name = "bvs"
 app_title = "Background Verification"
 app_publisher = "VHRS"
-app_description = "Custom BVS App"
-app_icon = "octicon octicon-file-directory"
-app_color = "grey"
-app_email = "abdulla.pi@voltechgroup.com"
+app_description = "VHRS Background Verification Service"
+app_icon = "octicon octicon-search"
+app_color = "lightgreen"
+app_email = "erp@voltechgroup.com"
 app_license = "MIT"
 
 # Includes in <head>
@@ -21,6 +21,15 @@ app_license = "MIT"
 # include js, css files in header of web template
 # web_include_css = "/assets/bvs/css/bvs.css"
 # web_include_js = "/assets/bvs/js/bvs.js"
+
+# include js in page
+# page_js = {"page" : "public/js/file.js"}
+
+# include js in doctype views
+# doctype_js = {"doctype" : "public/js/doctype.js"}
+# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+# doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
+# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
 # Home Pages
 # ----------
@@ -70,13 +79,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+    "Cases": {
+        "on_update": "vhrs.utils.add_customer",
+    }
+}
 
 # Scheduled Tasks
 # ---------------
@@ -110,4 +117,3 @@ app_license = "MIT"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "bvs.event.get_events"
 # }
-

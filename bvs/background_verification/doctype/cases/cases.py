@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2015, VHRS and contributors
+# Copyright (c) 2017, VHRS and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 
-class DocumentUpload(Document):
-	pass
+
+class Cases(Document):
+    pass

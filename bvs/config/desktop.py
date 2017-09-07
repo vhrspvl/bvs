@@ -6,18 +6,9 @@ def get_data():
 	return [
 		{
 			"module_name": "Background Verification",
-			"color": "grey",
-			"icon": "assets/img/verified-user.svg",
+			"color": "lightgreen",
+			"icon": "octicon octicon-search",
 			"type": "module",
 			"label": _("Background Verification")
-			"items": [
-				{
-					"type": "doctype",
-					"name": "Document Upload",
-					"label": _("Document Upload"),
-					"description": _("Uploaded docs from customer"),
-				},
-			]
-
 		}
 	]

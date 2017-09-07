@@ -1,6 +1,6 @@
 ## Background Verification
 
-Custom BVS App
+VHRS Background Verification Service
 
 #### License
 
