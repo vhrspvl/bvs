@@ -81,7 +81,7 @@ app_license = "MIT"
 
 doc_events = {
     "Cases": {
-        "on_update": "vhrs.utils.add_customer",
+        "after_insert": "vhrs.utils.add_customer",
     }
 }
 
