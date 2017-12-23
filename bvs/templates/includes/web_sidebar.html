@@ -21,8 +21,7 @@
             </li>
             {% endif %} {% for item in sidebar_items -%}
             <li class="sidebar-item">
-                <a href="{{ item.route }}" class="text-muted {{ 'active' if pathname==item.route else '' }}" {% if item.target %}target="{{ item.target }}"
-                    {% endif %}>
+                <a href="{{ item.route }}" class="text-muted {{ 'active' if pathname==item.route else '' }}" {% if item.target %}target="{{ item.target }}" {% endif %}>
 				{{ _(item.title or item.label) }}
 				</a>
             </li>
@@ -37,8 +36,8 @@
 
 
 <script>
-    frappe.ready(function () {
-        $('.sidebar-item a').each(function (index) {
+    frappe.ready(function() {
+        $('.sidebar-item a').each(function(index) {
             if (this.href.trim() == window.location)
                 $(this).addClass("active");
         });

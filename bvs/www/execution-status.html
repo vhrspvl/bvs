@@ -1,7 +1,6 @@
 {% extends "templates/web.html" %} {% block title %} {{ _("My Account") }} {% endblock %} {% block header %}
 <h1>{{ _("My Account") }}</h1>
-{% endblock %} {% block page_sidebar %} {% include "templates/pages/web_sidebar.html" %} {% endblock %} {% block page_content
-%} {% set cases = frappe.get_list("Execution Status",fields='*',filters={}) %}
+{% endblock %} {% block page_sidebar %} {% include "templates/pages/web_sidebar.html" %} {% endblock %} {% block page_content %} {% set cases = frappe.get_list("Execution Status",fields='*',filters={}) %}
 
 <table class="table table-bordered">
     <thead>
