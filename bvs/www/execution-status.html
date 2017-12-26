@@ -1,0 +1,29 @@
+{% extends "templates/web.html" %} {% block title %} {{ _("My Account") }} {% endblock %} {% block header %}
+<h1>{{ _("My Account") }}</h1>
+{% endblock %} {% block page_sidebar %} {% include "templates/pages/web_sidebar.html" %} {% endblock %} {% block page_content %} {% set cases = frappe.get_list("Execution Status",fields='*',filters={}) %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Total No of Cases Entered </th>
+            <th>Pending </th>
+            <th> Completed</th>
+            <th>test:{{ test }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- for case in cases -%}
+        <tr>
+            <td>{{ case.no_of_cases_entered}}</td>
+            <td>{{ case.pending }}</td>
+            <td>{{ case.completed }}</td>
+        </tr>
+
+        {%- endfor -%}
+
+    </tbody>
+</table>
+
+<!-- no-cache -->
+
+{% endblock %}
