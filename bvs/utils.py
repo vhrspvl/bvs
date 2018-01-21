@@ -17,10 +17,10 @@ def get_groups(doctype, txt, searchfield, start, page_len, filters):
 def get_group_checks(checks_group):
     cg = frappe.get_doc("Checks Group", checks_group)
     checklist = []
+    if cg.employment_check:
+        checklist.append('employment')
     if cg.education_check:
         checklist.append('education')
-    if cg.employment_check:
-         checklist.append('employment')
-    return cg     
-            
-    
+    if cg.second_employment:
+        checklist.append('employment2')    
+    return checklist

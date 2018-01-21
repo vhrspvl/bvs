@@ -1,0 +1,24 @@
+{
+ "content": null, 
+ "creation": "2018-01-21 09:59:26.181296", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "icon": "octicon octicon-desktop-download", 
+ "idx": 0, 
+ "modified": "2018-01-21 10:32:09.811002", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "bvs-entry-selection", 
+ "owner": "Administrator", 
+ "page_name": "BVS Entry Selection", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "BVS Entry Selection"
+}
