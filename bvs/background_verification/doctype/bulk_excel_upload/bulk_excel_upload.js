@@ -1,7 +1,7 @@
 // Copyright (c) 2018, VHRS and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Demographic Data With Attachment', {
+frappe.ui.form.on('Bulk Excel Upload', {
 	refresh: function (frm) {
 
 	},
