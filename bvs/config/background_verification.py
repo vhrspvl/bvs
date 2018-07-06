@@ -8,13 +8,30 @@ def get_data():
             "icon": "fa fa-search",
                     "items": [
                 {
+					"type": "page",
+					"name": "dashboard",
+					"label": _("Dashboard"),
+					"description": _("Point of Sale")
+				},        
+                {
                     "type": "doctype",
-                    "name": "Profile",
+                    "name": "BG Profile",
                     "description": _("BVS Cases."),
                 },
+                
                 {
                     "type": "doctype",
                     "name": "Checks Group",
+                    "description": _("Check Groups of Customer"),
+                },
+                {
+                    "type": "doctype",
+                    "name": "Cases",
+                    "description": _("Check Groups of Customer"),
+                },
+                {
+                    "type": "doctype",
+                    "name": "Archive",
                     "description": _("Check Groups of Customer"),
                 }
             ]

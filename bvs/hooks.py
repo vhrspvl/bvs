@@ -79,11 +79,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-doc_events = {
-    "Cases": {
-        "after_insert": "vhrs.utils.add_customer",
-    }
-}
+# doc_events = {
+#     "Cases": {
+#         "after_insert": "vhrs.utils.add_customer",
+#     }
+# }
 
 # Scheduled Tasks
 # ---------------

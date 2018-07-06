@@ -4,12 +4,12 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe.model.naming import make_autoname
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 from frappe.utils import today
 
 
-class Profile(Document):
+class BGProfile(Document):
     def autoname(self):
         self.name = make_autoname(
             self.checks_group + "/" + self.candidate_name + "/.###")
