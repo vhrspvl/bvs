@@ -8,3 +8,13 @@ from frappe.model.document import Document
 
 class Applicant(Document):
 	pass
+
+@frappe.whitelist()
+def get_check(applicant,check):
+	frappe.errprint(applicant)
+	check = frappe.db.get_value(check, {"applicant_id": applicant},
+                                     ["name"])
+	return check					   
+
+
+
