@@ -23,6 +23,11 @@ frappe.ui.form.on("Verify Family Check1", {
 			}
 
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.status == "Completed"){
+			frm.set_value("end_date",(frappe.datetime.nowdate()));
+		}
 	}
 
 });

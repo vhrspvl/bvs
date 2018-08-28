@@ -8,7 +8,7 @@ frappe.ui.form.on("Verify Employment Check1", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("date",(frappe.datetime.nowdate()));
+		frm.set_value("start_date",(frappe.datetime.nowdate()));
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_employment_check1.verify_employment_check1.get_check",
 			args: {
@@ -23,6 +23,11 @@ frappe.ui.form.on("Verify Employment Check1", {
 			}
 
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.status == "Completed"){
+			frm.set_value("end_date",(frappe.datetime.nowdate()));
+		}
 	}
 });
 

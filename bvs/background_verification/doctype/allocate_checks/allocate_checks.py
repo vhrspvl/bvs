@@ -122,7 +122,7 @@ def status_filter(status,check):
 			check2 = frappe.get_list("Education Check2", fields =("applicant_id","name","status"))
 			check3 = frappe.get_list("Education Check3", fields =("applicant_id","name","status"))
 			check4 = frappe.get_list("Education Check4", fields =("applicant_id","name","status"))
-			pending_checks = check1+check2+check3+check4
+			status = check1+check2+check3+check4
 			return status
 	elif check == "Reference Check":
 		if status == "Allocation Pending" or "IQC Pending" or "Execution Pending" or "Entry Pending" or "Insufficient" or "QC Pending":
@@ -130,7 +130,7 @@ def status_filter(status,check):
 			check2 = frappe.get_list("Reference Check2", fields =("applicant_id","name","status"))
 			check3 = frappe.get_list("Reference Check3", fields =("applicant_id","name","status"))
 			check4 = frappe.get_list("Reference Check4", fields =("applicant_id","name","status"))
-			pending_checks = check1+check2+check3+check4
+			status = check1+check2+check3+check4
 			return status
 	elif check == "Family Check":
 		if status == "Allocation Pending" or "IQC Pending" or "Execution Pending" or "Entry Pending" or "Insufficient" or "QC Pending":
@@ -138,7 +138,7 @@ def status_filter(status,check):
 			check2 = frappe.get_list("Family Check2", fields =("applicant_id","name","status"))
 			check3 = frappe.get_list("Family Check3", fields =("applicant_id","name","status"))
 			check4 = frappe.get_list("Family Check4", fields =("applicant_id","name","status"))
-			pending_checks = check1+check2+check3+check4
+			status = check1+check2+check3+check4
 			return status
 	elif check == "Identity Check":
 		if status == "Allocation Pending" or "IQC Pending" or "Execution Pending" or "Entry Pending" or "Insufficient" or "QC Pending":
@@ -182,7 +182,7 @@ def status_filter(status,check):
 			check2 = frappe.get_list("verify Education Check2", fields =("applicant_id","name","status"))
 			check3 = frappe.get_list("verify Education Check3", fields =("applicant_id","name","status"))
 			check4 = frappe.get_list("Verify Education Check4", fields =("applicant_id","name","status"))
-			pending_checks = check1+check2+check3+check4
+			status = check1+check2+check3+check4
 			return status
 	elif check == "Verify Reference Check":
 		if status == "Insufficient" or "Pending":
@@ -190,7 +190,7 @@ def status_filter(status,check):
 			check2 = frappe.get_list("Verify Reference Check2", fields =("applicant_id","name","status"))
 			check3 = frappe.get_list("Verify Reference Check3", fields =("applicant_id","name","status"))
 			check4 = frappe.get_list("Verify Reference Check4", fields =("applicant_id","name","status"))
-			pending_checks = check1+check2+check3+check4
+			status = check1+check2+check3+check4
 			return status
 	elif check == "Verify Family Check":
 		if status == "Insufficient" or "Pending":
@@ -198,7 +198,7 @@ def status_filter(status,check):
 			check2 = frappe.get_list("Verify Family Check2", fields =("applicant_id","name","status"))
 			check3 = frappe.get_list("Verify Family Check3", fields =("applicant_id","name","status"))
 			check4 = frappe.get_list("Verify Family Check4", fields =("applicant_id","name","status"))
-			pending_checks = check1+check2+check3+check4
+			status = check1+check2+check3+check4
 			return status
 	elif check == "Verify Identity Check":
 		if status == "Insufficient" or "Pending":
@@ -222,13 +222,26 @@ def status_filter(status,check):
 			return status
 
 
-
+@frappe.whitelist()
+def get_verifycheck(applicant,check):
+	if check == "Employment Check":
+		verify_check1 = frappe.db.get_value("Verify Employment Check1", {"applicant_id": applicant}, ["name"])
+		# verify_check2 = frappe.db.get_value("Verify Employment Check2", {"applicant_id": applicant}, ["name"])
+		# verify_check3 = frappe.db.get_value("Verify Employment Check3", {"applicant_id": applicant}, ["name"])
+		# verify_check4 = frappe.db.get_value("Verify Employment Check4", {"applicant_id": applicant}, ["name"])		
+		# verify_check = verify_check1+verify_check2
+        # frappe.errprint(verify_check1)
+	return verify_check1
 
 @frappe.whitelist()
 def set_assign_to(checks_executive):
-	if checks_executive:
-        # frappe.desk.form.assign_to.add(args = { "allocated_to": , "DocType": , "reference_doctype": , "a": })
-		frappe.errprint(checks_executive)
+	for d in list(checks_executive):
+		frappe.errprint(d)
+	# args = frappe._dict(checks_executive)
+	# frappe.errprint(args)
+	# if checks_executive:
+    #     # frappe.desk.form.assign_to.add(args = { "allocated_to": , "DocType": , "reference_doctype": , "a": })
+	# 	frappe.errprint(checks_executive)
 
 
 

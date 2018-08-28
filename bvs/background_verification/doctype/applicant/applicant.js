@@ -132,7 +132,7 @@ frappe.ui.form.on("Applicant", {
 	onload: function (frm) {
 		frm.toggle_display(['employment_check1','employment_check2','employment_check3','employment_check4','education_check1','education_check2','education_check3','education_check4','reference_check1','reference_check2','reference_check3','reference_check4',
 		 'address_check1','address_check2','address_check3','address_check4','identity_check1','identity_check2','identity_check3','identity_check4','identity_check5','identity_check6','family_check1','family_check2','family_check3','family_check4','civil_check','criminal_check']);
-			var status1,status2,status3,status4,status5,status6,status7,status8,status9,status10,
+		var status1,status2,status3,status4,status5,status6,status7,status8,status9,status10,
 			status11,status12,status13,status14,status15,status16,status17,status18,status19,status20,
 			status21,status22,status23,status24,status25,status26,status27,status28;
 			if(frm.doc.status == "Pending"){

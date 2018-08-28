@@ -10,7 +10,7 @@
  "html": "<!-- Report content starts here, <br> is used to create new lines -->\n<h3><u> <div align=\"center\"> Background Verification Report </div></u></h3><br>\n<h4>Case Summary</h4>\n<table border=\"1\" >\n<tr>\n<td style=\"background-color:SkyBlue\" width=\"25%\">Name</td>\n<td width=\"30%\">{{ doc.candidate_first_name }} {{doc.candidate_last_name }}</td>\n<td style=\"background-color:SkyBlue\" width=\"25%\"> Employee ID </td>\n<td width=\"30%\"> Employee ID </td>\n</tr>\n<tr>\n<td style=\"background-color:SkyBlue\" width=\"25%\">DOB</td>\n<td width=\"30%\">{{ doc.date_of_birth }} </td>\n<td style=\"background-color:SkyBlue\" width=\"25%\">Age</td>\n<td width=\"30%\"> {{ doc.age }}</td>\n</tr>\n<tr>\n<td style=\"background-color:SkyBlue\" width=\"25%\">Contact</td>\n<td width=\"30%\">{{ doc.contact_number }} </td>\n<td style=\"background-color:SkyBlue\" width=\"25%\">Gender</td>\n<td width=\"30%\"> {{ doc.gender }}</td>\n</tr>\n</table>\n", 
  "idx": 0, 
  "line_breaks": 0, 
- "modified": "2018-08-24 16:48:37.100699", 
+ "modified": "2018-08-27 11:24:23.731381", 
  "modified_by": "Administrator", 
  "module": "Background Verification", 
  "name": "Applicant", 

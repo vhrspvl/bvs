@@ -22,6 +22,11 @@ frappe.ui.form.on("Verify Voters ID Verification", {
 			}
 
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.status == "Completed"){
+			frm.set_value("end_date",(frappe.datetime.nowdate()));
+		}
 	}
 
 });

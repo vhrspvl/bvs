@@ -23,5 +23,10 @@ frappe.ui.form.on("Verify Passport Verification", {
 			}
 
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.status == "Completed"){
+			frm.set_value("end_date",(frappe.datetime.nowdate()));
+		}
 	}
 });

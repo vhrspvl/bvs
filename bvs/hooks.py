@@ -117,3 +117,14 @@ app_license = "MIT"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "bvs.event.get_events"
 # }
+doc_events = {
+    "Employment Check1": {
+        "on_update": "bvs.api.create_verify_emp1"
+    }
+    # "Task Candidate": {
+    #     "on_update": "recruitment.api.create_closure"
+    # },
+    #"Project": {
+    #    "on_update": "recruitment.utils.apply_perm"
+    #}
+}
