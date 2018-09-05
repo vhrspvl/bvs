@@ -8,7 +8,9 @@ frappe.ui.form.on("Verify Family Check4", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("date",(frappe.datetime.nowdate()));
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_family_check4.verify_family_check4.get_check",
 			args: {

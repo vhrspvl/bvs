@@ -8,3 +8,6 @@ from frappe.model.document import Document
 
 class EmploymentCheck3(Document):
 	pass
+
+
+

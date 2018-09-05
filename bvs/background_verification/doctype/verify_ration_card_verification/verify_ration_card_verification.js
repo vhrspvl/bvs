@@ -8,7 +8,9 @@ frappe.ui.form.on("Verify Ration Card Verification", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("date",(frappe.datetime.nowdate()));
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_ration_card_verification.verify_ration_card_verification.get_check",
 			args: {

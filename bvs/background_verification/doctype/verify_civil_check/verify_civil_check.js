@@ -8,7 +8,9 @@ frappe.ui.form.on("Verify Civil Check", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("date",(frappe.datetime.nowdate()));
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_civil_check.verify_civil_check.get_check",
 			args: {
@@ -23,6 +25,11 @@ frappe.ui.form.on("Verify Civil Check", {
 			}
 
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.status == "Completed"){
+			frm.set_value("end_date",(frappe.datetime.nowdate()));
+		}
 	}
 
 });

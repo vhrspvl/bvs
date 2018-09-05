@@ -8,7 +8,9 @@ frappe.ui.form.on("Verify Employment Check1", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("start_date",(frappe.datetime.nowdate()));
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_employment_check1.verify_employment_check1.get_check",
 			args: {

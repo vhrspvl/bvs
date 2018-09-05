@@ -8,7 +8,9 @@ frappe.ui.form.on("Verify Pan Verification", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("date",(frappe.datetime.nowdate()));
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_pan_verification.verify_pan_verification.get_check",
 			args: {

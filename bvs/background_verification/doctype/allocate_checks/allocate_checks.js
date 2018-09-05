@@ -2,8 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Allocate Checks', {
-	check: function(frm, cdt, cdn) {
-		var vname;
+	check: function(frm) {
         if(frm.doc.check != "Select"){
 			frm.clear_table("allocate_checks_executive");
 			frappe.call({
@@ -17,7 +16,7 @@ frappe.ui.form.on('Allocate Checks', {
 						// console.log(r.message)
 						if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Civil Check"||"Criminal Check"){
 							var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-							// row.reference_doctype = d.check;
+							// row.reference_doctype = d.doctype;
 							// row.reference_name = d.name;
 							// row.applicant = d.applicant_id;
 							// if(d.status == "Entry Completed"){
@@ -28,6 +27,7 @@ frappe.ui.form.on('Allocate Checks', {
 							// 		row.status = d.status;
 							// }
                             if(d.status == "Entry Completed"){
+								// row.reference_doctype = reference_name.;
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
 								row.status = "IQC Pending";
@@ -37,6 +37,8 @@ frappe.ui.form.on('Allocate Checks', {
 								    row.applicant = d.applicant_id;
 							}else if(d.status == "IQC Completed"){								
 								row.status = "Allocation Pending";
+								row.reference_doctype = d.doctype;
+								console.log(doctype)
 								row.applicant = d.applicant_id;
 								if(row.status == "Allocation Pending"){
 									frappe.call({
@@ -46,22 +48,18 @@ frappe.ui.form.on('Allocate Checks', {
 											"applicant":d.applicant_id
 										},
 										callback: function (r) {
-											// if(row.status == "Allocation Pending"){
-											// frm.set_value(cdt, cdn, 'reference_name', r.message);
-											$.each(cur_frm.doc.allocate_checks_executive || [], function(i,d) {
-												if(r.message){
-													d.reference_name = r.message
-												}
-											});
+											if(row.status == "Allocation Pending"){
+													row.reference_name = r.message[1].name;
+											}
 											refresh_field("allocate_checks_executive");
-											console.log(r.message)
-											// }
 											
 										}
 										
 									})
-								}					
-							}
+									
+								}
+							}					
+							
 						}else if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Other Checks") {
 							var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
 							row.reference_doctype = d.check;
@@ -91,7 +89,7 @@ frappe.ui.form.on('Allocate Checks', {
 					if(r.message){
 						// console.log(r.message)
 						if(frm.doc.status == "IQC Pending" && d.status == "Entry Completed"){
-							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
+							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
 								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
 								row.reference_doctype = d.check;
 								row.reference_name = d.name;
@@ -115,37 +113,56 @@ frappe.ui.form.on('Allocate Checks', {
 								row.status = "Insufficient";
 							} 
 						}else if(frm.doc.status == "Allocation Pending" && d.status == "IQC Completed"){
-							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
+							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
 								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
-								row.reference_name = d.name;
+								// row.reference_doctype = d.check;
+								// row.reference_name = d.name;
 								row.applicant = d.applicant_id;
 								row.status = "Allocation Pending";
+								if(row.status == "Allocation Pending"){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_verifycheck",
+										args: {
+											"check":frm.doc.check,
+											"applicant":d.applicant_id
+										},
+										callback: function (r) {
+											if(row.status == "Allocation Pending"){
+												row.reference_name = r.message[0].name;
+												// frappe.model.set_value(d.doctype, d.name, "reference_name", r.message);
+												// console.log(r.message)												
+											}											
+											refresh_field("allocate_checks_executive");											
+										}
+										
+									})
+									
+								}
 							} 
-						} else if(frm.doc.status == "Execution Pending" && d.status == "Allocation Completed"){
-							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
-								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
-								row.reference_name = d.name;
-								row.applicant = d.applicant_id;
-								row.status = "Execution Pending";
-							} 
-						} else if(frm.doc.status == "QC Pending" && d.status == "Execution Completed"){
-							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
-								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
-								row.reference_name = d.name;
-								row.applicant = d.applicant_id;
-								row.status = "QC Pending";
-							} 
-						}else if(frm.doc.status == "Entry Pending" && d.status == "Entry Pending"){
-							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
-								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
-								row.reference_name = d.name;
-								row.applicant = d.applicant_id;
-								row.status = "Entry Pending";
-							} 
+						// } else if(frm.doc.status == "Execution Pending" && d.status == "Allocation Completed"){
+						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
+						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
+						// 		row.reference_doctype = d.check;
+						// 		row.reference_name = d.name;
+						// 		row.applicant = d.applicant_id;
+						// 		row.status = "Execution Pending";
+						// 	} 
+						// } else if(frm.doc.status == "QC Pending" && d.status == "Execution Completed"){
+						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
+						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
+						// 		row.reference_doctype = d.check;
+						// 		row.reference_name = d.name;
+						// 		row.applicant = d.applicant_id;
+						// 		row.status = "QC Pending";
+						// 	} 
+						// }else if(frm.doc.status == "Entry Pending" && d.status == "Entry Pending"){
+						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
+						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
+						// 		row.reference_doctype = d.check;
+						// 		row.reference_name = d.name;
+						// 		row.applicant = d.applicant_id;
+						// 		row.status = "Entry Pending";
+						// 	} 
 						}
 					}
 					});
@@ -154,14 +171,7 @@ frappe.ui.form.on('Allocate Checks', {
 			});	
 		}	     
 	},	
-	select_executive: function(frm, cdt, cdn) {	
-		// frm.set_query("select_executive", function() {
-		// 	return {
-		// 		"filters": {
-		// 			"department": "BVS - V"
-		// 		}
-		// 	};
-		// });		
+	select_executive: function(frm, cdt, cdn) {		
 		if(frm.doc.select_executive != ""){
 		frappe.call({
 			"method":"frappe.client.get",
@@ -184,7 +194,7 @@ frappe.ui.form.on('Allocate Checks', {
 		frm.disable_save();
 		// frm.disable_menu();
 	},
-	onload:function(frm){
+	onload:function(frm, dt,dn){
 		frm.set_query("select_executive", function() {
 			return {
 				"filters": {
@@ -192,19 +202,46 @@ frappe.ui.form.on('Allocate Checks', {
 				}
 			};
 		});	
-	}
-	// assign: function(frm){
-	// 	// var row = locals[cdt][cdn];
-	// 	frappe.call({
-	// 		"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
-	// 		args: {
-	// 			"checks_executive": frm.doc.allocate_checks_executive
-	// 		},
-	// 		callback: function(r){
-    //             console.log(r.message)
-	// 		}
-	// 	})
-	// }
-});
+		// frm.fields_dict['allocated_to'].get_query = function(doc, dt, dn) {
+		// 	return {
+		// 		filters: {"department": "BVS - V"}
+		// 	}
+		// };
+	},
+	assign:function(frm){
+		frappe.call({
+			"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
+			args: {
+				"doc": frm.doc.allocate_checks_executive
+			},
+			callback: function(r){
+				frappe.msgprint("Updated")
+				if(r.message){
+					frm.clear_table("allocate_checks_executive")
+				}
+			}
+			})
+		}
+})
+
+
+// frappe.ui.form.on("Allocate Checks Executive" , {
+// 	assign: function(frm, cdt, cdn){
+//         var child = locals[cdt][cdn];
+//         if(child.allocated_to){
+// 			// frappe.call({
+// 			// 	"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
+// 			// 	args: {
+// 			// 		"reference_name": child.reference_name, 
+// 			// 		"checks_executive": child.allocated_to
+// 			// 	},
+// 			// 	callback: function(r){
+// 			// 		console.log(r.message)
+// 			// 	}
+// 			// })
+// 			console.log(child.allocated_to)
+// 		}
+// 	}
+// });
 
 

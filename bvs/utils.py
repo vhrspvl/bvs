@@ -49,18 +49,18 @@ def get_group_checks(checks_group):
         checklist.append('reference_check3')
     if cg.reference_check4:
         checklist.append('reference_check4')
-    if cg.identity_check1:
-        checklist.append('identity_check1')
-    if cg.identity_check2:
-        checklist.append('identity_check2')
-    if cg.identity_check3:
-        checklist.append('identity_check3')
-    if cg.identity_check4:
-        checklist.append('identity_check4')
-    if cg.identity_check5:
-        checklist.append('identity_check5')
-    if cg.identity_check6:
-        checklist.append('identity_check6')
+    if cg.aadhar_card_verification:
+        checklist.append('aadhar_card_verification')
+    if cg.pan_verification:
+        checklist.append('pan_verification')
+    if cg.driving_license_verification:
+        checklist.append('driving_license_verification')
+    if cg.passport_verification:
+        checklist.append('passport_verification')
+    if cg.ration_card_verification:
+        checklist.append('ration_card_verification')
+    if cg.voters_id_verification:
+        checklist.append('voters_id_verification')
     if cg.family_check1:
         checklist.append('family_check1')
     if cg.family_check2:

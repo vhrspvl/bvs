@@ -8,7 +8,9 @@ frappe.ui.form.on("Verify Aadhar Card Verification", {
 		} 
 	},
 	onload:function(frm){
-		frm.set_value("date",(frappe.datetime.nowdate()));
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_aadhar_card_verification.verify_aadhar_card_verification.get_check",
 			args: {
@@ -17,12 +19,17 @@ frappe.ui.form.on("Verify Aadhar Card Verification", {
 			callback: function(r){
 				$.each(r.message, function(i, d) {
 					if(r.message){
-						frm.set_value("aadhar_card_verification_id", d.name);
+						frm.set_value("aadhar_card_id", d.name);
 					}
 				});
 			}
 
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.status == "Completed"){
+			frm.set_value("end_date",(frappe.datetime.nowdate()));
+		}
 	}
 
 });

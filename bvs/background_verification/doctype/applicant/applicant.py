@@ -11,7 +11,6 @@ class Applicant(Document):
 
 @frappe.whitelist()
 def get_check(applicant,check):
-	frappe.errprint(applicant)
 	check = frappe.db.get_value(check, {"applicant_id": applicant},
                                      ["name"])
 	return check					   

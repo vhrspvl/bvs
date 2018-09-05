@@ -3,7 +3,9 @@
 
 frappe.ui.form.on('Demographic Data With Attachment', {
 	refresh: function (frm) {
-
+	    if(!frm.doc.in_date) {
+		    frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 	},
 	onload: function (frm) {
 		frm.set_query("checks_group", function () {

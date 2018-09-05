@@ -8,3 +8,10 @@ from frappe.model.document import Document
 
 class AadharCardVerification(Document):
 	pass
+
+
+@frappe.whitelist()
+def get_value(applicant):
+	value = frappe.get_doc("Applicant", applicant) 
+	frappe.errprint(value)
+	return value

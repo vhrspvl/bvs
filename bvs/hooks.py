@@ -119,7 +119,91 @@ app_license = "MIT"
 # }
 doc_events = {
     "Employment Check1": {
-        "on_update": "bvs.api.create_verify_emp1"
+        "on_update": "bvs.api.create_verify"
+    },
+    "Employment Check2": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Employment Check3": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Employment Check4": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Education Check1": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Education Check2": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Education Check3": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Education Check4": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Reference Check1": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Reference Check2": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Reference Check3": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Reference Check4": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Address Check1": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Address Check2": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Address Check3": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Address Check4": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Family Check1": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Family Check2": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Family Check3": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Family Check4": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Aadhar Card Verification": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Pan Verification": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Driving License Verification": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Passport Verification": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Ration Card Verification": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Voters ID Verification": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Civil Check": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Criminal Check": {
+        "on_update": "bvs.api.create_verify"
+    },
+    "Demographic Data With Attachment": {
+        "on_update": "bvs.background_verification.doctype.demographic_data_with_attachment.demographic_data_with_attachment.create_applicant",
     }
     # "Task Candidate": {
     #     "on_update": "recruitment.api.create_closure"

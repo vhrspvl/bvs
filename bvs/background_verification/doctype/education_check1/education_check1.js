@@ -11,5 +11,21 @@ frappe.ui.form.on("Education Check1", {
 		if(frm.doc.applicant_id) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 		} 
+	},
+	refresh: function(frm){
+		frappe.call({
+			"method":"bvs.background_verification.doctype.education_check1.education_check1.get_value",
+			args: {
+				"applicant":frm.doc.applicant_id,
+				},
+			callback: function (r) {
+				$.each(r.message, function(i, d) {
+					if(r.message){
+						frm.set_value("student_name", d.candidate_name);
+					}
+				})
+			}
+		});
 	}
 });
+

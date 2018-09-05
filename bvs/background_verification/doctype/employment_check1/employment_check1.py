@@ -8,3 +8,11 @@ from frappe.model.document import Document
 
 class EmploymentCheck1(Document):
 	pass
+
+
+
+@frappe.whitelist()
+def get_value(applicant):
+	value = frappe.get_list("Applicant", filters={"name":applicant}, fields=("candidate_name","contact_number")) 
+	# frappe.errprint(value)
+	return value

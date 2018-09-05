@@ -8,6 +8,9 @@ frappe.ui.form.on("Verify Voters ID Verification", {
 		} 
 	},
 	onload:function(frm){
+		if(!frm.doc.in_date){
+            frm.set_value("in_date",(frappe.datetime.nowdate()));
+		}
 		frappe.call({
 			"method": "bvs.background_verification.doctype.verify_voters_id_verification.verify_voters_id_verification.get_check",
 			args: {
