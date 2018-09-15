@@ -88,13 +88,13 @@ app_license = "MIT"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"bvs.tasks.all"
 # 	],
-# 	"daily": [
-# 		"bvs.tasks.daily"
-# 	],
+    "daily": [
+		"bvs.background_verification.doctype.applicant.applicant.get_tat"
+	]
 # 	"hourly": [
 # 		"bvs.tasks.hourly"
 # 	],
@@ -104,7 +104,7 @@ app_license = "MIT"
 # 	"monthly": [
 # 		"bvs.tasks.monthly"
 # 	]
-# }
+}
 
 # Testing
 # -------

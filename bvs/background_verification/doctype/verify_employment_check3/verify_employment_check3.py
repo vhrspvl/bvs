@@ -15,8 +15,3 @@ def get_check(applicant_id):
 	# frappe.errprint(employment_check1_id)
 	return employment_check3_id
 
-@frappe.whitelist()
-def get_status(applicant):
-	status = frappe.db.get_value("Verify Employment Check3", {"applicant_id":applicant}, "status")
-	# frappe.errprint(status)
-	return status

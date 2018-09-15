@@ -33,7 +33,7 @@
    "label": "Check", 
    "length": 0, 
    "no_copy": 0, 
-   "options": "Select \nEmployment Check\nEducation Check\nAddress Check\nReference Check\nFamily Check\nIdentity Check\nCivil Check\nCriminal Check\nVerify Employment Check\nVerify Education Check\nVerify Address Check\nVerify Reference Check\nVerify Family Check\nVerify Identity Check\nVerify Civil Check\nVerify Criminal Check", 
+   "options": "Select\nEmployment Check\nEducation Check\nAddress Check\nReference Check\nFamily Check\nIdentity Check\nCivil Check\nCriminal Check\nVerify Employment Check\nVerify Education Check\nVerify Address Check\nVerify Reference Check\nVerify Family Check\nVerify Identity Check\nVerify Civil Check\nVerify Criminal Check", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
@@ -68,7 +68,7 @@
    "label": "Status", 
    "length": 0, 
    "no_copy": 0, 
-   "options": "Select\nEntry Pending\nIQC Pending\nAllocation Pending\nExecution Pending\nInsufficient\nQC Pending\nInsufficient\nPending", 
+   "options": "Select\nEntry Pending\nIQC Pending\nAllocation Pending\nAllocation Completed\nInsufficient\nPending", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
@@ -289,7 +289,7 @@
  "issingle": 1, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-08-27 13:13:01.739469", 
+ "modified": "2018-09-06 16:37:49.300639", 
  "modified_by": "Administrator", 
  "module": "Background Verification", 
  "name": "Allocate Checks", 
@@ -323,5 +323,6 @@
  "sort_field": "modified", 
  "sort_order": "DESC", 
  "track_changes": 1, 
- "track_seen": 0
+ "track_seen": 0, 
+ "track_views": 0
 }

@@ -30,6 +30,9 @@ frappe.ui.form.on("Verify Employment Check3", {
 		if(frm.doc.status == "Completed"){
 			frm.set_value("end_date",(frappe.datetime.nowdate()));
 		}
+		if(frm.doc.tat){
+			frm.set_df_property('tat', 'read_only', 1);
+		}
 	}
 
 });

@@ -12,6 +12,7 @@ def create_verify(doc, method):
         else:
             verify_emp1 = frappe.new_doc("Verify Employment Check1")
         verify_emp1.update({
+            "tat": doc.tat,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
@@ -26,6 +27,7 @@ def create_verify(doc, method):
         else:
             verify_emp2 = frappe.new_doc("Verify Employment Check2")
         verify_emp2.update({
+            "tat": doc.tat,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
@@ -40,6 +42,7 @@ def create_verify(doc, method):
         else:
             verify_emp3 = frappe.new_doc("Verify Employment Check3")
         verify_emp3.update({
+            "tat": doc.tat,
             "employment_check3_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -54,6 +57,7 @@ def create_verify(doc, method):
         else:
             verify_emp4 = frappe.new_doc("Verify Employment Check4")          
         verify_emp4.update({
+            "tat": doc.tat,
             "employment_check4_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -69,6 +73,7 @@ def create_verify(doc, method):
         else:
             verify_edu1 = frappe.new_doc("Verify Education Check1")
         verify_edu1.update({
+            "tat": doc.tat,
             "education_check1_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -83,6 +88,7 @@ def create_verify(doc, method):
         else:
             verify_edu2 = frappe.new_doc("Verify Education Check2")
         verify_edu2.update({
+            "tat": doc.tat,
             "education_check2_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -97,6 +103,7 @@ def create_verify(doc, method):
         else:
             verify_edu3 = frappe.new_doc("Verify Education Check3")
         verify_edu3.update({
+            "tat": doc.tat,
             "education_check3_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -111,6 +118,7 @@ def create_verify(doc, method):
         else:
             verify_edu4 = frappe.new_doc("Verify Education Check4")
         verify_edu4.update({
+            "tat": doc.tat,
             "education_check4_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -125,6 +133,7 @@ def create_verify(doc, method):
         else:
             verify_ref1 = frappe.new_doc("Verify Reference Check1")
         verify_ref1.update({
+            "tat": doc.tat,
             "reference_check1_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -140,6 +149,7 @@ def create_verify(doc, method):
         else:
             verify_ref2 = frappe.new_doc("Verify Reference Check2")
         verify_ref2.update({
+            "tat": doc.tat,
             "reference_check2_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -155,6 +165,7 @@ def create_verify(doc, method):
         else:
             verify_ref3 = frappe.new_doc("Verify Reference Check3")
         verify_ref3.update({
+            "tat": doc.tat,
             "reference_check3_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -170,6 +181,7 @@ def create_verify(doc, method):
         else:
             verify_ref4 = frappe.new_doc("Verify Reference Check4")
         verify_ref4.update({
+            "tat": doc.tat,
             "reference_check4_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -185,6 +197,7 @@ def create_verify(doc, method):
         else:
             verify_add1 = frappe.new_doc("Verify Address Check1")
         verify_add1.update({
+            "tat": doc.tat,
             "address_check1_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -199,6 +212,7 @@ def create_verify(doc, method):
         else:
             verify_add2 = frappe.new_doc("Verify Address Check2")
         verify_add2.update({
+            "tat": doc.tat,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
@@ -213,6 +227,7 @@ def create_verify(doc, method):
         else:
             verify_add3 = frappe.new_doc("Verify Address Check3")
         verify_add3.update({
+            "tat": doc.tat,
             "address_check3_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -227,6 +242,7 @@ def create_verify(doc, method):
         else:
             verify_add4 = frappe.new_doc("Verify Address Check4")
         verify_add4.update({
+            "tat": doc.tat,
             "address_check4_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -241,6 +257,7 @@ def create_verify(doc, method):
         else:
             verify_fmly1 = frappe.new_doc("Verify Family Check1")
         verify_fmly1.update({
+            "tat": doc.tat,
             "family_check1_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -255,6 +272,7 @@ def create_verify(doc, method):
         else:
             verify_fmly2 = frappe.new_doc("Verify Family Check2")
         verify_fmly2.update({
+            "tat": doc.tat,
             "family_check2_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -269,6 +287,7 @@ def create_verify(doc, method):
         else:
             verify_fmly3 = frappe.new_doc("Verify Family Check3")
         verify_fmly3.update({
+            "tat": doc.tat,
             "family_check3_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -283,6 +302,7 @@ def create_verify(doc, method):
         else:
             verify_fmly4 = frappe.new_doc("Verify Family Check4")
         verify_fmly4.update({
+            "tat": doc.tat,
             "family_check4_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -298,6 +318,7 @@ def create_verify(doc, method):
         else:
             verify_cvl = frappe.new_doc("Verify Civil Check")
         verify_cvl.update({
+            "tat": doc.tat,
             "civil_check_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -312,6 +333,7 @@ def create_verify(doc, method):
         else:
             verify_cmv = frappe.new_doc("Verify Criminal Check")
         verify_cmv.update({
+            "tat": doc.tat,
             "criminal_check_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -327,6 +349,7 @@ def create_verify(doc, method):
         else:
             verify_pv = frappe.new_doc("Verify Pan Verification")
         verify_pv.update({
+            "tat": doc.tat,
             "pan_verification_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -334,13 +357,14 @@ def create_verify(doc, method):
             "applicant_name": doc.applicant_name
         })
         verify_pv.save(ignore_permissions=True)
-    if doc.name1 == "Aadhar Card Verification ":
+    if doc.name1 == "Aadhar Card Verification":
         acv_id = frappe.db.get_value("Verify Aadhar Card Verification", {"applicant_id": doc.applicant_id})
         if acv_id:
             verify_acv = frappe.get_doc("Verify Aadhar Card Verification", acv_id)
         else:
             verify_acv = frappe.new_doc("Verify Aadhar Card Verification")
         verify_acv.update({
+            "tat": doc.tat,
             "aadhar_card_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -355,6 +379,7 @@ def create_verify(doc, method):
         else:
             verify_dlv = frappe.new_doc("Verify Driving License Verification")
         verify_dlv.update({
+            "tat": doc.tat,
             "driving_license_verification_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -369,6 +394,7 @@ def create_verify(doc, method):
         else:
             verify_pass = frappe.new_doc("Verify Passport Verification")
         verify_pass.update({
+            "tat": doc.tat,
             "passport_verification_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -383,6 +409,7 @@ def create_verify(doc, method):
         else:
             verify_rcv = frappe.new_doc("Verify Ration Card Verification")
         verify_rcv.update({
+            "tat": doc.tat,
             "ration_card_verification_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
@@ -397,6 +424,7 @@ def create_verify(doc, method):
         else:
             verify_viv = frappe.new_doc("Verify Voters ID Verification")
         verify_viv.update({
+            "tat": doc.tat,
             "voters_id_verification_id": doc.name,
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,

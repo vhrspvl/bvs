@@ -3,7 +3,7 @@
  "allow_guest_to_view": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
- "autoname": "concatenate:education4.####", 
+ "autoname": "edu4.-.applicant_name.-.####", 
  "beta": 0, 
  "creation": "2018-07-19 16:58:42.540228", 
  "custom": 0, 
@@ -543,7 +543,7 @@
    "label": "Status", 
    "length": 0, 
    "no_copy": 0, 
-   "options": "Select\nEntry Pending\nEntry Completed\nIQC Pending\nIQC Completed", 
+   "options": "Select\nEntry Pending\nEntry Completed\nIQC Completed\nAllocation Completed", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
@@ -601,7 +601,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-09-01 11:58:01.695741", 
+ "modified": "2018-09-06 17:48:00.958615", 
  "modified_by": "Administrator", 
  "module": "Background Verification", 
  "name": "Education Check4", 
@@ -635,5 +635,6 @@
  "sort_field": "modified", 
  "sort_order": "DESC", 
  "track_changes": 1, 
- "track_seen": 0
+ "track_seen": 0, 
+ "track_views": 0
 }

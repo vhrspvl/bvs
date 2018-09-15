@@ -35,6 +35,16 @@ def get_data():
 					"type": "doctype",
 					"name": "Allocate Checks",
 					"description":_("Checks Assigned to Executives"),
+				},
+				{
+					"type": "doctype",
+					"name": "Data Entry Allocation",
+					"description":_("Data Entry Allocation records"),
+				},
+				{
+					"type": "doctype",
+					"name": "Entry Dashboard",
+					"description":_("Entry Dashboard Records"),
 					"hide_count": True
 				},
 			]

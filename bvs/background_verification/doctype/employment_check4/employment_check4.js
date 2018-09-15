@@ -28,6 +28,11 @@ frappe.ui.form.on('Employment Check4', {
 				})
 			}
 		});
+	},
+	validate: function(frm){
+		if(frm.doc.tat){
+			frm.set_df_property('tat', 'read_only', 1);
+		}
 	}
 });
 

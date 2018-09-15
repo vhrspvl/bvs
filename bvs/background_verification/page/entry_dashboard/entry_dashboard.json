@@ -1,0 +1,20 @@
+{
+ "content": null, 
+ "creation": "2018-09-11 10:19:38.413268", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "icon": "Entry Dashboard", 
+ "idx": 0, 
+ "modified": "2018-09-11 10:19:38.413268", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "entry-dashboard", 
+ "owner": "Administrator", 
+ "page_name": "Entry Dashboard", 
+ "roles": [], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Entry Dashboard"
+}

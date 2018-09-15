@@ -5,9 +5,13 @@ frappe.ui.form.on('Allocate Checks', {
 	check: function(frm) {
         if(frm.doc.check != "Select"){
 			frm.clear_table("allocate_checks_executive");
+			// if (frm.doc.check === 'Employment Check'){
+			// 	var check = { doctype1 :'Employment Check1',doctype2:'Employment Check2'}
+
+			// }
 			frappe.call({
 				"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_check",
-				args: {
+				args:{
 					"check":frm.doc.check
 				},
 				callback: function (r) {
@@ -16,29 +20,26 @@ frappe.ui.form.on('Allocate Checks', {
 						// console.log(r.message)
 						if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Civil Check"||"Criminal Check"){
 							var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-							// row.reference_doctype = d.doctype;
-							// row.reference_name = d.name;
-							// row.applicant = d.applicant_id;
-							// if(d.status == "Entry Completed"){
-							// 	row.status = "IQC Pending";
-							// } else if(d.status == "IQC Completed"){
-							// 		row.status = "Allocation Pending";
-							// }else{
-							// 		row.status = d.status;
-							// }
                             if(d.status == "Entry Completed"){
-								// row.reference_doctype = reference_name.;
+								row.reference_doctype = d.doctype;
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
 								row.status = "IQC Pending";
 							} else if(d.status == "Entry Pending"){
-									row.status = d.status;
-									row.reference_name = d.name;
-								    row.applicant = d.applicant_id;
+								row.reference_doctype = d.doctype;
+								row.status = d.status;
+								row.reference_name = d.name;
+								row.applicant = d.applicant_id;
+							}else if(d.status == "Allocation Completed"){
+								row.reference_doctype = d.doctype;
+								row.status = "Allocation Completed";
+								row.reference_name = d.name;
+								row.applicant = d.applicant_id;
+								// }
 							}else if(d.status == "IQC Completed"){								
 								row.status = "Allocation Pending";
 								row.reference_doctype = d.doctype;
-								console.log(doctype)
+								// console.log(frm.doctype)
 								row.applicant = d.applicant_id;
 								if(row.status == "Allocation Pending"){
 									frappe.call({
@@ -48,26 +49,109 @@ frappe.ui.form.on('Allocate Checks', {
 											"applicant":d.applicant_id
 										},
 										callback: function (r) {
-											if(row.status == "Allocation Pending"){
-													row.reference_name = r.message[1].name;
+											if(row.reference_doctype == "Verify Employment Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Education Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Education Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Education Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Education Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Address Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Address Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Address Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Address Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Family Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Family Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Family Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Family Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Aadhar Card verification Check"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Pan Card Verification Check"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Passport Verification"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Driving License Verification"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Voter's Card Verification"){
+												row.reference_name = r.message[4].name;
+											}
+											if(row.reference_doctype == "Verify Ration Card Verification"){
+												row.reference_name = r.message[5].name;
+											}
+											if(row.reference_doctype == "Verify Civil Check"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Criminal Check"){
+												row.reference_name = r.message[0].name;
 											}
 											refresh_field("allocate_checks_executive");
 											
 										}
 										
-									})
+									});
 									
 								}
-							}					
 							
-						}else if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Other Checks") {
-							var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-							row.reference_doctype = d.check;
-							row.reference_name = d.name;
-							row.applicant = d.applicant_id;
-							row.status = d.status;
-						}
+						}else if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Civil Checks"||"Verify Criminal Check"){
+							// var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
+							if(d.status == "Pending"||"Insufficient"){	                    
+								row.reference_doctype = d.doctype;
+								row.reference_name = d.name;
+								row.applicant = d.applicant_id;
+								row.status = d.status;
+							}
+					    }
 					}
+				    }
 					});
 					refresh_field("allocate_checks_executive");
 				}
@@ -75,7 +159,7 @@ frappe.ui.form.on('Allocate Checks', {
 		}	     
 	},
 	status: function(frm) {
-        if(frm.doc.check != "Select"){
+        if(frm.doc.check != "Select"){	
 			frm.clear_table("allocate_checks_executive");
 			frappe.call({
 				"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.status_filter",
@@ -91,32 +175,31 @@ frappe.ui.form.on('Allocate Checks', {
 						if(frm.doc.status == "IQC Pending" && d.status == "Entry Completed"){
 							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
 								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
+								row.reference_doctype = d.doctype;
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
 								row.status = "IQC Pending";
 							} 
-						} else 	if(frm.doc.status == "Pending" && d.status == "Pending"){
-							if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Civil Checks"||"Verify Criminal Check"){
-								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
+						}else if(d.status == "Entry Pending" && frm.doc.status == "Entry Pending"){
+							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
+								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
+								row.reference_doctype = d.doctype;
+								row.status = "Entry Pending";
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
-								row.status = d.status;
-							} 
-						} else if(frm.doc.status == "Insufficient" && d.status == "Insufficient"){
-							if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Civil Checks"||"Verify Criminal Check"){
-								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								row.reference_doctype = d.check;
+							}
+						}else if(d.status == "Allocation Completed" && frm.doc.status == "Allocation Completed"){
+							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
+								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
+								row.reference_doctype = d.doctype;
+								row.status = "Allocation Completed";
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
-								row.status = "Insufficient";
-							} 
+							}
 						}else if(frm.doc.status == "Allocation Pending" && d.status == "IQC Completed"){
 							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
 								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-								// row.reference_doctype = d.check;
-								// row.reference_name = d.name;
+								row.reference_doctype = d.doctype;
 								row.applicant = d.applicant_id;
 								row.status = "Allocation Pending";
 								if(row.status == "Allocation Pending"){
@@ -127,49 +210,120 @@ frappe.ui.form.on('Allocate Checks', {
 											"applicant":d.applicant_id
 										},
 										callback: function (r) {
-											if(row.status == "Allocation Pending"){
+											console.log(r.message)
+											if(row.reference_doctype == "Verify Employment Check1"){
 												row.reference_name = r.message[0].name;
-												// frappe.model.set_value(d.doctype, d.name, "reference_name", r.message);
-												// console.log(r.message)												
+											}
+											if(row.reference_doctype == "Verify Employment Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Education Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Education Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Education Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Education Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Address Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Address Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Address Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Address Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Family Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Family Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Family Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Family Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Aadhar Card verification Check"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Pan Card Verification Check"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Passport Verification"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Driving License Verification"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Voter's Card Verification"){
+												row.reference_name = r.message[4].name;
+											}
+											if(row.reference_doctype == "Verify Ration Card Verification"){
+												row.reference_name = r.message[5].name;
+											}
+											if(row.reference_doctype == "Verify Civil Check"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Criminal Check"){
+												row.reference_name = r.message[0].name;
 											}											
 											refresh_field("allocate_checks_executive");											
 										}
 										
-									})
-									
-								}
+									});												
+								}								 
+							}
+						}else if(frm.doc.status == "Pending" && d.status == "Pending"){
+							if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Civil Checks"||"Verify Criminal Check"){
+								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
+								row.reference_doctype = d.doctype;
+								row.reference_name = d.name;
+								row.applicant = d.applicant_id;
+								row.status = d.status;
 							} 
-						// } else if(frm.doc.status == "Execution Pending" && d.status == "Allocation Completed"){
-						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
-						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-						// 		row.reference_doctype = d.check;
-						// 		row.reference_name = d.name;
-						// 		row.applicant = d.applicant_id;
-						// 		row.status = "Execution Pending";
-						// 	} 
-						// } else if(frm.doc.status == "QC Pending" && d.status == "Execution Completed"){
-						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
-						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-						// 		row.reference_doctype = d.check;
-						// 		row.reference_name = d.name;
-						// 		row.applicant = d.applicant_id;
-						// 		row.status = "QC Pending";
-						// 	} 
-						// }else if(frm.doc.status == "Entry Pending" && d.status == "Entry Pending"){
-						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Other Checks"){
-						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
-						// 		row.reference_doctype = d.check;
-						// 		row.reference_name = d.name;
-						// 		row.applicant = d.applicant_id;
-						// 		row.status = "Entry Pending";
-						// 	} 
+						}else if(frm.doc.status == "Insufficient" && d.status == "Insufficient"){
+							if(frm.doc.check == "Verify Address Check"||"Verify Education Check"||"Verify Employment Check"||"Verify Reference Check"||"Verify Family Check"||"Verify Identity Check"||"Verify Civil Checks"||"Verify Criminal Check"){
+								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    
+								row.reference_doctype = d.doctype;
+								row.reference_name = d.name;
+								row.applicant = d.applicant_id;
+								row.status = "Insufficient";
+							} 
 						}
-					}
+					}					
 					});
 					refresh_field("allocate_checks_executive");
 				}
-			});	
-		}	     
+			});
+		}
 	},	
 	select_executive: function(frm, cdt, cdn) {		
 		if(frm.doc.select_executive != ""){
@@ -192,7 +346,6 @@ frappe.ui.form.on('Allocate Checks', {
 	},
 	refresh: function (frm) {
 		frm.disable_save();
-		// frm.disable_menu();
 	},
 	onload:function(frm, dt,dn){
 		frm.set_query("select_executive", function() {
@@ -202,46 +355,44 @@ frappe.ui.form.on('Allocate Checks', {
 				}
 			};
 		});	
-		// frm.fields_dict['allocated_to'].get_query = function(doc, dt, dn) {
-		// 	return {
-		// 		filters: {"department": "BVS - V"}
-		// 	}
-		// };
+		cur_frm.fields_dict['allocate_checks_executive'].grid.get_field("allocated_to").set_query = function(frm, dt, dn) {
+			return {
+				filters: {"department": "BVS - V"}
+			}
+		}
 	},
-	assign:function(frm){
+	// assign:function(frm){	
+	// 	frappe.call({
+	// 		"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
+	// 		args: {
+	// 			"doc": frm.doc.allocate_checks_executive
+	// 		},
+	// 		freeze:true,
+	// 		callback: function(r){
+	// 			frappe.msgprint("Updated")
+	// 			if(r.message){
+	// 				frm.clear_table("allocate_checks_executive");
+	// 			}
+	// 		}
+	// 		})
+	// 	}
+	assign:function(frm){	
 		frappe.call({
 			"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
 			args: {
-				"doc": frm.doc.allocate_checks_executive
+				"doc": frm.doc.allocate_checks_executive,
+				"check": frm.doc.check
 			},
+			freeze:true,
 			callback: function(r){
 				frappe.msgprint("Updated")
 				if(r.message){
-					frm.clear_table("allocate_checks_executive")
+					frm.clear_table("allocate_checks_executive");
 				}
 			}
 			})
 		}
 })
 
-
-// frappe.ui.form.on("Allocate Checks Executive" , {
-// 	assign: function(frm, cdt, cdn){
-//         var child = locals[cdt][cdn];
-//         if(child.allocated_to){
-// 			// frappe.call({
-// 			// 	"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
-// 			// 	args: {
-// 			// 		"reference_name": child.reference_name, 
-// 			// 		"checks_executive": child.allocated_to
-// 			// 	},
-// 			// 	callback: function(r){
-// 			// 		console.log(r.message)
-// 			// 	}
-// 			// })
-// 			console.log(child.allocated_to)
-// 		}
-// 	}
-// });
 
 

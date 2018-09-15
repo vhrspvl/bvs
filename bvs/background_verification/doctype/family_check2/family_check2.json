@@ -3,7 +3,7 @@
  "allow_guest_to_view": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
- "autoname": "concatenate:family2.####", 
+ "autoname": "family2.-.applicant_name.-.####", 
  "beta": 0, 
  "creation": "2018-07-19 17:24:29.406692", 
  "custom": 0, 
@@ -514,7 +514,7 @@
    "label": "Status", 
    "length": 0, 
    "no_copy": 0, 
-   "options": "Select\nEntry Pending\nEntry Completed\nIQC Completed", 
+   "options": "Select\nEntry Pending\nEntry Completed\nIQC Completed\nAllocation Completed", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
@@ -572,7 +572,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-09-01 11:53:33.282689", 
+ "modified": "2018-09-06 17:48:43.213832", 
  "modified_by": "Administrator", 
  "module": "Background Verification", 
  "name": "Family Check2", 
@@ -606,5 +606,6 @@
  "sort_field": "modified", 
  "sort_order": "DESC", 
  "track_changes": 1, 
- "track_seen": 0
+ "track_seen": 0, 
+ "track_views": 0
 }
