@@ -8,3 +8,9 @@ from frappe.model.document import Document
 
 class RationCardVerification(Document):
 	pass
+
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Ration Card Verification", {"applicant_id": applicant_id}, "status")
+    return status

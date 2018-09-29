@@ -8,3 +8,8 @@ from frappe.model.document import Document
 
 class ReferenceCheck4(Document):
 	pass
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Reference Check4", {"applicant_id": applicant_id}, "status")
+    return status

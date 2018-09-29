@@ -1,6 +1,3 @@
-// Copyright (c) 2018, VHRS and contributors
-// For license information, please see license.txt
-
 frappe.ui.form.on('Entry Dashboard', {
 	onload: function(frm) {
 		frappe.call({
@@ -17,12 +14,22 @@ frappe.ui.form.on('Entry Dashboard', {
 						"name":d.name
 						}, 
 					callback:function(r){	
-						// if(frappe.session.user == r.message.executive){					
+						if(frappe.session.user == r.message.executive){					
 							var row = frappe.model.add_child(frm.doc, "Entry Dashboard List", "entry_dashboard_list");
 							row.data_entry_name = r.message.name;
+							if(r.message.demographic_entry){
+							row.demographic_entry = "Yes";
+							} else {
+							    row.demographic_entry = "No";
+							}
 							row.customer = r.message.customer;
-							var cust = r.message.customer;
-							row.new_entry = r.message.cases_pending;
+							if(r.message.cases_pending != 0){
+								row.new_entry = r.message.cases_pending;	
+							}	
+							if(r.message.cases_pending == 0){	
+								row.new_entry = "0";	
+							}
+							
 							row.executive = r.message.executive;
 							refresh_field("entry_dashboard_list");
 							frappe.call({
@@ -31,13 +38,15 @@ frappe.ui.form.on('Entry Dashboard', {
 									doctype:"Applicant",
 									filters: {
 										"status": "Pending",
+										"executive": r.message.executive,
 										"customer": r.message.customer
 									},
 									group_by: "customer"  
 					
 								},
 								callback:function(r){
-									if(row.customer == cust){
+									if(r.message){
+										console.log(r.message)
 										var c = Object.keys(r.message).length;
 										if(c != 0){
 											row.entry_pending = c;	
@@ -45,16 +54,13 @@ frappe.ui.form.on('Entry Dashboard', {
 										if(c == 0){	
 											row.entry_pending = "0";	
 										}			
-										// console.log(row.customer)
-										// console.log(c)
-										
 									}
 									refresh_field("entry_dashboard_list");
 								}
 					
 						    })
 						}
-					// }	
+					}	
 				});
 			})
 		}
@@ -63,31 +69,53 @@ frappe.ui.form.on('Entry Dashboard', {
 	},
 	'onload_post_render': function(frm, cdt, cdn) {
 		var list = frm.doc.entry_dashboard_list;
-		var i = 0;
-		var input = 'input[data-fieldname="new_entry"][data-doctype="Entry Dashboard List"]';
-		frm.fields_dict.entry_dashboard_list.grid.wrapper.on('focus', 'input', function(i, j) {	
-			while(i<list.length){
-			console.log(j.idx)
-			i += 1;
+		frm.fields_dict.entry_dashboard_list.grid.wrapper.on('focus', 'input[data-fieldname="new_entry"][data-doctype="Entry Dashboard List"]', function(e) {	
+			var current_doc = $('.data-row.editable-row').parent().attr("data-name");
+			var d = locals["Entry Dashboard List"][current_doc];
+			if(d.new_entry > 0){
+			if(d.demographic_entry == "Yes"){
+			frappe.call({
+				"method": "frappe.client.get_list",
+					args: {
+					doctype: "Demographic Data With Attachment",
+					filters:{
+						"customer": d.customer
+					}
+					},
+				
+				callback:function(r){	
+					// 
+					$.each(r.message, function(i, j) {
+						frappe.call({
+							"method": "frappe.client.get",
+								args: {
+								doctype: "Demographic Data With Attachment",
+								filters: {
+									"name": j.name
+								}
+							    },							
+							callback:function(r){
+								$.each(r.message, function(i, j) {
+								console.log(r.message)		
+			 		        }
+					    })
+					    })					
+				     }
+				})
+			} else {
+					frappe.set_route('Form','Applicant',"New Applicant",{"customer": d.customer});
+     			}
 			}
-			
-		});
-		// 	// frappe.set_route('Form','Applicant','New Applicant');
 
+	    });
+		frm.fields_dict.entry_dashboard_list.grid.wrapper.on('focus', 'input[data-fieldname="entry_pending"][data-doctype="Entry Dashboard List"]', function(e) {	
+			var current_doc = $('.data-row.editable-row').parent().attr("data-name");
+			var d = locals["Entry Dashboard List"][current_doc];
+			var a = locals[cdt][cdn];
+			if(d.entry_pending > 0){
+			frappe.set_route('List','Applicant',{"status":"Pending","customer":d.customer,"executive": d.executive}) ;
+			}
+		});
 	}
 
-	// }
-	// 'onload_post_render': function(frm) {
-	// 	// $.each(frm.doc.entry_dashboard_list, function(i, item) {
-	// 	// 	if(frm.doc.entry_dashboard_list){
-	// 		console.log(frm.doc.entry_dashboard_list)
-	// // 		}
-	// // 		// if(item.qty > 0) {
-	// // 		// 	  $("div[data-fieldname=new_entry]").find(format('div.grid-row[data-idx="{0}"]', [item.idx])).css({'background-color': '#FF0000 !important'});
-	// // 		// }
-	// //   });
-	// }
 })
-
-
-

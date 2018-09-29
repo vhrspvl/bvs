@@ -17,11 +17,12 @@ def create_applicant(doc,method):
 	else:
 		applicant = frappe.new_doc("Applicant")
 	applicant.update({
+		"demographic_id": doc.name,
 		"customer": doc.customer,
 		"checks_group": doc.checks_group,
 		"candidate_name": doc.candidate_name,
 		"father_name": doc.father_name,
-		"contact_number": doc.name,
+		"contact_number": doc.contact_number,
 		"gender": doc.gender,
 		"dob": doc.dob,
 		"age": doc.age,
@@ -37,4 +38,16 @@ def create_applicant(doc,method):
 		"pincode": doc.pincode
 	})
 	applicant.save(ignore_permissions=True)
+	return "OK"
+
+
+
+@frappe.whitelist()
+def update_ref_id(ref_id,demographic_id):
+	if ref_id:
+		demo = frappe.get_doc("Demographic Data With Attachment", demographic_id)
+	demo.update({
+		"ref_id": ref_id
+	})
+	demo.save(ignore_permissions=True)
 	return "OK"

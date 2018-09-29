@@ -17,3 +17,8 @@ def get_value(applicant):
 	value = frappe.get_list("Applicant", filters={"name":applicant}, fields=("candidate_name","dob","age","address_line1","address_line2","address_line3","talukdistrict","state","city","country","pincode")) 
 	# frappe.errprint(value)
 	return value
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Education Check1", {"applicant_id": applicant_id}, "status")
+    return status

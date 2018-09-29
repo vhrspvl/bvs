@@ -7,11 +7,16 @@ import frappe
 from frappe.model.document import Document
 
 class AadharCardVerification(Document):
-	pass
+    pass
 
 
 @frappe.whitelist()
 def get_value(applicant):
-	value = frappe.get_doc("Applicant", applicant) 
-	frappe.errprint(value)
-	return value
+    value = frappe.get_doc("Applicant", applicant) 
+    return value
+
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Aadhar Card Verification", {"applicant_id": applicant_id}, "status")
+    return status

@@ -8,3 +8,9 @@ from frappe.model.document import Document
 
 class VotersIDVerification(Document):
 	pass
+
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Voters ID Verification", {"applicant_id": applicant_id}, "status")
+    return status

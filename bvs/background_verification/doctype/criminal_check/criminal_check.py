@@ -15,3 +15,8 @@ def get_doc(applicant):
 	address = frappe.db.get_value("Address Check1", {"applicant_id":applicant}, ["address_line1","address_line2","address_line3","talukdistrict","state","city","country","pincode"])
 	# frappe.errprint(status)
 	return address
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Criminal Check", {"applicant_id": applicant_id}, "status")
+    return status

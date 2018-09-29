@@ -1,26 +1,3 @@
-// Copyright (c) 2018, VHRS and contributors
-// For license information, please see license.txt
-
-// frappe.ui.form.on('Applicant', {
-//     employment_check1:function (frm) {
-// // 		// frappe.db.get_value('Employment Check1', {applicant_id: frm.doc.name}, 'name', (r) => {
-// // 		// 	d.employment_check_id = r.name
-// // 		// })
-			
-//     	if(!frm.doc.employment_check_id){
-//  		    frappe.set_route('Form','Employment Check1','New Employment Check1',{"applicant_name": frm.doc.candidate_first_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
-		
-//  		} else {
-//  			frappe.set_route('Form','Employment Check1',frm.doc.employment_check_id);
-
-// 		}
-// 		// console.log(frm.doc.employment_check_id);
-//  	}
-// // 	// onload:function(frm){
-// // 	// 	frm.refresh_field("employment_check_id");
-// // 	// }
-//  });
-
 frappe.ui.form.on("Applicant", {
 	validate: function(frm){
        if(frm.doc.checks_group){
@@ -35,11 +12,689 @@ frappe.ui.form.on("Applicant", {
 						frm.set_value("tat", r.message.tat);
 					}
 				}
-		   })
+			})
+	   } 
+	   if(!frm.doc.data_entry_allocation_id){
+		frappe.call({
+			"method": "frappe.client.get",
+			args:{
+				"doctype": "Data Entry Allocation",
+				fieldname: "name",
+				filters: {"customer": frm.doc.customer}
+			},
+			callback: function(r){
+				if(r.message){
+					frm.set_value("data_entry_allocation_id", r.message.name);
+					// 
+				}
+			}
+		})
+		}
+		
+	},
+	after_save: function(frm){
+		if(frm.doc.demographic_id){
+			// console.log(frm.doc.ref_id)
+			frappe.call({
+				"method":"bvs.background_verification.doctype.demographic_data_with_attachment.demographic_data_with_attachment.update_ref_id",
+			    args:{
+					"ref_id": frm.doc.ref_id,
+					"demographic_id": frm.doc.demographic_id
+				},
+				callback: function(r){
+					console.log(r)
+				}
+			})
+		}
+		if(!frm.doc.ref_no){
+			frm.set_value("ref_id", frm.doc.name);
+		}
+		if(frm.doc.decrease_pending_case != "Updated"){	
+			frappe.call({
+				"method":"bvs.background_verification.doctype.entry_dashboard.entry_dashboard.get_pending_cases",
+					args: {
+					"name":frm.doc.data_entry_allocation_id
+					}, 
+				callback:function(r){
+					if(r.message){
+						frm.set_value("decrease_pending_case", "Updated")
+					}
+				}
+			})
+	    }
 
-	   }
 	},
 	refresh: function (frm) {
+		if(frm.doc.customer && frappe.user.has_role("BVS DEO")){
+			frm.set_value("executive", frappe.session.user);
+		}
+		frappe.call({
+			"method":"frappe.client.get",
+					args: {
+						"doctype": "Checks Group",
+						"name": frm.doc.checks_group
+					},
+					callback: function(r){
+						if(r.message)	{
+							if(r.message.employment_check1){
+							frappe.call({
+								"method":"bvs.background_verification.doctype.employment_check1.employment_check1.get_status",
+								args: {
+									"applicant_id": frm.doc.name
+								},
+								callback: function(r){
+									if(r.message == "Allocation Completed"){
+						            $(cur_frm.fields_dict.employment_check1.input).css("backgroundColor","Chocolate");
+									}
+									if(r.message == "Entry Pending"){
+										$(cur_frm.fields_dict.employment_check1.input).css("backgroundColor","Aquamarine");
+									}
+									if(r.message == "Entry Completed"){
+										$(cur_frm.fields_dict.employment_check1.input).css("backgroundColor","DeepSkyBlue");
+									}
+									if(r.message == "IQC Completed"){
+										$(cur_frm.fields_dict.employment_check1.input).css("backgroundColor","Yellow");
+									}
+								}
+							})
+							}
+							if(r.message.employment_check2){
+								frappe.call({
+									"method":"bvs.background_verification.doctype.employment_check2.employment_check2.get_status",
+									args: {
+										"applicant_id": frm.doc.name
+									},
+									callback: function(r){
+										if(r.message == "Allocation Completed"){
+										$(cur_frm.fields_dict.employment_check2.input).css("backgroundColor","Chocolate");
+										}
+										if(r.message == "Entry Pending"){
+											$(cur_frm.fields_dict.employment_check2.input).css("backgroundColor","Aquamarine");
+										}
+										if(r.message == "Entry Completed"){
+											$(cur_frm.fields_dict.employment_check2.input).css("backgroundColor","DeepSkyBlue");
+										}
+										if(r.message == "IQC Completed"){
+											$(cur_frm.fields_dict.employment_check2.input).css("backgroundColor","Yellow");
+										}
+									}
+								})
+							}
+							if(r.message.employment_check3){
+								frappe.call({
+									"method":"bvs.background_verification.doctype.employment_check3.employment_check3.get_status",
+									args: {
+										"applicant_id": frm.doc.name
+									},
+									callback: function(r){
+										if(r.message == "Allocation Completed"){
+										$(cur_frm.fields_dict.employment_check3.input).css("backgroundColor","Chocolate");
+										}
+										if(r.message == "Entry Pending"){
+											$(cur_frm.fields_dict.employment_check3.input).css("backgroundColor","Aquamarine");
+										}
+										if(r.message == "Entry Completed"){
+											$(cur_frm.fields_dict.employment_check3.input).css("backgroundColor","DeepSkyBlue");
+										}
+										if(r.message == "IQC Completed"){
+											$(cur_frm.fields_dict.employment_check3.input).css("backgroundColor","Yellow");
+										}
+									}
+								})
+							}
+							if(r.message.employment_check4){
+								frappe.call({
+									"method":"bvs.background_verification.doctype.employment_check4.employment_check4.get_status",
+									args: {
+										"applicant_id": frm.doc.name
+									},
+									callback: function(r){
+										if(r.message == "Allocation Completed"){
+										$(cur_frm.fields_dict.employment_check4.input).css("backgroundColor","Chocolate");
+										}
+										if(r.message == "Entry Pending"){
+											$(cur_frm.fields_dict.employment_check4.input).css("backgroundColor","Aquamarine");
+										}
+										if(r.message == "Entry Completed"){
+											$(cur_frm.fields_dict.employment_check4.input).css("backgroundColor","DeepSkyBlue");
+										}
+										if(r.message == "IQC Completed"){
+											$(cur_frm.fields_dict.employment_check4.input).css("backgroundColor","Yellow");
+										}
+									}
+								})
+							}
+							if(r.message.education_check1){
+								frappe.call({
+									"method":"bvs.background_verification.doctype.education_check1.education_check1.get_status",
+									args: {
+										"applicant_id": frm.doc.name
+									},
+									callback: function(r){
+										if(r.message == "Allocation Completed"){
+										$(cur_frm.fields_dict.education_check1.input).css("backgroundColor","Chocolate");
+										}
+										if(r.message == "Entry Pending"){
+											$(cur_frm.fields_dict.education_check1.input).css("backgroundColor","Aquamarine");
+										}
+										if(r.message == "Entry Completed"){
+											$(cur_frm.fields_dict.education_check1.input).css("backgroundColor","DeepSkyBlue");
+										}
+										if(r.message == "IQC Completed"){
+											$(cur_frm.fields_dict.education_check1.input).css("backgroundColor","Yellow");
+										}
+									}
+								})
+								}
+								if(r.message.education_check2){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.education_check2.education_check2.get_status",
+										args: {
+											"applicant_id": frm.doc.name
+										},
+										callback: function(r){
+											if(r.message == "Allocation Completed"){
+											$(cur_frm.fields_dict.education_check2.input).css("backgroundColor","Chocolate");
+											}
+											if(r.message == "Entry Pending"){
+												$(cur_frm.fields_dict.education_check2.input).css("backgroundColor","Aquamarine");
+											}
+											if(r.message == "Entry Completed"){
+												$(cur_frm.fields_dict.education_check2.input).css("backgroundColor","DeepSkyBlue");
+											}
+											if(r.message == "IQC Completed"){
+												$(cur_frm.fields_dict.education_check2.input).css("backgroundColor","Yellow");
+											}
+										}
+									})
+								}
+								if(r.message.education_check3){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.education_check3.education_check3.get_status",
+										args: {
+											"applicant_id": frm.doc.name
+										},
+										callback: function(r){
+											if(r.message == "Allocation Completed"){
+											$(cur_frm.fields_dict.education_check3.input).css("backgroundColor","Chocolate");
+											}
+											if(r.message == "Entry Pending"){
+												$(cur_frm.fields_dict.education_check3.input).css("backgroundColor","Aquamarine");
+											}
+											if(r.message == "Entry Completed"){
+												$(cur_frm.fields_dict.education_check3.input).css("backgroundColor","DeepSkyBlue");
+											}
+											if(r.message == "IQC Completed"){
+												$(cur_frm.fields_dict.education_check3.input).css("backgroundColor","Yellow");
+											}
+										}
+									})
+								}
+								if(r.message.education_check4){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.education_check4.education_check4.get_status",
+										args: {
+											"applicant_id": frm.doc.name
+										},
+										callback: function(r){
+											if(r.message == "Allocation Completed"){
+											$(cur_frm.fields_dict.education_check4.input).css("backgroundColor","Chocolate");
+											}
+											if(r.message == "Entry Pending"){
+												$(cur_frm.fields_dict.education_check4.input).css("backgroundColor","Aquamarine");
+											}
+											if(r.message == "Entry Completed"){
+												$(cur_frm.fields_dict.education_check4.input).css("backgroundColor","DeepShyBlue");
+											}
+											if(r.message == "IQC Completed"){
+												$(cur_frm.fields_dict.education_check4.input).css("backgroundColor","Yellow");
+											}
+										}
+									})
+								}
+								if(r.message.address_check1){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.address_check1.address_check1.get_status",
+										args: {
+											"applicant_id": frm.doc.name
+										},
+										callback: function(r){
+											if(r.message == "Allocation Completed"){
+											$(cur_frm.fields_dict.address_check1.input).css("backgroundColor","Chocolate");
+											}
+											if(r.message == "Entry Pending"){
+												$(cur_frm.fields_dict.address_check1.input).css("backgroundColor","Aquamarine");
+											}
+											if(r.message == "Entry Completed"){
+												$(cur_frm.fields_dict.address_check1.input).css("backgroundColor","DeepSkyBlue");
+											}
+											if(r.message == "IQC Completed"){
+												$(cur_frm.fields_dict.address_check1.input).css("backgroundColor","Yellow");
+											}
+										}
+									})
+									}
+									if(r.message.address_check2){
+										frappe.call({
+											"method":"bvs.background_verification.doctype.address_check2.address_check2.get_status",
+											args: {
+												"applicant_id": frm.doc.name
+											},
+											callback: function(r){
+												if(r.message == "Allocation Completed"){
+												$(cur_frm.fields_dict.address_check2.input).css("backgroundColor","Chocolate");
+												}
+												if(r.message == "Entry Pending"){
+													$(cur_frm.fields_dict.address_check2.input).css("backgroundColor","Aquamarine");
+												}
+												if(r.message == "Entry Completed"){
+													$(cur_frm.fields_dict.address_check2.input).css("backgroundColor","DeepSkyBlue");
+												}
+												if(r.message == "IQC Completed"){
+													$(cur_frm.fields_dict.address_check2.input).css("backgroundColor","Yellow");
+												}
+											}
+										})
+									}
+									if(r.message.address_check3){
+										frappe.call({
+											"method":"bvs.background_verification.doctype.address_check3.address_check3.get_status",
+											args: {
+												"applicant_id": frm.doc.name
+											},
+											callback: function(r){
+												if(r.message == "Allocation Completed"){
+												$(cur_frm.fields_dict.address_check3.input).css("backgroundColor","Chocolate");
+												}
+												if(r.message == "Entry Pending"){
+													$(cur_frm.fields_dict.address_check3.input).css("backgroundColor","Aquamarine");
+												}
+												if(r.message == "Entry Completed"){
+													$(cur_frm.fields_dict.address_check3.input).css("backgroundColor","DeepSkyBlue");
+												}
+												if(r.message == "IQC Completed"){
+													$(cur_frm.fields_dict.address_check3.input).css("backgroundColor","Yellow");
+												}
+											}
+										})
+									}
+									if(r.message.address_check4){
+										frappe.call({
+											"method":"bvs.background_verification.doctype.address_check4.address_check4.get_status",
+											args: {
+												"applicant_id": frm.doc.name
+											},
+											callback: function(r){
+												if(r.message == "Allocation Completed"){
+												$(cur_frm.fields_dict.address_check4.input).css("backgroundColor","Chocolate");
+												}
+												if(r.message == "Entry Pending"){
+													$(cur_frm.fields_dict.address_check4.input).css("backgroundColor","Aquamarine");
+												}
+												if(r.message == "Entry Completed"){
+													$(cur_frm.fields_dict.address_check4.input).css("backgroundColor","DeepSkyBlue");
+												}
+												if(r.message == "IQC Completed"){
+													$(cur_frm.fields_dict.address_check4.input).css("backgroundColor","Yellow");
+												}
+											}
+										})
+									}
+									if(r.message.family_check1){
+										frappe.call({
+											"method":"bvs.background_verification.doctype.family_check1.family_check1.get_status",
+											args: {
+												"applicant_id": frm.doc.name
+											},
+											callback: function(r){
+												if(r.message == "Allocation Completed"){
+												$(cur_frm.fields_dict.family_check1.input).css("backgroundColor","Chocolate");
+												}
+												if(r.message == "Entry Pending"){
+													$(cur_frm.fields_dict.family_check1.input).css("backgroundColor","Aquamarine");
+												}
+												if(r.message == "Entry Completed"){
+													$(cur_frm.fields_dict.family_check1.input).css("backgroundColor","DeepSkyBlue");
+												}
+												if(r.message == "IQC Completed"){
+													$(cur_frm.fields_dict.family_check1.input).css("backgroundColor","Yellow");
+												}
+											}
+										})
+										}
+										if(r.message.family_check2){
+											frappe.call({
+												"method":"bvs.background_verification.doctype.family_check2.family_check2.get_status",
+												args: {
+													"applicant_id": frm.doc.name
+												},
+												callback: function(r){
+													if(r.message == "Allocation Completed"){
+													$(cur_frm.fields_dict.family_check2.input).css("backgroundColor","Chocolate");
+													}
+													if(r.message == "Entry Pending"){
+														$(cur_frm.fields_dict.family_check2.input).css("backgroundColor","Aquamarine");
+													}
+													if(r.message == "Entry Completed"){
+														$(cur_frm.fields_dict.family_check2.input).css("backgroundColor","DeepSkyBlue");
+													}
+													if(r.message == "IQC Completed"){
+														$(cur_frm.fields_dict.family_check2.input).css("backgroundColor","yellow");
+													}
+												}
+											})
+										}
+										if(r.message.family_check3){
+											frappe.call({
+												"method":"bvs.background_verification.doctype.family_check3.family_check3.get_status",
+												args: {
+													"applicant_id": frm.doc.name
+												},
+												callback: function(r){
+													if(r.message == "Allocation Completed"){
+													$(cur_frm.fields_dict.family_check3.input).css("backgroundColor","Chocolate");
+													}
+													if(r.message == "Entry Pending"){
+														$(cur_frm.fields_dict.family_check3.input).css("backgroundColor","Aquamarine");
+													}
+													if(r.message == "Entry Completed"){
+														$(cur_frm.fields_dict.family_check3.input).css("backgroundColor","DeepSkyBlue");
+													}
+													if(r.message == "IQC Completed"){
+														$(cur_frm.fields_dict.family_check3.input).css("backgroundColor","Yellow");
+													}
+												}
+											})
+										}
+										if(r.message.family_check4){
+											frappe.call({
+												"method":"bvs.background_verification.doctype.family_check4.family_check4.get_status",
+												args: {
+													"applicant_id": frm.doc.name
+												},
+												callback: function(r){
+													if(r.message == "Allocation Completed"){
+													$(cur_frm.fields_dict.family_check4.input).css("backgroundColor","Chocolate");
+													}
+													if(r.message == "Entry Pending"){
+														$(cur_frm.fields_dict.family_check4.input).css("backgroundColor","Aquamarine");
+													}
+													if(r.message == "Entry Completed"){
+														$(cur_frm.fields_dict.family_check4.input).css("backgroundColor","DeepSkyBlue");
+													}
+													if(r.message == "IQC Completed"){
+														$(cur_frm.fields_dict.family_check4.input).css("backgroundColor","yellow");
+													}
+												}
+											})
+										}
+										if(r.message.reference_check1){
+											frappe.call({
+												"method":"bvs.background_verification.doctype.reference_check1.reference_check1.get_status",
+												args: {
+													"applicant_id": frm.doc.name
+												},
+												callback: function(r){
+													if(r.message == "Allocation Completed"){
+													$(cur_frm.fields_dict.reference_check1.input).css("backgroundColor","Chocolate");
+													}
+													if(r.message == "Entry Pending"){
+														$(cur_frm.fields_dict.reference_check1.input).css("backgroundColor","Aquamarine");
+													}
+													if(r.message == "Entry Completed"){
+														$(cur_frm.fields_dict.reference_check1.input).css("backgroundColor","DeepSkyBlue");
+													}
+													if(r.message == "IQC Completed"){
+														$(cur_frm.fields_dict.reference_check1.input).css("backgroundColor","Yellow");
+													}
+												}
+											})
+											}
+											if(r.message.reference_check2){
+												frappe.call({
+													"method":"bvs.background_verification.doctype.reference_check2.reference_check2.get_status",
+													args: {
+														"applicant_id": frm.doc.name
+													},
+													callback: function(r){
+														if(r.message == "Allocation Completed"){
+														$(cur_frm.fields_dict.reference_check2.input).css("backgroundColor","Chocolate");
+														}
+														if(r.message == "Entry Pending"){
+															$(cur_frm.fields_dict.reference_check2.input).css("backgroundColor","Aquamarine");
+														}
+														if(r.message == "Entry Completed"){
+															$(cur_frm.fields_dict.reference_check2.input).css("backgroundColor","DeepSkyBlue");
+														}
+														if(r.message == "IQC Completed"){
+															$(cur_frm.fields_dict.reference_check2.input).css("backgroundColor","Yellow");
+														}
+													}
+												})
+											}
+											if(r.message.reference_check3){
+												frappe.call({
+													"method":"bvs.background_verification.doctype.reference_check3.reference_check3.get_status",
+													args: {
+														"applicant_id": frm.doc.name
+													},
+													callback: function(r){
+														if(r.message == "Allocation Completed"){
+														$(cur_frm.fields_dict.reference_check3.input).css("backgroundColor","Chocolate");
+														}
+														if(r.message == "Entry Pending"){
+															$(cur_frm.fields_dict.reference_check3.input).css("backgroundColor","Aquamarine");
+														}
+														if(r.message == "Entry Completed"){
+															$(cur_frm.fields_dict.reference_check3.input).css("backgroundColor","DeepSkyBlue");
+														}
+														if(r.message == "IQC Completed"){
+															$(cur_frm.fields_dict.reference_check3.input).css("backgroundColor","Yellow");
+														}
+													}
+												})
+											}
+											if(r.message.reference_check4){
+												frappe.call({
+													"method":"bvs.background_verification.doctype.reference_check4.reference_check4.get_status",
+													args: {
+														"applicant_id": frm.doc.name
+													},
+													callback: function(r){
+														if(r.message == "Allocation Completed"){
+														$(cur_frm.fields_dict.reference_check4.input).css("backgroundColor","Chocolate");
+														}
+														if(r.message == "Entry Pending"){
+															$(cur_frm.fields_dict.reference_check4.input).css("backgroundColor","Aquamarine");
+														}
+														if(r.message == "Entry Completed"){
+															$(cur_frm.fields_dict.reference_check4.input).css("backgroundColor","DeepSkyBlue");
+														}
+														if(r.message == "IQC Completed"){
+															$(cur_frm.fields_dict.reference_check4.input).css("backgroundColor","Yellow");
+														}
+													}
+												})
+											}
+											if(r.message.civil_check){
+												frappe.call({
+													"method":"bvs.background_verification.doctype.civil_check.civil_check.get_status",
+													args: {
+														"applicant_id": frm.doc.name
+													},
+													callback: function(r){
+														if(r.message == "Allocation Completed"){
+														$(cur_frm.fields_dict.civil_check.input).css("backgroundColor","Chocolate");
+														}
+														if(r.message == "Entry Pending"){
+															$(cur_frm.fields_dict.civil_check.input).css("backgroundColor","Aquamarine");
+														}
+														if(r.message == "Entry Completed"){
+															$(cur_frm.fields_dict.civil_check.input).css("backgroundColor","DeepSkyBlue");
+														}
+														if(r.message == "IQC Completed"){
+															$(cur_frm.fields_dict.civil_check.input).css("backgroundColor","Yellow");
+														}
+													}
+												})
+												}
+												if(r.message.criminal_check){
+													frappe.call({
+														"method":"bvs.background_verification.doctype.criminal_check.criminal_check.get_status",
+														args: {
+															"applicant_id": frm.doc.name
+														},
+														callback: function(r){
+															if(r.message == "Allocation Completed"){
+															$(cur_frm.fields_dict.criminal_check.input).css("backgroundColor","Chocolate");
+															}
+															if(r.message == "Entry Pending"){
+																$(cur_frm.fields_dict.criminal_check.input).css("backgroundColor","Aquamarine");
+															}
+															if(r.message == "Entry Completed"){
+																$(cur_frm.fields_dict.criminal_check.input).css("backgroundColor","DeepSkyBlue");
+															}
+															if(r.message == "IQC Completed"){
+																$(cur_frm.fields_dict.criminal_check.input).css("backgroundColor","Yellow");
+															}
+														}
+													})
+												}
+												if(r.message.aadhar_card_verification){
+													frappe.call({
+														"method":"bvs.background_verification.doctype.aadhar_card_verification.aadhar_card_verification.get_status",
+														args: {
+															"applicant_id": frm.doc.name
+														},
+														callback: function(r){
+															if(r.message == "Allocation Completed"){
+															$(cur_frm.fields_dict.aadhar_card_verification.input).css("backgroundColor","Chocolate");
+															}
+															if(r.message == "Entry Pending"){
+																$(cur_frm.fields_dict.aadhar_card_verification.input).css("backgroundColor","Aquamarine");
+															}
+															if(r.message == "Entry Completed"){
+																$(cur_frm.fields_dict.aadhar_card_verification.input).css("backgroundColor","DeepSkyBlue");
+															}
+															if(r.message == "IQC Completed"){
+																$(cur_frm.fields_dict.aadhar_card_verification.input).css("backgroundColor","Yellow");
+															}
+														}
+													})
+												}
+												if(r.message.pan_verification){
+													frappe.call({
+														"method":"bvs.background_verification.doctype.pan_verification.pan_verification.get_status",
+														args: {
+															"applicant_id": frm.doc.name
+														},
+														callback: function(r){
+															if(r.message == "Allocation Completed"){
+															$(cur_frm.fields_dict.pan_verification.input).css("backgroundColor","Chocolate");
+															}
+															if(r.message == "Entry Pending"){
+																$(cur_frm.fields_dict.pan_verification.input).css("backgroundColor","Aquamarine");
+															}
+															if(r.message == "Entry Completed"){
+																$(cur_frm.fields_dict.pan_verification.input).css("backgroundColor","DeepSkyBlue");
+															}
+															if(r.message == "IQC Completed"){
+																$(cur_frm.fields_dict.pan_verification.input).css("backgroundColor","Yellow");
+															}
+														}
+													})
+												}
+												if(r.message.passport_verification){
+													frappe.call({
+														"method":"bvs.background_verification.doctype.passport_verification.passport_verification.get_status",
+														args: {
+															"applicant_id": frm.doc.name
+														},
+														callback: function(r){
+															if(r.message == "Allocation Completed"){
+															$(cur_frm.fields_dict.passport_verification.input).css("backgroundColor","Chocolate");
+															}
+															if(r.message == "Entry Pending"){
+																$(cur_frm.fields_dict.passport_verification.input).css("backgroundColor","Aquamarine");
+															}
+															if(r.message == "Entry Completed"){
+																$(cur_frm.fields_dict.passport_verification.input).css("backgroundColor","DeepSkyBlue");
+															}
+															if(r.message == "IQC Completed"){
+																$(cur_frm.fields_dict.passport_verification.input).css("backgroundColor","Yellow");
+															}
+														}
+													})
+													}
+													if(r.message.driving_license_verification){
+														frappe.call({
+															"method":"bvs.background_verification.doctype.driving_license_verification.driving_license_verification.get_status",
+															args: {
+																"applicant_id": frm.doc.name
+															},
+															callback: function(r){
+																if(r.message == "Allocation Completed"){
+																$(cur_frm.fields_dict.driving_license_verification.input).css("backgroundColor","Chocolate");
+																}
+																if(r.message == "Entry Pending"){
+																	$(cur_frm.fields_dict.driving_license_verification.input).css("backgroundColor","Aquamarine");
+																}
+																if(r.message == "Entry Completed"){
+																	$(cur_frm.fields_dict.driving_license_verification.input).css("backgroundColor","DeepSkyBlue");
+																}
+																if(r.message == "IQC Completed"){
+																	$(cur_frm.fields_dict.driving_license_verification.input).css("backgroundColor","Yellow");
+																}
+															}
+														})
+													}
+													if(r.message.voters_id_verification){
+														frappe.call({
+															"method":"bvs.background_verification.doctype.voters_id_verification.voters_id_verification.get_status",
+															args: {
+																"applicant_id": frm.doc.name
+															},
+															callback: function(r){
+																if(r.message == "Allocation Completed"){
+																$(cur_frm.fields_dict.voters_id_verification.input).css("backgroundColor","Chocolate");
+																}
+																if(r.message == "Entry Pending"){
+																	$(cur_frm.fields_dict.voters_id_verification.input).css("backgroundColor","Aquamarine");
+																}
+																if(r.message == "Entry Completed"){
+																	$(cur_frm.fields_dict.voters_id_verification.input).css("backgroundColor","DeepSkyBlue");
+																}
+																if(r.message == "IQC Completed"){
+																	$(cur_frm.fields_dict.voters_id_verification.input).css("backgroundColor","Yellow");
+																}
+															}
+														})
+													}
+													if(r.message.ration_card_verification){
+														frappe.call({
+															"method":"bvs.background_verification.doctype.ration_card_verification.ration_card_verification.get_status",
+															args: {
+																"applicant_id": frm.doc.name
+															},
+															callback: function(r){
+																if(r.message == "Allocation Completed"){
+																$(cur_frm.fields_dict.ration_card_verification.input).css("backgroundColor","Chocolate");
+																}
+																if(r.message == "Entry Pending"){
+																	$(cur_frm.fields_dict.ration_card_verification.input).css("backgroundColor","Aquamarine");
+																}
+																if(r.message == "Entry Completed"){
+																	$(cur_frm.fields_dict.ration_card_verification.input).css("backgroundColor","DeepSkyBlue");
+																}
+																if(r.message == "IQC Completed"){
+																	$(cur_frm.fields_dict.ration_card_verification.input).css("backgroundColor","Yellow");
+																}
+															}
+														})
+													}
+						}					 
+					}
+		})
 			frm.set_query("checks_group", function () {
 				return {
 					query: "bvs.utils.get_groups",
@@ -48,6 +703,7 @@ frappe.ui.form.on("Applicant", {
 					}
 				};
 			});
+			
 			frm.trigger("check_status");
 			if (frm.doc.checks_group) {
 				frappe.call({
@@ -148,7 +804,6 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	onload: function (frm) {
-		// frm.trigger("check_status");
 		if(!frm.doc.in_date){
             frm.set_value("in_date",(frappe.datetime.nowdate()));
 		}
@@ -269,7 +924,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Employment Check1',r.message);
 						} else{
-							frappe.set_route('Form','Employment Check1','New Employment Check1',{"applicant_name": frm.doc.candidate_name,"tat": frm.doc.tat, "customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Employment Check1','New Employment Check1',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
   			    }
 			  });
@@ -284,7 +939,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check1',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check1','New Verify Employment Check1',{"applicant_name": frm.doc.candidate_name,"tat": frm.doc.tat, "customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check1','New Verify Employment Check1',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
   			    }
 			  });     
@@ -302,7 +957,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Employment Check2',r.message);
 						} else{
-						    frappe.set_route('Form','Employment Check2','New Employment Check2',{"applicant_name": frm.doc.candidate_name,"tat": frm.doc.tat, "customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+						    frappe.set_route('Form','Employment Check2','New Employment Check2',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 				}
 			});
@@ -317,7 +972,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check2',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check2','New Verify Employment Check2',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check2','New Verify Employment Check2',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
   			    }
 			  });     
@@ -335,7 +990,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Employment Check3',r.message);
 						} else{
-							frappe.set_route('Form','Employment Check3','New Employment Check3',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Employment Check3','New Employment Check3',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name, "customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});
@@ -369,7 +1024,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Employment Check4',r.message);
 						} else{
-							frappe.set_route('Form','Employment Check4','New Employment Check4',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Employment Check4','New Employment Check4',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});
@@ -384,7 +1039,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check4',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check4','New Verify Employment Check4',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check4','New Verify Employment Check4',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
@@ -1192,14 +1847,24 @@ frappe.ui.form.on("Applicant", {
 					"applicant":frm.doc.name,
 				},
 				callback: function(r){
-								
+					if(frm.doc.status == "Positive"){
+					$(cur_frm.fields_dict.status.input).css("backgroundColor","Green");	
+					}	
+					if(frm.doc.status == "Negative"){
+						$(cur_frm.fields_dict.status.input).css("backgroundColor","Red");	
+					}
+					if(frm.doc.status == "Amber"){
+						$(cur_frm.fields_dict.status.input).css("backgroundColor","Orange");	
+					}	
+					if(frm.doc.status == "Negative"){
+						$(cur_frm.fields_dict.status.input).css("backgroundColor","Yellow");	
+					}
 				}
 			});	
 		}
 	}
 
 	});
-
 
 
 

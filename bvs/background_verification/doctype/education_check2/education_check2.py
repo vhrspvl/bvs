@@ -8,3 +8,9 @@ from frappe.model.document import Document
 
 class EducationCheck2(Document):
 	pass
+
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Education Check2", {"applicant_id": applicant_id}, "status")
+    return status

@@ -45,6 +45,11 @@ def get_data():
 					"type": "doctype",
 					"name": "Entry Dashboard",
 					"description":_("Entry Dashboard Records"),
+				},
+				{
+					"type": "doctype",
+					"name": "Verifier Dashboard",
+					"description":_("Verify Dashboard Records"),
 					"hide_count": True
 				},
 			]

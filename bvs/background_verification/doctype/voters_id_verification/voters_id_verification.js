@@ -9,8 +9,13 @@ frappe.ui.form.on("Voters ID Verification", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
+			if(frappe.user.has_role("BVS DEO")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
+			}
 		} 
+		if(frm.doc.tat){
+			frm.set_df_property('tat', 'read_only', 1);
+		}
 	},
 	refresh: function(frm){
 		frappe.call({
@@ -30,5 +35,10 @@ frappe.ui.form.on("Voters ID Verification", {
 				// })
 			}
 		});
+	},
+	validate:function(frm){
+		if(frm.doc.tat){
+			frm.set_df_property('tat', 'read_only', 1);
+		}
 	}
 });

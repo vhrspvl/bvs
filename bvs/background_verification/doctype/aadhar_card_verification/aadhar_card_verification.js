@@ -9,8 +9,29 @@ frappe.ui.form.on("Aadhar Card Verification", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
+			if(frappe.user.has_role("BVS DEO")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
+			}
+			// if(frappe.user.has_role("BVS Verifier")) {
+			// 	frappe.set_route("Form","Applicant",frm.doc.applicant_id);
+			// 	}
 		} 
+		if(frm.doc.tat){
+			frm.set_df_property('tat', 'read_only', 1);
+		}
+
+		// if(frm.doc.allocated_for != frm.doc.status){
+		// 	frm.set_value("executive","");
+		// }
+		// if(frm.doc.allocated_for == "Entry Pending"){
+		// 	frm.set_value("status","Entry Completed")
+		// }
+		// if(frm.doc.allocated_for == "IQC Pending"){
+		// 	frm.set_value("status","IQC Completed")
+		// }
+		// if(frm.doc.allocated_for == "Allocation Pending"){
+		// 	frm.set_value("status","Allocation Completed")
+		// }
 	},
 	refresh: function(frm){
 		frappe.call({
@@ -36,6 +57,23 @@ frappe.ui.form.on("Aadhar Card Verification", {
 				// })
 			}
 		});
+		if(frm.doc.allocated_for){
+			$(cur_frm.fields_dict.allocated_for.input).css("backgroundColor","DeepPink");
+		}
+	},
+	validate: function(frm){
+		if(frm.doc.allocated_for != frm.doc.status){
+			frm.set_value("executive","");
+		}
+		if(frm.doc.allocated_for == "Entry Pending"){
+			frm.set_value("status","Entry Completed")
+		}
+		if(frm.doc.allocated_for == "IQC Pending"){
+			frm.set_value("status","IQC Completed")
+		}
+		if(frm.doc.allocated_for == "Allocation Pending"){
+			frm.set_value("status","Allocation Completed")
+		}
 	}
 });
 

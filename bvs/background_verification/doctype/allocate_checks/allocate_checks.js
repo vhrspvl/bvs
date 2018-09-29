@@ -5,10 +5,6 @@ frappe.ui.form.on('Allocate Checks', {
 	check: function(frm) {
         if(frm.doc.check != "Select"){
 			frm.clear_table("allocate_checks_executive");
-			// if (frm.doc.check === 'Employment Check'){
-			// 	var check = { doctype1 :'Employment Check1',doctype2:'Employment Check2'}
-
-			// }
 			frappe.call({
 				"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_check",
 				args:{
@@ -209,8 +205,7 @@ frappe.ui.form.on('Allocate Checks', {
 											"check":frm.doc.check,
 											"applicant":d.applicant_id
 										},
-										callback: function (r) {
-											console.log(r.message)
+										callback: function (r) {											
 											if(row.reference_doctype == "Verify Employment Check1"){
 												row.reference_name = r.message[0].name;
 											}
@@ -271,10 +266,11 @@ frappe.ui.form.on('Allocate Checks', {
 											if(row.reference_doctype == "Verify Family Check4"){
 												row.reference_name = r.message[3].name;
 											}
-											if(row.reference_doctype == "Verify Aadhar Card verification Check"){
+											if(row.reference_doctype == "Verify Aadhar Card Verification"){
+												console.log(r.message.name)
 												row.reference_name = r.message[0].name;
 											}
-											if(row.reference_doctype == "Verify Pan Card Verification Check"){
+											if(row.reference_doctype == "Verify Pan Card Verification"){
 												row.reference_name = r.message[1].name;
 											}
 											if(row.reference_doctype == "Verify Passport Verification"){
@@ -355,11 +351,11 @@ frappe.ui.form.on('Allocate Checks', {
 				}
 			};
 		});	
-		cur_frm.fields_dict['allocate_checks_executive'].grid.get_field("allocated_to").set_query = function(frm, dt, dn) {
-			return {
-				filters: {"department": "BVS - V"}
-			}
-		}
+		// cur_frm.fields_dict['allocate_checks_executive'].grid.get_field("allocated_to").set_query = function(frm, dt, dn) {
+		// 	return {
+		// 		filters: {"department": "BVS - V"}
+		// 	}
+		// }
 	},
 	// assign:function(frm){	
 	// 	frappe.call({
@@ -376,7 +372,8 @@ frappe.ui.form.on('Allocate Checks', {
 	// 		}
 	// 		})
 	// 	}
-	assign:function(frm){	
+	assign:function(frm){
+		// 	
 		frappe.call({
 			"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.set_assign_to",
 			args: {
@@ -386,7 +383,8 @@ frappe.ui.form.on('Allocate Checks', {
 			freeze:true,
 			callback: function(r){
 				frappe.msgprint("Updated")
-				if(r.message){
+				if(r.message == "ok"){
+					// console.log(r.message == "ok")
 					frm.clear_table("allocate_checks_executive");
 				}
 			}
@@ -396,3 +394,6 @@ frappe.ui.form.on('Allocate Checks', {
 
 
 
+
+	
+	
