@@ -14,7 +14,7 @@ frappe.ui.form.on("Pan Verification", {
 		if(frm.doc.pan_number){
 			me = $(cur_frm.fields_dict.pan_number.input);
 		    me.attr("length", "10");
-		    if(frappe.user.has_role("BVS DEO")) {
+		    if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			    frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		}
@@ -32,6 +32,7 @@ frappe.ui.form.on("Pan Verification", {
 		if(!frm.doc.pan_number){
 			frappe.msgprint("Please Enter the Pan Number")
 		}
+		
 		
 	},
 	refresh: function(frm){

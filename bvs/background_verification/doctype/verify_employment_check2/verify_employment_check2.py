@@ -22,3 +22,5 @@ def get_status(applicant):
 	status = frappe.db.get_value("Verify Employment Check2", {"applicant_id":applicant}, "status")
 	# frappe.errprint(status)
 	return status
+
+

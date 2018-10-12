@@ -1,6 +1,9 @@
 frappe.ui.form.on("Applicant", {
 	validate: function(frm){
-       if(frm.doc.checks_group){
+		if(frm.doc.status){
+		frm.trigger("check_status");
+		}
+        if(frm.doc.checks_group){
 			frappe.call({
 				"method": "frappe.client.get",
 					args: {
@@ -30,9 +33,15 @@ frappe.ui.form.on("Applicant", {
 			}
 		})
 		}
+		if(frm.doc.status != "Pending"){
+		if(!frm.doc.end_date){
+		   frm.set_value("end_date",(frappe.datetime.nowdate()))
+		} 
+		}
 		
 	},
 	after_save: function(frm){
+		frm.trigger("check_status");
 		if(frm.doc.demographic_id){
 			// console.log(frm.doc.ref_id)
 			frappe.call({
@@ -65,7 +74,8 @@ frappe.ui.form.on("Applicant", {
 
 	},
 	refresh: function (frm) {
-		if(frm.doc.customer && frappe.user.has_role("BVS DEO")){
+		frm.trigger("check_status");
+		if(frm.doc.customer && (frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager"))){
 			frm.set_value("executive", frappe.session.user);
 		}
 		frappe.call({
@@ -702,9 +712,7 @@ frappe.ui.form.on("Applicant", {
 						customer: frm.doc.customer
 					}
 				};
-			});
-			
-			frm.trigger("check_status");
+			});			
 			if (frm.doc.checks_group) {
 				frappe.call({
 					method: "bvs.utils.get_group_checks",
@@ -804,6 +812,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	onload: function (frm) {
+		// frm.trigger("check_status");
 		if(!frm.doc.in_date){
             frm.set_value("in_date",(frappe.datetime.nowdate()));
 		}
@@ -913,7 +922,7 @@ frappe.ui.form.on("Applicant", {
 	},
 
  	"employment_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
  		frappe.call({
                 "method":"bvs.background_verification.doctype.applicant.applicant.get_check",
                 args: {
@@ -939,14 +948,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check1',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check1','New Verify Employment Check1',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check1','New Verify Employment Check1',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
   			    }
 			  });     
 			}
 	},
 	"employment_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 		frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -972,14 +981,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check2',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check2','New Verify Employment Check2',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check2','New Verify Employment Check2',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
   			    }
 			  });     
 			}	
 	},	
 	"employment_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1005,7 +1014,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check3',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check3','New Verify Employment Check3',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check3','New Verify Employment Check3',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
@@ -1013,7 +1022,7 @@ frappe.ui.form.on("Applicant", {
 		
 	},
 	"employment_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1039,7 +1048,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Employment Check4',r.message);
 						} else{
-							frappe.set_route('Form','Verify Employment Check4','New Verify Employment Check4',{"tat": frm.doc.tat,"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Employment Check4','New Verify Employment Check4',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
@@ -1047,7 +1056,7 @@ frappe.ui.form.on("Applicant", {
 	},
 
 	"education_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1073,14 +1082,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Education Check1',r.message);
 						} else{
-							frappe.set_route('Form','Verify Education Check1','New Verify Education Check1',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Education Check1','New Verify Education Check1',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"education_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1106,14 +1115,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Education Check2',r.message);
 						} else{
-							frappe.set_route('Form','Verify Education Check2','New Verify Education Check2',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Education Check2','New Verify Education Check2',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"education_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1139,7 +1148,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Education Check3',r.message);
 						} else{
-							frappe.set_route('Form','Verify Education Check3','New Verify Education Check3',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Education Check3','New Verify Education Check3',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
@@ -1147,7 +1156,7 @@ frappe.ui.form.on("Applicant", {
 			console.log(frm.doc.candidate_name)
 	},
 	"education_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1173,14 +1182,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Education Check4',r.message);
 						} else{
-							frappe.set_route('Form','Verify Education Check4','New Verify Education Check4',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Education Check4','New Verify Education Check4',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"family_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1206,14 +1215,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Family Check1',r.message);
 						} else{
-							frappe.set_route('Form','Verify Family Check1','New Verify Family Check1',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Family Check1','New Verify Family Check1',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"family_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1239,14 +1248,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Family Check2',r.message);
 						} else{
-							frappe.set_route('Form','Verify Family Check2','New Verify Family Check2',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Family Check2','New Verify Family Check2',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"family_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1272,14 +1281,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Family Check3',r.message);
 						} else{
-							frappe.set_route('Form','Verify Family Check3','New Verify Family Check3',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Family Check3','New Verify Family Check3',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"family_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1305,14 +1314,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Family Check4',r.message);
 						} else{
-							frappe.set_route('Form','Verify Family Check4','New Verify Family Check4',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Family Check4','New Verify Family Check4',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"address_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1338,14 +1347,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Address Check1',r.message);
 						} else{
-							frappe.set_route('Form','Verify Address Check1','New Verify Address Check1',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Address Check1','New Verify Address Check1',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"address_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1371,14 +1380,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Address Check2',r.message);
 						} else{
-							frappe.set_route('Form','Verify Address Check2','New Verify Address Check2',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Address Check2','New Verify Address Check2',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"address_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1404,14 +1413,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Address Check3',r.message);
 						} else{
-							frappe.set_route('Form','Verify Address Check3','New Verify Address Check3',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Address Check3','New Verify Address Check3',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"address_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1437,14 +1446,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Address Check4',r.message);
 						} else{
-							frappe.set_route('Form','Verify Address Check4','New Verify Address Check4',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Address Check4','New Verify Address Check4',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"aadhar_card_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1470,14 +1479,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Aadhar Card Verification',r.message);
 						} else{
-							frappe.set_route('Form','Verify Aadhar Card Verification','New Verify Aadhar Card Verification',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Aadhar Card Verification','New Verify Aadhar Card Verification',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"pan_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1503,14 +1512,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Pan Verification',r.message);
 						} else{
-							frappe.set_route('Form','Verify Pan Verification','New Verify Pan Verification',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Pan Verification','New Verify Pan Verification',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"driving_license_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1536,14 +1545,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Driving License Verification',r.message);
 						} else{
-							frappe.set_route('Form','Verify Driving License Verification','New Verify Driving License Verification',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Driving License Verification','New Verify Driving License Verification',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"passport_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1569,14 +1578,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Passport Verification',r.message);
 						} else{
-							frappe.set_route('Form','Verify Passport Verification','New Passport Verification',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Passport Verification','New Verify Passport Verification',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"ration_card_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1602,14 +1611,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Ration Card Verification',r.message);
 						} else{
-							frappe.set_route('Form','Verify Ration Card Verification','New Ration Card Verification',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Ration Card Verification','New Verify Ration Card Verification',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"voters_id_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1635,14 +1644,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Voters ID Verification',r.message);
 						} else{
-							frappe.set_route('Form','Verify Voters ID Verification','New Voters ID Verification',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Voters ID Verification','New Verify Voters ID Verification',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"reference_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1668,14 +1677,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Reference Check1',r.message);
 						} else{
-							frappe.set_route('Form','Verify Reference Check1','New Reference Check1',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Reference Check1','New Verify Reference Check1',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"reference_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1701,14 +1710,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Reference Check2',r.message);
 						} else{
-							frappe.set_route('Form','Verify Reference Check2','New Reference Check2',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Reference Check2','New Verify Reference Check2',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"reference_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1734,14 +1743,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Reference Check3',r.message);
 						} else{
-							frappe.set_route('Form','Verify Reference Check3','New Reference Check3',{"tat": frm.doc.tat, "applicant_name":frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Reference Check3','New Verify Reference Check3',{"applicant_name":frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"reference_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1767,14 +1776,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Reference Check4',r.message);
 						} else{
-							frappe.set_route('Form','Verify Reference Check4','New Reference Check4',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Reference Check4','New Verify Reference Check4',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"civil_check":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1800,14 +1809,14 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Civil Check',r.message);
 						} else{
-							frappe.set_route('Form','Verify Civil Check','New Civil Check',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Civil Check','New Verify Civil Check',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
 			}
 	},
 	"criminal_check":function(frm) {
-		if(frappe.user.has_role("BVS DEO")) {
+		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1833,7 +1842,7 @@ frappe.ui.form.on("Applicant", {
 					if(r.message){
 						frappe.set_route('Form','Verify Criminal Check',r.message);
 						} else{
-							frappe.set_route('Form','Verify Criminal Check','New Criminal Check',{"tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
+							frappe.set_route('Form','Verify Criminal Check','New Verify Criminal Check',{"applicant_name": frm.doc.candidate_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.name});
 						}
 					}
 				});     
@@ -1856,8 +1865,8 @@ frappe.ui.form.on("Applicant", {
 					if(frm.doc.status == "Amber"){
 						$(cur_frm.fields_dict.status.input).css("backgroundColor","Orange");	
 					}	
-					if(frm.doc.status == "Negative"){
-						$(cur_frm.fields_dict.status.input).css("backgroundColor","Yellow");	
+					if(frm.doc.status == "Insufficient"){
+						$(cur_frm.fields_dict.status.input).css("backgroundColor","Blue");	
 					}
 				}
 			});	

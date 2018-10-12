@@ -26,11 +26,11 @@ frappe.ui.form.on('Allocate Checks', {
 								row.status = d.status;
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
-							}else if(d.status == "Allocation Completed"){
-								row.reference_doctype = d.doctype;
-								row.status = "Allocation Completed";
-								row.reference_name = d.name;
-								row.applicant = d.applicant_id;
+							// }else if(d.status == "Allocation Completed"){
+								// row.reference_doctype = d.doctype;
+								// row.status = "Allocation Completed";
+								// row.reference_name = d.name;
+								// row.applicant = d.applicant_id;
 								// }
 							}else if(d.status == "IQC Completed"){								
 								row.status = "Allocation Pending";
@@ -184,14 +184,14 @@ frappe.ui.form.on('Allocate Checks', {
 								row.reference_name = d.name;
 								row.applicant = d.applicant_id;
 							}
-						}else if(d.status == "Allocation Completed" && frm.doc.status == "Allocation Completed"){
-							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
-								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
-								row.reference_doctype = d.doctype;
-								row.status = "Allocation Completed";
-								row.reference_name = d.name;
-								row.applicant = d.applicant_id;
-							}
+						// }else if(d.status == "Allocation Completed" && frm.doc.status == "Allocation Completed"){
+						// 	if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
+						// 		var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
+						// 		row.reference_doctype = d.doctype;
+						// 		row.status = "Allocation Completed";
+						// 		row.reference_name = d.name;
+						// 		row.applicant = d.applicant_id;
+						// 	}
 						}else if(frm.doc.status == "Allocation Pending" && d.status == "IQC Completed"){
 							if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Criminal Check"||"Civil Check"){
 								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");                    

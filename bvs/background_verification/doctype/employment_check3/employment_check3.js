@@ -9,7 +9,7 @@ frappe.ui.form.on("Employment Check3", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
@@ -28,7 +28,6 @@ frappe.ui.form.on("Employment Check3", {
 					if(r.message){
 						frm.set_value("employee_name", d.employee_name);
 						frm.set_value("location", d.location);
-						frm.set_value("contact_number", d.contact_number);
 					}
 				})
 			}
@@ -50,6 +49,7 @@ frappe.ui.form.on("Employment Check3", {
 		if(frm.doc.allocated_for == "Entry Pending"){
 			frm.set_value("status","Entry Completed")
 		}
+		
 	}
 });
 

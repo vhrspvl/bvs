@@ -11,7 +11,7 @@ frappe.ui.form.on("Passport Verification", {
 		if(frm.doc.passport_number){
 			me = $(cur_frm.fields_dict.passport_number.input);
 			me.attr("length", "8");
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			    frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
@@ -41,9 +41,9 @@ frappe.ui.form.on("Passport Verification", {
 		});
 	},
 	validate: function(frm){
-		if(frm.doc.allocated_for != frm.doc.status){
-			frm.set_value("executive","");
-		}
+		// if(frm.doc.allocated_for != frm.doc.status){
+		// 	frm.set_value("executive","");
+		// }
 		if(frm.doc.allocated_for == "IQC Pending"){
 			frm.set_value("status","IQC Completed")
 		}

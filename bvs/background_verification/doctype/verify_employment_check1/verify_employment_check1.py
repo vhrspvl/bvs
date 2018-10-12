@@ -26,6 +26,7 @@ def get_status(applicant):
 
 
 
+
 # @frappe.whitelist()
 # def get_child_table(applicant_id):
 # 	doc_a = frappe.get_doc("Allocate Checks",applicant_id)

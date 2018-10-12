@@ -94,13 +94,13 @@ scheduler_events = {
 # 	],
     "daily": [
 		"bvs.background_verification.doctype.applicant.applicant.get_tat"
-	]
+	],
 # 	"hourly": [
 # 		"bvs.tasks.hourly"
 # 	],
-# 	"weekly": [
-# 		"bvs.tasks.weekly"
-# 	]
+	"weekly": [
+		"bvs.background_verification.doctype.api.api.send_weekly_report"
+	]
 # 	"monthly": [
 # 		"bvs.tasks.monthly"
 # 	]

@@ -74,33 +74,35 @@ frappe.ui.form.on('Entry Dashboard', {
 			var d = locals["Entry Dashboard List"][current_doc];
 			if(d.new_entry > 0){
 			if(d.demographic_entry == "Yes"){
-			frappe.call({
-				"method": "frappe.client.get_list",
-					args: {
-					doctype: "Demographic Data With Attachment",
-					filters:{
-						"customer": d.customer
-					}
-					},
-				
-				callback:function(r){	
-					// 
-					$.each(r.message, function(i, j) {
-						frappe.call({
-							"method": "frappe.client.get",
-								args: {
-								doctype: "Demographic Data With Attachment",
-								filters: {
-									"name": j.name
-								}
-							    },							
-							callback:function(r){
-								$.each(r.message, function(i, j) {
-								console.log(r.message)		
-			 		        }
-					    })
-					    })					
-				     }
+				frappe.call({
+					"method": "frappe.client.get_list",
+						args: {
+						doctype: "Demographic Data With Attachment",
+						filters:{
+							"customer": d.customer
+						}
+						},				
+					callback:function(r){	
+						$.each(r.message, function(i, j) {
+							// console.log(r.message)
+							frappe.call({
+								"method": "frappe.client.get_list",
+									args: {
+									doctype: "Applicant",
+									filters: {
+										"demographic_id": j.name,
+										"customer": d.customer
+									}
+									},							
+								callback:function(r){
+									$.each(r.message, function(i, k) {
+									console.log(r.message)	
+									frappe.set_route('List','Applicant',r.message,{"status": "Pending","customer": d.customer,"executive": ('==',"%")});	
+									})
+								 }
+							})
+							})					
+						}
 				})
 			} else {
 					frappe.set_route('Form','Applicant',"New Applicant",{"customer": d.customer});

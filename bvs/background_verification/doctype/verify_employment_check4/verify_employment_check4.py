@@ -8,3 +8,11 @@ from frappe.model.document import Document
 
 class verifyEmploymentCheck4(Document):
 	pass
+
+
+@frappe.whitelist()
+def get_check(applicant_id):
+	employment_check4_id = frappe.get_list("Employment Check4", filters={"applicant_id":applicant_id}, fields=("name"))
+	# frappe.errprint(employment_check1_id)
+	return employment_check4_id
+

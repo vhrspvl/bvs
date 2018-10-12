@@ -9,7 +9,7 @@ frappe.ui.form.on("Reference Check1", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 

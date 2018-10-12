@@ -11,7 +11,7 @@ class DemographicDataWithAttachment(Document):
 
 @frappe.whitelist()
 def create_applicant(doc,method):
-	applicant_id = frappe.db.get_value("Applicant", {"email_id": doc.email_id})
+	applicant_id = frappe.db.get_value("Applicant", {"email_id": doc.email_id, "contact_number": doc.contact_number})
 	if applicant_id:
 		applicant = frappe.get_doc("Applicant", applicant_id)
 	else:

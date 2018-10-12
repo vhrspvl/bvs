@@ -15,3 +15,4 @@ def get_check(applicant_id):
 	# frappe.errprint(employment_check1_id)
 	return employment_check3_id
 
+

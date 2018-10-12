@@ -21,3 +21,4 @@ def get_status(applicant):
 	status = frappe.db.get_value("Verify Reference Check3", {"applicant_id":applicant}, "status")
 	# frappe.errprint(status)
 	return status
+

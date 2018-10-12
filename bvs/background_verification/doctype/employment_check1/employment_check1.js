@@ -20,13 +20,14 @@ frappe.ui.form.on("Employment Check1", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
 		if(frm.doc.tat){
 			frm.set_df_property('tat', 'read_only', 1);
 		}
+
 	},
 	refresh: function(frm){
 		frappe.call({
@@ -38,7 +39,6 @@ frappe.ui.form.on("Employment Check1", {
 				$.each(r.message, function(i, d) {
 					if(r.message){
 						frm.set_value("employee_name", d.candidate_name);
-						frm.set_value("contact_number", d.contact_number);
 					}
 				})
 			}
@@ -64,9 +64,9 @@ frappe.ui.form.on("Employment Check1", {
 		frm.set_value("status","Entry Completed")
 		}
 		}
-		// if(frm.doc.allocated_for != frm.doc.status){
-		// 	frm.set_value("executive","");
-		// }
+		if(frm.doc.allocated_for != frm.doc.status){
+			frm.set_value("executive","");
+		}
 		if(frm.doc.allocated_for == "IQC Pending"){
 			frm.set_value("status","IQC Completed")
 		}
@@ -77,6 +77,7 @@ frappe.ui.form.on("Employment Check1", {
 		if(frm.doc.allocated_for == "Entry Pending"){
 			frm.set_value("status","Entry Completed")
 		}
+		
 	}
 		
 });

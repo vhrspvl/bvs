@@ -35,6 +35,8 @@ def get_data():
 					"type": "doctype",
 					"name": "Allocate Checks",
 					"description":_("Checks Assigned to Executives"),
+					"BVS DEO": 0,
+					"BVS Verifier": 1,
 				},
 				{
 					"type": "doctype",
@@ -56,6 +58,10 @@ def get_data():
 		},
         {
 			"label": _("Employment Checks"),
+			'restricted_roles': [
+		        'BVS Verifier',
+		        'BVS DEO'
+	        ],
 			"items": [
 				{
 					"type": "doctype",

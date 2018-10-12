@@ -9,7 +9,7 @@ frappe.ui.form.on("Civil Check", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
@@ -28,8 +28,6 @@ frappe.ui.form.on("Civil Check", {
 					if(r.message){
 						console.log(r.message)
 						frm.set_value("name2", d.candidate_name);
-						frm.set_value("date_of_birth", d.dob);
-						frm.set_value("age", d.age);
 						frm.set_value("present_address", d.address_line1 + ",\n"+ d.address_line2 + ",\n"+ d.address_line3 + ",\n"+ d.talukdistrict + ",\n"+ d.city + ",\n"+ d.state + ",\n"+ d.country + ",\n"+ d.pincode);
 					}
 				})
@@ -52,6 +50,7 @@ frappe.ui.form.on("Civil Check", {
 		if(frm.doc.allocated_for == "Entry Pending"){
 			frm.set_value("status","Entry Completed")
 		}
+		
 	}
 
 });

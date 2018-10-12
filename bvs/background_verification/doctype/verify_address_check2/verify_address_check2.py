@@ -14,3 +14,5 @@ def get_check(applicant_id):
 	address_check2_id = frappe.get_list("Address Check2", filters={"applicant_id":applicant_id}, fields=("name"))
 	# frappe.errprint(employment_check1_id)
 	return address_check2_id
+
+

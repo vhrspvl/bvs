@@ -9,7 +9,7 @@ frappe.ui.form.on("Education Check4", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
@@ -48,5 +48,6 @@ frappe.ui.form.on("Education Check4", {
 		if(frm.doc.allocated_for == "Allocation Pending"){
 			frm.set_value("status","Allocation Completed")
 		}
+		
 	}
 });

@@ -20,3 +20,5 @@ def get_status(applicant):
 	status = frappe.db.get_value("Verify Passport Verification", {"applicant_id":applicant}, "status")
 	# frappe.errprint(status)
 	return status
+
+

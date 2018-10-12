@@ -9,7 +9,7 @@ frappe.ui.form.on("Address Check3", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO")) {
+			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
@@ -30,6 +30,7 @@ frappe.ui.form.on("Address Check3", {
 		if(frm.doc.allocated_for == "Entry Pending"){
 			frm.set_value("status","Entry Completed")
 		}
+		
 	},
 	refresh: function(frm){
 		if(frm.doc.allocated_for){

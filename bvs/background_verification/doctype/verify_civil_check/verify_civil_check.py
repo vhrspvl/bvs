@@ -15,3 +15,5 @@ def get_check(applicant_id):
 	civil_check_id = frappe.get_list("Civil Check", filters={"applicant_id":applicant_id}, fields=("name"))
 	# frappe.errprint(employment_check1_id)
 	return civil_check_id
+
+
