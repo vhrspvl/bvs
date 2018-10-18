@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
+from frappe.utils.global_search import search
 from frappe.utils import getdate, cint, add_months, date_diff, add_days, flt, nowdate, \
 get_datetime_str, cstr, get_datetime, time_diff, time_diff_in_seconds, time_diff_in_hours,today
 from datetime import date,datetime,timedelta
@@ -25,42 +26,118 @@ def get_check(applicant,check):
 
 
 @frappe.whitelist()
-def get_status(applicant):
+def get_status(applicant,checks_group):
     check = ["Verify Employment Check1","Verify Employment Check2","Verify Employment Check3","Verify Employment Check4","Verify Education Check1","Verify Education Check2","Verify Education Check3","Verify Education Check4",
     "Verify Address Check1","Verify Address Check2","Verify Address Check3","Verify Address Check4","Verify Family Check1","Verify Family Check2","Verify Family Check3","Verify Family Check4","Verify Reference Check1","Verify Reference Check2",
     "Verify Reference Check3","Verify Reference Check4","Verify Civil Check","Verify Criminal Check","Verify Aadhar Card Verification","Verify Pan Verification","Verify Passport Verification","Verify Voters ID Verification","Verify Driving License Verification",
     "Verify Ration Card Verification"]
-    entry_check = ["Employment Check1","Employment Check2","Employment Check3","Employment Check4","Education Check1","Education Check2","Education Check3","Education Check4","Address Check1","Address Check2","Address Check3","Address Check4",
-    "Family Check1","Family Check2","Family Check3","Family Check4","Reference Check1","Reference Check2","Reference Check3","Reference Check4","Aadhar Card Verification","Pan Verification","Passport Verification","Voters ID Verification","Ration Card Verification","Driving License Verification"]
-    status = "Pending"
-    for e in entry_check:
-        check1 = frappe.db.get_value(e, {"applicant_id": applicant}, "status")
-        if check1 == "Entry Completed":
-            status = "Completed"
-        if check1 == "IQC Completed":
-            status = "Completed"
-        if check1 == "Allocation Completed":
-            status = "Completed"
-    # for c in check:
-    #     check1 = frappe.db.get_value(c, {"applicant_id": applicant}, "status")
-    #     if check1 == "Completed":
-            # status = "Completed"
-    if status == "Completed":
-        for c in check:
-            check2 = frappe.db.get_value(c, {"applicant_id": applicant}, "result")
-            if check2 == "Negative":
+    entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
+    "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
+    "aadhar_card_verification","pan_verification","passport_verification","voters_id_verification","ration_card_verification","driving_license_verification","civil_check","criminal_check"]
+    status = "Entry Pending"
+    applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
+    for a in applicant_cg:
+        checks = []
+        for i in entry_check:
+            if a.get(i) == 1:
+                if i == "employment_check1":
+                   checks.append("Employment Check1")
+                if i == "employment_check2":
+                   checks.append("Employement Check2")
+                if i == "employment_check3":
+                   checks.append("Employement Check3")
+                if i == "employment_check4":
+                   checks.append("Employement Check4")
+                if i == "education_check1":
+                   checks.append("Education Check1")
+                if i == "education_check2":
+                   checks.append("Education Check2")
+                if i == "education_check3":
+                   checks.append("Education Check3")
+                if i == "education_check4":
+                   checks.append("Education Check4")
+                if i == "address_check1":
+                   checks.append("Address Check1")
+                if i == "address_check2":
+                   checks.append("Address Check2")
+                if i == "address_check3":
+                   checks.append("Address Check3")
+                if i == "address_check4":
+                   checks.append("Address Check4")
+                if i == "family_check1":
+                   checks.append("Family Check1")
+                if i == "family_check2":
+                   checks.append("Family Check2")
+                if i == "family_check3":
+                   checks.append("Family Check3")
+                if i == "family_check4":
+                   checks.append("Family Check4")
+                if i == "reference_check1":
+                   checks.append("Reference Check1")
+                if i == "reference_check2":
+                   checks.append("Reference Check2")
+                if i == "reference_check3":
+                   checks.append("Reference Check3")
+                if i == "reference_check4":
+                   checks.append("Reference Check4")
+                if i == "aadhar_card_verification":
+                   checks.append("Aadhar Card Verification")
+                if i == "pan_verification":
+                   checks.append("Pan Verification")
+                if i == "passport_verification":
+                   checks.append("Passport Verification")
+                if i == "voters_id_verification":
+                   checks.append("Voters ID Verification")
+                if i == "ration_card_verification":
+                   checks.append("Ration Card Verification")
+                if i == "driving_license_verification":
+                   checks.append("driving License Verification")
+                if i == "civil_check":
+                   checks.append("Civil Check")
+                if i == "criminal_check":
+                   checks.append("Criminal Check")
+        check1 = []
+        for e in checks :
+            check1.append(frappe.db.get_value(e, {"applicant_id": applicant}, "status"))
+        if all(check == "Entry Completed" for check in check1):
+            status = "IQC Pending"
+        if all(check == "IQC Completed" for check in check1):
+            status = "Allocation Pending"
+        if all(check == "Allocation Completed" for check in check1):
+            status = "QC Pending"
+        check2 = []
+        check3 = []
+        if status == "Allocation Completed":
+            for c in checks:
+                check2.append(frappe.db.get_value("Verify "+c, {"applicant_id": applicant}, "result"))
+                check3.append(frappe.db.get_value("Verify "+c, {"applicant_id": applicant}, "status"))
+            if all(result == "Positive" for result in check2):
+                status = "Positive"
+            if all(check == "Negative" for check in check2):
                 status = "Negative" 
-            if check2 == "Positive":
-                status = "Positive" 
-            if check2 == "Amber":
+            if all(check == "Amber" for check in check2):
                 status = "Amber"
-            if check2 == "Insufficient":
-                status = "Insufficient"
-    applicant_id = frappe.get_doc("Applicant",applicant) 
-    applicant_id.status = status
-    applicant_id.db_update()
-    frappe.db.commit()            
-    return "ok"
+            if all(check == "Insufficient" for check in check2):
+                status = "Insufficient" 
+            if all(check == "QC Completed" for check in check3):
+                status = "QC Completed" 
+            if all(check == "QC pending" for check in check3):
+                status = "QC Pending" 
+        applicant_id = frappe.get_doc("Applicant",applicant) 
+        applicant_id.assigned_date = ""
+        applicant_id.executive = ""
+        applicant_id.allocated_for = ""
+        applicant_id.status = status
+        # args = {
+        #     "allocated_for": "",
+        #     "executive": "",
+        #     "assigned_date": "",
+        #     "status": status
+        # }
+        applicant_id.db_update()
+        # applicant_id.save(ignore_permissions=True)
+        frappe.db.commit()            
+        return "ok"
 
 
 @frappe.whitelist()
@@ -101,367 +178,3 @@ def get_tat():
                 # print day
                 check_id.save(ignore_permissions=True)
                 frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Address Check1` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Address Check1",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Address Check2` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Address Check2",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Address Check3` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Address Check3",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Address Check4` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Address Check4",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Civil Check` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Civil Check",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Criminal Check` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Criminal Check",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Education Check1` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Education Check1",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Education Check2` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Education Check2",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Education Check3` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Education Check3",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Education Check4` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Education Check4",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Employment Check1` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Employment Check1",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Employment Check2` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Employment Check2",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Employment Check3` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Employment Check3",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Employment Check4` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Employment Check4",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Family Check1` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Family Check1",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Family Check2` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Family Check2",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Family Check3` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Family Check3",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Family Check4` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Family Check4",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Pan Verification` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Pan Verification",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Passport Verification` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Passport Verification",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Ration Card Verification` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Ration Card Verification",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Reference Check1` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Reference Check1",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Reference Check2` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Reference Check2",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Reference Check3` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Reference Check3",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Reference Check4` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Reference Check4",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()
-    # aadhar = frappe.db.sql(""" select name from `tabVerify Voters ID Verification` where status = 'Pending'""", as_dict = 1)
-    # for a in aadhar:
-    #     aadhar_id = frappe.get_doc("Verify Voters ID Verification",a["name"])
-    #     tat = aadhar_id.tat
-    #     in_date = aadhar_id.in_date
-    #     if in_date:
-    #         today = date.today()
-    #         day = (today - in_date).days
-    #         tat =  tat - day 
-    #         aadhar_id.update({
-    #             "tat": tat
-    #         })    
-    #         aadhar_id.save(ignore_permissions=True)
-    #         frappe.db.commit()

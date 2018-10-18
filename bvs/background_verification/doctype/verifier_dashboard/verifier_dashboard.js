@@ -2,6 +2,28 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Verifier Dashboard', {
+	onload: function(frm) {
+		frappe.call({
+			"method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
+			args:{
+			},
+			callback: function (r) {
+				$.each(r.message, function(i, d) {
+					if(r.message){							
+						var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
+						row.pending_checks = "1";
+						row.check_name = d.name;
+						row.allocated_for = d.allocated_for;
+						row.executive = d.executive;
+						row.checks = d.doctype;	
+						row.customer = d.customer;						
+					}
+					
+				});
+				refresh_field("verify_dashboard_list");  
+			}
+		})
+	},
 	checks: function(frm) {
         if(frm.doc.check != "Select"){
 			frm.clear_table("verify_dashboard_list");
@@ -11,7 +33,6 @@ frappe.ui.form.on('Verifier Dashboard', {
 					"check":frm.doc.checks
 				},
 				callback: function (r) {
-					console.log(r.message)
 					$.each(r.message, function(i, d) {
 						if(r.message){							
 							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
@@ -21,8 +42,7 @@ frappe.ui.form.on('Verifier Dashboard', {
 							row.executive = d.executive;
 							row.checks = d.doctype;	
 							row.customer = d.customer;						
-						}
-						
+						}						
 				    });
 					refresh_field("verify_dashboard_list");  
 				}

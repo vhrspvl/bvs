@@ -41,9 +41,9 @@ frappe.ui.form.on("Passport Verification", {
 		});
 	},
 	validate: function(frm){
-		// if(frm.doc.allocated_for != frm.doc.status){
-		// 	frm.set_value("executive","");
-		// }
+		if(frm.doc.allocated_for != frm.doc.status){
+			frm.set_value("executive","");
+		}
 		if(frm.doc.allocated_for == "IQC Pending"){
 			frm.set_value("status","IQC Completed")
 		}

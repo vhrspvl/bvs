@@ -29,7 +29,7 @@ frappe.ui.form.on("Address Check4", {
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
 			frm.set_value("status","Entry Completed")
-		}
+		} 
 		
 	},
 	refresh: function(frm){

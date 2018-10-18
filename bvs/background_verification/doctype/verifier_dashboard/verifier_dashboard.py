@@ -12,6 +12,27 @@ class VerifierDashboard(Document):
 
 
 @frappe.whitelist()
+def get_checks():
+    checks = ["Verify Employment Check1","Verify Employment Check2","Verify Employment Check3","Verify Employment Check4","Verify Education Check1","Verify Education Check2","Verify Education Check3","Verify Education Check4",
+    "Verify Address Check1","Verify Address Check2","Verify Address Check3","Verify Address Check4","Verify Family Check1","Verify Family Check2","Verify Family Check3","Verify Family Check4","Verify Reference Check1","Verify Reference Check2",
+    "Verify Reference Check3","Verify Reference Check4","Verify Civil Check","Verify Criminal Check","Verify Aadhar Card Verification","Verify Pan Verification","Verify Passport Verification","Verify Voters ID Verification","Verify Driving License Verification",
+    "Verify Ration Card Verification","Employment Check1","Employment Check2","Employment Check3","Employment Check4","Education Check1","Education Check2","Education Check3","Education Check4","Address Check1","Address Check2","Address Check3","Address Check4",
+    "Family Check1","Family Check2","Family Check3","Family Check4","Reference Check1","Reference Check2","Reference Check3","Reference Check4","Aadhar Card Verification","Pan Verification","Passport Verification","Voters ID Verification","Ration Card Verification","Driving License Verification"]   
+    for check in checks:
+        check1 = frappe.get_list(check, filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer")) 
+        c1dt = []    
+        for c in check1:
+            dt = {}
+            cdt = {'doctype':check} 
+            c.update(cdt)
+            c1dt.append(c)
+        return check1
+        
+
+
+
+
+@frappe.whitelist()
 def get_check(check):
     if check == "Employment Check":
         check1 = frappe.get_list("Employment Check1", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
@@ -33,7 +54,7 @@ def get_check(check):
             cdt = {'doctype':'Employment Check3'}
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Employment Check4", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Employment Check4", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Employment Check4'}
@@ -60,7 +81,7 @@ def get_check(check):
             cdt = {'doctype':'Education Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Education Check4", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Education Check4", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Education Check4'}
@@ -87,7 +108,7 @@ def get_check(check):
             cdt = {'doctype':'Address Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Address Check4", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Address Check4", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Address Check4'}
@@ -114,7 +135,7 @@ def get_check(check):
             cdt = {'doctype':'Family Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Family Check4", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Family Check4", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Family Check4'}
@@ -141,7 +162,7 @@ def get_check(check):
             cdt = {'doctype':'Reference Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Reference Check4", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Reference Check4", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Reference Check4'}
@@ -168,25 +189,26 @@ def get_check(check):
             cdt = {'doctype':'Passport Verification'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Driving License Verification", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Driving License Verification", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Driving License Verification'}
             c.update(cdt)
             c1dt.append(c)
         check5 = frappe.get_list("Ration Card Verification", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
-        for c in check3:
+        for c in check5:
             dt = {}
             cdt = {'doctype':'Ration Card Verification'} 
             c.update(cdt)
             c1dt.append(c)
-        check6 = frappe.get_list("Voters ID Verification", filters = {"executive": frappe.session.user}, fields =("applicant_id","name","status","allocated_for","customer"))
-        for c in check4:
+        check6 = frappe.get_list("Voters ID Verification", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
+        for c in check6:
             dt = {}
             cdt = {'doctype':'Voters ID Verification'}
             c.update(cdt)
             c1dt.append(c)
         pending_checks = check1+check2+check3+check4+check5+check6
+        frappe.errprint(pending_checks)
     if check == "Civil Check":
         check1 = frappe.get_list("Civil Check", filters = {"executive": frappe.session.user}, fields =("executive","name","status","allocated_for","customer"))
         c1dt = []    
@@ -225,7 +247,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Employment Check3'}
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Verify Employment Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Verify Employment Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Employment Check4'}
@@ -252,7 +274,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Education Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Verify Education Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Verify Education Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Education Check4'}
@@ -279,7 +301,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Address Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Verify Address Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Verify Address Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Address Check4'}
@@ -306,7 +328,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Family Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Verify Family Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Verify Family Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Family Check4'}
@@ -333,7 +355,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Reference Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Verify Reference Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Verify Reference Check4", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Reference Check4'}
@@ -360,7 +382,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Passport Verification'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Verify Driving License Verification", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check4 = frappe.get_list("Verify Driving License Verification", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Driving License Verification'}
@@ -372,7 +394,7 @@ def get_check(check):
             cdt = {'doctype':'Verify Ration Card Verification'} 
             c.update(cdt)
             c1dt.append(c)
-        check6 = frappe.get_list("Verify Voters ID Verification", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("applicant_id","name","status","allocated_for","customer"))
+        check6 = frappe.get_list("Verify Voters ID Verification", filters = {"executive": frappe.session.user, "status": "Pending"}, fields =("executive","name","status","allocated_for","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Verify Voters ID Verification'}

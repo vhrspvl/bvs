@@ -32,7 +32,9 @@ frappe.ui.form.on("Pan Verification", {
 		if(!frm.doc.pan_number){
 			frappe.msgprint("Please Enter the Pan Number")
 		}
-		
+		if(frm.doc.allocated_for == "Entry Pending"){
+			frm.set_value("status","Entry Completed")
+		}
 		
 	},
 	refresh: function(frm){

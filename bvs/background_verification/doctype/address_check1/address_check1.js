@@ -9,7 +9,7 @@ frappe.ui.form.on("Address Check1", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+			if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 			}
 		} 
@@ -52,14 +52,14 @@ frappe.ui.form.on("Address Check1", {
 		if(frm.doc.allocated_for != frm.doc.status){
 			frm.set_value("executive","");
 		}
-		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
-		}
 		if(frm.doc.allocated_for == "IQC Pending"){
 			frm.set_value("status","IQC Completed")
 		}
 		if(frm.doc.allocated_for == "Allocation Pending"){
 			frm.set_value("status","Allocation Completed")
+		}
+		if(frm.doc.allocated_for == "Entry Pending"){
+			frm.set_value("status","Entry Completed")
 		}
 		
 	},

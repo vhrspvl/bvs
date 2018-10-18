@@ -52,7 +52,16 @@ def get_data():
 					"type": "doctype",
 					"name": "Verifier Dashboard",
 					"description":_("Verify Dashboard Records"),
-					"hide_count": True
+				},
+				{
+					"type": "doctype",
+					"name": "QC Allocation",
+					"description":_("Allocate case for QC"),
+				},
+				{
+					"type": "doctype",
+					"name": "QC Verification",
+					"description":_("Verify Allocated case for QC"),
 				},
 			]
 		},

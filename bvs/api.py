@@ -404,6 +404,7 @@ def create_verify(doc, method):
             "applicant_name": doc.applicant_name
         })
         verify_viv.save(ignore_permissions=True)
+    
 
 
 

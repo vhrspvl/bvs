@@ -35,14 +35,20 @@ frappe.ui.form.on("Verify Address Check2", {
 		if(frm.doc.tat){
 			frm.set_df_property('tat', 'read_only', 1);
 		}
+		if(!frm.doc.actual_end_date){
+			var tomorrow = moment(frm.doc.in_date).add(frm.doc.tat, 'days');
+            frm.set_value("actual_end_date", tomorrow);
+		}
 		if(frm.doc.allocated_for == "Allocation Pending"){
-			frm.set_value("status","Completed")
-			frm.set_value("allocated_for","Allocation Completed")
-			if(!frm.doc.end_date){
-				if(frm.doc.status == "Completed"){
-				frm.set_value('end_date', frappe.datetime.nowdate());
+			if(frm.doc.executive == frappe.session.user){
+				frm.set_value("status","Completed")
+				frm.set_value("allocated_for","Allocation Completed")
+				if(!frm.doc.end_date){
+					if(frm.doc.status != ("Completed"||"Pending")){
+					frm.set_value("end_date",(frappe.datetime.nowdate()))
+					}
 				}
-			}
+		      }
 		}
 		if(frm.doc.customer == "Aadhar Housing Finance Limited"){
             frm.set_value("tat",7);

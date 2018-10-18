@@ -3,6 +3,11 @@ frappe.ui.form.on("Applicant", {
 		if(frm.doc.status){
 		frm.trigger("check_status");
 		}
+		// if(!frm.doc.end_date){
+		//     if((frm.doc.status != "Completed") || (frm.doc.status != "Pending")){
+		//        frm.set_value("end_date",(frappe.datetime.nowdate()))
+		//     } 
+		// }
         if(frm.doc.checks_group){
 			frappe.call({
 				"method": "frappe.client.get",
@@ -33,17 +38,18 @@ frappe.ui.form.on("Applicant", {
 			}
 		})
 		}
-		if(frm.doc.status != "Pending"){
-		if(!frm.doc.end_date){
-		   frm.set_value("end_date",(frappe.datetime.nowdate()))
-		} 
-		}
 		
 	},
 	after_save: function(frm){
-		frm.trigger("check_status");
+		if(frm.doc.checks_group){
+			var tomorrow = moment(frm.doc.in_date).add(frm.doc.tat, 'days');
+			frm.set_value("actual_end_date", tomorrow);
+		}
+		if(frm.doc.actual_end_date){
+				frm.set_df_property('actual_end_date', 'read_only', 1);
+			}
+		// frm.trigger("check_status");
 		if(frm.doc.demographic_id){
-			// console.log(frm.doc.ref_id)
 			frappe.call({
 				"method":"bvs.background_verification.doctype.demographic_data_with_attachment.demographic_data_with_attachment.update_ref_id",
 			    args:{
@@ -51,7 +57,6 @@ frappe.ui.form.on("Applicant", {
 					"demographic_id": frm.doc.demographic_id
 				},
 				callback: function(r){
-					console.log(r)
 				}
 			})
 		}
@@ -812,7 +817,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	onload: function (frm) {
-		// frm.trigger("check_status");
+		frm.trigger("check_status");
 		if(!frm.doc.in_date){
             frm.set_value("in_date",(frappe.datetime.nowdate()));
 		}
@@ -922,7 +927,7 @@ frappe.ui.form.on("Applicant", {
 	},
 
  	"employment_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
  		frappe.call({
                 "method":"bvs.background_verification.doctype.applicant.applicant.get_check",
                 args: {
@@ -955,7 +960,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"employment_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 		frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -988,7 +993,7 @@ frappe.ui.form.on("Applicant", {
 			}	
 	},	
 	"employment_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1022,7 +1027,7 @@ frappe.ui.form.on("Applicant", {
 		
 	},
 	"employment_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1056,7 +1061,7 @@ frappe.ui.form.on("Applicant", {
 	},
 
 	"education_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1089,7 +1094,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"education_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1122,7 +1127,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"education_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1153,10 +1158,9 @@ frappe.ui.form.on("Applicant", {
 					}
 				});     
 			}
-			console.log(frm.doc.candidate_name)
 	},
 	"education_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1189,7 +1193,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"family_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1222,7 +1226,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"family_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1255,7 +1259,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"family_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1288,7 +1292,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"family_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1321,7 +1325,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"address_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1354,7 +1358,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"address_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1387,7 +1391,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"address_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1420,7 +1424,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"address_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1453,7 +1457,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"aadhar_card_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1486,7 +1490,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"pan_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1519,7 +1523,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"driving_license_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1552,7 +1556,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"passport_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1585,7 +1589,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"ration_card_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1618,7 +1622,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"voters_id_verification":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1651,7 +1655,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"reference_check1":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1684,7 +1688,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"reference_check2":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1717,7 +1721,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"reference_check3":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1750,7 +1754,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"reference_check4":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1783,7 +1787,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"civil_check":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1816,7 +1820,7 @@ frappe.ui.form.on("Applicant", {
 			}
 	},
 	"criminal_check":function(frm) {
-		if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
+		if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.call({
 				"method":"bvs.background_verification.doctype.applicant.applicant.get_check",
 				args: {
@@ -1854,6 +1858,7 @@ frappe.ui.form.on("Applicant", {
 				"method": "bvs.background_verification.doctype.applicant.applicant.get_status",
 				args: {
 					"applicant":frm.doc.name,
+					"checks_group": frm.doc.checks_group
 				},
 				callback: function(r){
 					if(frm.doc.status == "Positive"){
@@ -1866,7 +1871,7 @@ frappe.ui.form.on("Applicant", {
 						$(cur_frm.fields_dict.status.input).css("backgroundColor","Orange");	
 					}	
 					if(frm.doc.status == "Insufficient"){
-						$(cur_frm.fields_dict.status.input).css("backgroundColor","Blue");	
+						$(cur_frm.fields_dict.status.input).css("backgroundColor","Yellow");	
 					}
 				}
 			});	

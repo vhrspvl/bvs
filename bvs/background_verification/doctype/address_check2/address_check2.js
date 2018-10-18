@@ -21,14 +21,14 @@ frappe.ui.form.on("Address Check2", {
 		if(frm.doc.allocated_for != frm.doc.status){
 			frm.set_value("executive","");
 		}
-		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
-		}
 		if(frm.doc.allocated_for == "IQC Pending"){
 			frm.set_value("status","IQC Completed")
 		}
 		if(frm.doc.allocated_for == "Allocation Pending"){
 			frm.set_value("status","Allocation Completed")
+		}
+		if(frm.doc.allocated_for == "Entry Pending"){
+			frm.set_value("status","Entry Completed")
 		}
 		
 	},

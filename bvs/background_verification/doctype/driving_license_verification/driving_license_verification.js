@@ -43,8 +43,8 @@ frappe.ui.form.on('Driving License Verification', {
 		if(frm.doc.allocated_for == "Allocation Pending"){
 			frm.set_value("status","Allocation Completed")
 		}
-		if(!frm.doc.passport_number){
-			frappe.msgprint("Please Enter the Passport Number")
+		if(frm.doc.allocated_for == "Entry Pending"){
+			frm.set_value("status","Entry Completed")
 		}
 	
 	}

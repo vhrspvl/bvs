@@ -72,7 +72,6 @@ frappe.ui.form.on("Employment Check1", {
 		}
 		if(frm.doc.allocated_for == "Allocation Pending"){
 			frm.set_value("status","Allocation Completed")
-			frm.set_df_property('executive', 'read_only', 1);
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
 			frm.set_value("status","Entry Completed")
