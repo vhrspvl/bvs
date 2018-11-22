@@ -12,8 +12,9 @@ class QCVerification(Document):
 
 
 @frappe.whitelist()
-def get_cases():
-    applicant = frappe.get_doc("Applicant", {"executive": frappe.session.user})
+def get_cases(name):
+    applicant = frappe.get_doc("Applicant", {"name": name})
+    frappe.errprint(applicant)
     return applicant
 
 

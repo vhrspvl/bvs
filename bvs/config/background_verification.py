@@ -63,6 +63,11 @@ def get_data():
 					"name": "QC Verification",
 					"description":_("Verify Allocated case for QC"),
 				},
+				{
+					"type": "doctype",
+					"name": "Archive",
+					"description":_("Case Data"),
+				},
 			]
 		},
         {

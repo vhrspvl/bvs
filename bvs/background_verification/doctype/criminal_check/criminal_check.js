@@ -48,38 +48,36 @@ frappe.ui.form.on("Criminal Check", {
 			frm.set_value("pincode","");
 		} 
 	},
-	same_as_permanent_address:function(frm){
-		if(frm.doc.same_as_permanent_address === "Yes"){
-			frappe.call({
-				"method": "bvs.background_verification.doctype.criminal_check.criminal_check.get_doc",
-				args: {
-					"applicant": frm.doc.applicant_id
-				},
-				callback: function(r){
-					console.log(r.message)
-					frm.set_value("address_line1",r.message[0]);
-					frm.set_value("address_line2",r.message[1]);
-					frm.set_value("address_line3",r.message[2]);
-					frm.set_value("talukdistrict",r.message[3]);
-					frm.set_value("state",r.message[4]);
-					frm.set_value("city",r.message[5]);
-					frm.set_value("country",r.message[6]);
-					frm.set_value("pincode",r.message[7]);
-				}
-
-			})
-
-		} else if(frm.doc.same_as_permanent_address === "NO"){
-			frm.set_value("address_line1", "");
-			frm.set_value("address_line2","");
-			frm.set_value("address_line3","");
-			frm.set_value("talukdistrict","");
-			frm.set_value("state","");
-			frm.set_value("city","");
-			frm.set_value("country","");
-			frm.set_value("pincode","");
-		}
-	},
+	// same_as_permanent_address:function(frm){
+	// 	if(frm.doc.same_as_permanent_address === "Yes"){
+	// 		frappe.call({
+	// 			"method": "bvs.background_verification.doctype.criminal_check.criminal_check.get_doc",
+	// 			args: {
+	// 				"applicant": frm.doc.applicant_id
+	// 			},
+	// 			callback: function(r){
+	// 				console.log(r.message)
+	// 				frm.set_value("address_line1",r.message[0]);
+	// 				frm.set_value("address_line2",r.message[1]);
+	// 				frm.set_value("address_line3",r.message[2]);
+	// 				frm.set_value("talukdistrict",r.message[3]);
+	// 				frm.set_value("state",r.message[4]);
+	// 				frm.set_value("city",r.message[5]);
+	// 				frm.set_value("country",r.message[6]);
+	// 				frm.set_value("pincode",r.message[7]);
+	// 			}
+	// 		})
+	// 	} else{
+	// 		frm.set_value("address_line1", "");
+	// 		frm.set_value("address_line2","");
+	// 		frm.set_value("address_line3","");
+	// 		frm.set_value("talukdistrict","");
+	// 		frm.set_value("state","");
+	// 		frm.set_value("city","");
+	// 		frm.set_value("country","");
+	// 		frm.set_value("pincode","");
+	// 	}
+	// },
 	validate: function(frm){
 		if(frm.doc.allocated_for != frm.doc.status){
 			frm.set_value("executive","");
@@ -91,7 +89,11 @@ frappe.ui.form.on("Criminal Check", {
 			frm.set_value("status","Allocation Completed")
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
+			if(frm.doc.status == "Insufficient"){
+				frm.set_value("status","Insufficient")
+			}else{
+				frm.set_value("status","Entry Completed")
+			}
 		}
 		
 	},

@@ -13,7 +13,6 @@ class VerifyRationCardVerification(Document):
 @frappe.whitelist()
 def get_check(applicant_id):
 	ration_card_verification_id = frappe.get_list("Ration Card Verification", filters={"applicant_id":applicant_id}, fields=("name"))
-	# frappe.errprint(employment_check1_id)
 	return ration_card_verification_id
 
 @frappe.whitelist()

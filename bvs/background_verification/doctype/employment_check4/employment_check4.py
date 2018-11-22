@@ -19,5 +19,10 @@ def get_value(applicant):
 	
 @frappe.whitelist()
 def get_status(applicant_id):
-    status = frappe.db.get_value("Employment Check3", {"applicant_id": applicant_id}, "status")
+    status = frappe.db.get_value("Employment Check4", {"applicant_id": applicant_id}, "status")
     return status
+
+@frappe.whitelist()
+def get_vstatus(applicant_id):
+    result = frappe.db.get_value("Verify Employment Check4", {"applicant_id": applicant_id}, "result")
+    return result

@@ -14,3 +14,8 @@ class VotersIDVerification(Document):
 def get_status(applicant_id):
     status = frappe.db.get_value("Voters ID Verification", {"applicant_id": applicant_id}, "status")
     return status
+
+@frappe.whitelist()
+def get_vstatus(applicant_id):
+    result = frappe.db.get_value("Verify Voters ID Verification", {"applicant_id": applicant_id}, "result")
+    return result

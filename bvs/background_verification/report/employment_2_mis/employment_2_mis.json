@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2018-10-30 14:21:31.089321", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "VHRS BVS", 
+ "modified": "2018-10-30 14:22:10.990431", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Employment 2 MIS", 
+ "owner": "Administrator", 
+ "query": "SELECT `tabVerify Employment Check2`.`executive` AS \"SPOC Name\",\n       `tabVerify Employment Check2`.`applicant_id` AS \"VHRS Ref ID\",\n       `tabVerify Employment Check2`.`employee_name_ver` AS \"Candidate Name\",\n       `tabVerify Employment Check2`.`in_date` AS \"Start Date\",\n       `tabVerify Employment Check2`.`employer_name_ver` AS \"Employer Name\",\n       `tabVerify Employment Check2`.`location_ver` AS \"Location::25\",\n       `tabVerify Employment Check2`.`employee_code_ver` AS \"Employee ID\",\n       `tabVerify Employment Check2`.`from_ver` AS \"Emp. Date - From\",\n       `tabVerify Employment Check2`.`to_ver` AS \"Emp. Date - To\",\n       `tabVerify Employment Check2`.`designationleaving_ver` AS \"Designation\"\nFROM `tabVerify Employment Check2` \nWHERE (`tabVerify Employment Check2`.`executive` <> '') AND (DATE(`tabVerify Employment Check2`.`in_date`) between %(from_date)s and %(to_date)s)\nORDER BY\n     `tabVerify Employment Check2`.`in_date` asc", 
+ "ref_doctype": "Verify Employment Check2", 
+ "report_name": "Employment 2 MIS", 
+ "report_type": "Query Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "BVS Manager"
+  }
+ ]
+}

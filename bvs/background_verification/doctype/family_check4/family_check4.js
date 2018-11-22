@@ -28,7 +28,11 @@ frappe.ui.form.on("Family Check4", {
 			frm.set_value("status","Allocation Completed")
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
+			if(frm.doc.status == "Insufficient"){
+				frm.set_value("status","Insufficient")
+			}else{
+				frm.set_value("status","Entry Completed")
+			}
 		}
 		
 	},

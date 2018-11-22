@@ -16,7 +16,6 @@ def get_pending_cases(name):
     if pending_case:
         case = pending_case.cases_pending
         if case > 0:
-            frappe.errprint(case)
             pc = case - 1
             pending_case.update({
                 "cases_pending": pc
@@ -32,4 +31,8 @@ def get_demographic_check(customer):
     case = frappe.db.get_value("Demographic Data With Attachement",{"customer":customer},"name")
     return case
 
+
+def validate(self):
+    for i, entry_dashboard_list in enumerate(sorted(self._range, key=lambda item: entry_dashboard_list.data_entry_name), start=frappe.utils.nowdate()):
+        item.idx = i
 

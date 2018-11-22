@@ -8,82 +8,122 @@ frappe.ui.form.on('Verifier Dashboard', {
 			args:{
 			},
 			callback: function (r) {
-				$.each(r.message, function(i, d) {
-					if(r.message){							
-						var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
-						row.pending_checks = "1";
-						row.check_name = d.name;
-						row.allocated_for = d.allocated_for;
-						row.executive = d.executive;
-						row.checks = d.doctype;	
-						row.customer = d.customer;						
-					}
-					
-				});
-				refresh_field("verify_dashboard_list");  
+				if(r.message)	{
+					var b = Object.keys(r.message).length;
+					console.log(b)
+					for(var i = 0;i < b; i++){
+						var c = Object.keys(r.message[i]).length;
+						if(c != 0){
+							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
+							row.pending_checks = c;
+							// if(pending_checks != 0){
+							// 	$(grid_row.row[i]).css({"font-weight": "bold"});
+							//     // $(cur_frm.fields_dict.pending_checks.input).css("font-color","Red");	
+							// }
+							row.executive = frappe.session.user;
+							if(i == 0){
+								row.checks = "Verify Employment Check1";
+							}
+							if(i == 1){
+								row.checks = "Verify Employment Check2";
+							}
+							if(i == 2){
+								row.checks = "Verify Employment Check2";
+							}
+							if(i == 3){
+								row.checks = "Verify Employment Check3";
+							}	
+							if(i == 4){
+								row.checks = "Verify Education Check1";
+							}
+							if(i == 5){
+								row.checks = "Verify Education Check2";
+							}
+							if(i == 6){
+								row.checks = "Verify Education Check2";
+							}
+							if(i == 7){
+								row.checks = "Verify Education Check3";
+							}
+							if(i == 8){
+								row.checks = "Verify Address Check1";
+							}
+							if(i == 9){
+								row.checks = "Verify Address Check2";
+							}
+							if(i == 10){
+								row.checks = "Verify Address Check2";
+							}
+							if(i == 11){
+								row.checks = "Verify Address Check3";
+							}	
+							if(i == 12){
+								row.checks = "Verify Family Check1";
+							}
+							if(i == 13){
+								row.checks = "Verify Family Check2";
+							}
+							if(i == 14){
+								row.checks = "Verify Family Check2";
+							}
+							if(i == 15){
+								row.checks = "Verify Family Check3";
+							}
+							if(i == 16){
+								row.checks = "Verify Reference Check1";
+							}
+							if(i == 17){
+								row.checks = "Verify Reference Check2";
+							}
+							if(i == 18){
+								row.checks = "Verify Reference Check2";
+							}
+							if(i == 19){
+								row.checks = "Verify Reference Check3";
+							}	
+							if(i == 20){
+								row.checks = "Verify Civil Check";
+							}
+							if(i == 21){
+								row.checks = "Verify Criminal Check";
+							}
+							if(i == 22){
+								row.checks = "Verify Aadhar Card Verification";
+							}
+							if(i == 23){
+								row.checks = "Verify Pan Verification";
+							}
+							if(i == 24){
+								row.checks = "Verify Passport Verification";
+							}
+							if(i == 25){
+								row.checks = "Verify Voters ID Verification";
+							}
+							if(i == 26){
+								row.checks = "Verify Driving License Verification";
+							}
+							if(i == 27){
+								row.checks = "Verify Ration Card Verification";
+							}
+					    }	
+				    }
+					refresh_field("verify_dashboard_list");						
+				}	
+				  
 			}
 		})
 	},
-	checks: function(frm) {
-        if(frm.doc.check != "Select"){
-			frm.clear_table("verify_dashboard_list");
-			frappe.call({
-                "method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_check",
-				args:{
-					"check":frm.doc.checks
-				},
-				callback: function (r) {
-					$.each(r.message, function(i, d) {
-						if(r.message){							
-							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
-							row.pending_checks = "1";
-							row.check_name = d.name;
-							row.allocated_for = d.allocated_for;
-							row.executive = d.executive;
-							row.checks = d.doctype;	
-							row.customer = d.customer;						
-						}						
-				    });
-					refresh_field("verify_dashboard_list");  
-				}
-				
-            });
-		}
-		
-	},
-	customer: function(frm){
-		if(frm.doc.customer){
-			frm.clear_table("verify_dashboard_list");
-			frappe.call({
-                "method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_check",
-				args:{
-					"check":frm.doc.checks 
-				},
-				callback: function (r) {
-					$.each(r.message, function(i, d) {
-						if(d.customer === frm.doc.customer){							
-							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
-							row.pending_checks = "1";
-							row.check_name = d.name;
-							row.allocated_for = d.allocated_for;
-							row.executive = d.executive;
-							row.checks = d.doctype;	
-							row.customer = d.customer;						
-						}
-						
-				    });
-					refresh_field("verify_dashboard_list");  
-				}
-				
-            });
-		}	
-	},
+	refresh: function (frm) {
+		frm.disable_save();
+	},			
 	'onload_post_render': function(frm, cdt, cdn) {
 		var list = frm.doc.verify_dashboard_list;
-		frm.fields_dict.verify_dashboard_list.grid.wrapper.on('focus', 'input[data-fieldname="check_name"][data-doctype="Verify Dashboard List"]', function(e) {	
+		frm.fields_dict.verify_dashboard_list.grid.wrapper.on('focus', 'input[data-fieldname="pending_checks"][data-doctype="Verify Dashboard List"]', function(e) {	
 			var current_doc = $('.data-row.editable-row').parent().attr("data-name");
 			var d = locals["Verify Dashboard List"][current_doc];
-			frappe.set_route('Form',d.checks,d.check_name) ;
+			if(d.pending_checks != 0){
+				frappe.set_route('List',d.checks,{"executive":frappe.session.user,"status":"Allocation Completed"});
+			}		
 		})
 	}
 });

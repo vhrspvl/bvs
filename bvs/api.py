@@ -16,7 +16,8 @@ def create_verify(doc, method):
             "customer": doc.customer,
             "checks_group": doc.checks_group,
             "applicant_name": doc.applicant_name,
-            "employment_check1_id": doc.name
+            "employment_check1_id": doc.name,
+            "status": "Allocation Pending"
         })
         verify_emp1.save(ignore_permissions=True)
     if doc.name1 == "Employment Check2":
@@ -30,7 +31,8 @@ def create_verify(doc, method):
             "customer": doc.customer,
             "checks_group": doc.checks_group,
             "applicant_name": doc.applicant_name,
-            "employment_check2_id": doc.name
+            "employment_check2_id": doc.name,
+            "status": "Allocation Pending"
         })
         verify_emp2.save(ignore_permissions=True)
     if doc.name1 == "Employment Check3":
@@ -44,7 +46,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_emp3.save(ignore_permissions=True)
     if doc.name1 == "Employment Check4":
@@ -58,10 +61,10 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_emp4.save(ignore_permissions=True)
-
     if doc.name1 == "Education Check1":
         edu1_id = frappe.db.get_value("Verify Education Check1", {"applicant_id": doc.applicant_id})
         if edu1_id:
@@ -73,7 +76,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_edu1.save(ignore_permissions=True)
     if doc.name1 == "Education Check2":
@@ -87,7 +91,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name          
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"         
         })
         verify_edu2.save(ignore_permissions=True)
     if doc.name1 == "Education Check3":
@@ -101,7 +106,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_edu3.save(ignore_permissions=True)
     if doc.name1 == "Education Check4":
@@ -115,7 +121,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name          
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"         
         })
         verify_edu4.save(ignore_permissions=True)
     if doc.name1 == "Reference Check1":
@@ -129,7 +136,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
             
         })
         verify_ref1.save(ignore_permissions=True)
@@ -144,7 +152,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
             
         })
         verify_ref2.save(ignore_permissions=True)
@@ -159,7 +168,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
             
         })
         verify_ref3.save(ignore_permissions=True)
@@ -174,7 +184,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
             
         })
         verify_ref4.save(ignore_permissions=True)
@@ -189,7 +200,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name          
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"         
         })
         verify_add1.save(ignore_permissions=True)
     if doc.name1 == "Address Check2":
@@ -203,7 +215,8 @@ def create_verify(doc, method):
             "customer": doc.customer,
             "checks_group": doc.checks_group,
             "applicant_name": doc.applicant_name,
-            "address_check2_id": doc.name
+            "address_check2_id": doc.name,
+            "status": "Allocation Pending"
         })
         verify_add2.save(ignore_permissions=True)
     if doc.name1 == "Address Check3":
@@ -217,7 +230,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name           
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"          
         })
         verify_add3.save(ignore_permissions=True)
     if doc.name1 == "Address Check4":
@@ -231,7 +245,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name        
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"       
         })
         verify_add4.save(ignore_permissions=True)
     if doc.name1 == "Family Check1":
@@ -245,7 +260,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_fmly1.save(ignore_permissions=True)
     if doc.name1 == "Family Check2":
@@ -259,7 +275,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_fmly2.save(ignore_permissions=True)
     if doc.name1 == "Family Check3":
@@ -273,7 +290,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_fmly3.save(ignore_permissions=True)
     if doc.name1 == "Family Check4":
@@ -287,7 +305,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_fmly4.save(ignore_permissions=True)
     if doc.name1 == "Civil Check":
@@ -302,7 +321,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_cvl.save(ignore_permissions=True)
     if doc.name1 == "Criminal Check":
@@ -316,7 +336,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_cmv.save(ignore_permissions=True)
     
@@ -331,7 +352,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_pv.save(ignore_permissions=True)
     if doc.name1 == "Aadhar Card Verification":
@@ -345,7 +367,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_acv.save(ignore_permissions=True)
     if doc.name1 == "Driving License Verification":
@@ -359,7 +382,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_dlv.save(ignore_permissions=True)
     if doc.name1 == "Passport Verification":
@@ -373,7 +397,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_pass.save(ignore_permissions=True)
     if doc.name1 == "Ration Card Verification":
@@ -387,7 +412,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_rcv.save(ignore_permissions=True)
     if doc.name1 == "Voters ID Verification":
@@ -401,7 +427,8 @@ def create_verify(doc, method):
             "applicant_id": doc.applicant_id,
             "customer": doc.customer,
             "checks_group": doc.checks_group,
-            "applicant_name": doc.applicant_name
+            "applicant_name": doc.applicant_name,
+            "status": "Allocation Pending"
         })
         verify_viv.save(ignore_permissions=True)
     

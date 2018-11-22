@@ -14,9 +14,7 @@ frappe.ui.form.on("Pan Verification", {
 		if(frm.doc.pan_number){
 			me = $(cur_frm.fields_dict.pan_number.input);
 		    me.attr("length", "10");
-		    if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
-			    frappe.set_route("Form","Applicant",frm.doc.applicant_id);
-			}
+			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
 		}
 	},
 	validate: function(frm){
@@ -33,7 +31,11 @@ frappe.ui.form.on("Pan Verification", {
 			frappe.msgprint("Please Enter the Pan Number")
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
+			if(frm.doc.status == "Insufficient"){
+				frm.set_value("status","Insufficient")
+			}else{
+				frm.set_value("status","Entry Completed")
+			}
 		}
 		
 	},

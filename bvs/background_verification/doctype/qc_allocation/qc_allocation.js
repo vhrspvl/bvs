@@ -2,6 +2,73 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('QC Allocation', {
+	onload:function(frm){
+       frappe.call({
+			"method": "frappe.client.get_list",
+			args: {
+				doctype: "Applicant",
+				fieldname: "name",
+				filters: {"executive":""}
+			}, 
+		   callback: function(r){
+				$.each(r.message, function(i, d) {
+					if(r.message){
+						frappe.call({
+							"method":"bvs.background_verification.doctype.qc_allocation.qc_allocation.get_applicant_details",
+							args:{
+								"applicant":d.name
+							},
+							callback: function(r){
+								if((r.message.status == "IQC Pending") || (r.message.status == "QC Pending")){
+									var row = frappe.model.add_child(frm.doc, "QC Allocation Dashboard", "qc_allocation");                    
+									row.data_entry_allocation_id = r.message.data_entry_allocation_id;	
+									row.applicant = r.message.name;
+									row.customer = r.message.customer;
+									row.status = r.message.status;
+									refresh_field("qc_allocation");
+								}
+							}
+						})
+					}
+				})
+		    }
+	    })
+	},
+	batch_id:function(frm){
+		frm.clear_table("qc_allocation");
+			frappe.call({
+				"method": "frappe.client.get_list",
+				args: {
+					doctype: "Applicant",
+					fieldname: "name",
+					filters: {"data_entry_allocation_id": frm.doc.batch_id, "executive": ""}
+                }, 
+				callback: function (r) {
+					$.each(r.message, function(i, d) {
+					if(r.message){
+						frappe.call({
+							"method":"bvs.background_verification.doctype.qc_allocation.qc_allocation.get_applicant_details",
+							args:{
+								"applicant":d.name
+							},
+							callback: function (r) {
+								if(r.message){
+									if((frm.doc.batch_id == r.message.data_entry_allocation_id) && ((r.message.status == "IQC Pending") || (r.message.status == "QC Pending"))){
+										var row = frappe.model.add_child(frm.doc, "QC Allocation Dashboard", "qc_allocation");                    
+										row.data_entry_allocation_id = r.message.data_entry_allocation_id;	
+										row.applicant = r.message.name;
+										row.customer = r.message.customer;
+										row.status = r.message.status;										
+									}
+									refresh_field("qc_allocation");
+								}					
+							}
+						})
+					}
+				    })
+			    }
+		    })
+	},
 	customer: function(frm) {
         if(frm.doc.customer){
 			frm.clear_table("qc_allocation");
@@ -19,15 +86,17 @@ frappe.ui.form.on('QC Allocation', {
 								"applicant":d.name
 							},
 							callback: function (r) {
-								if(frm.doc.customer == r.message.customer && ((r.message.status == "IQC Pending") ||(r.message.status == "QC PEnding"))){
 								if(r.message){
-									var row = frappe.model.add_child(frm.doc, "QC Allocation Dashboard", "qc_allocation");                    
-									row.applicant = r.message.name;
-									row.customer = r.message.customer;
-									row.status = r.message.status;
-									refresh_field("qc_allocation");
-								}							
-							}
+									if((frm.doc.customer == r.message.customer) && ((r.message.status == "IQC Pending") || (r.message.status == "QC Pending"))){
+										var row = frappe.model.add_child(frm.doc, "QC Allocation Dashboard", "qc_allocation");                    
+										row.data_entry_allocation_id = r.message.data_entry_allocation_id;	
+										row.applicant = r.message.name;
+										row.customer = r.message.customer;
+										row.status = r.message.status;
+										refresh_field("qc_allocation");
+										
+									}							
+								}
 							}
 						})
 					}
@@ -47,7 +116,7 @@ frappe.ui.form.on('QC Allocation', {
 				args: {
 					doctype: "Applicant",
 					fieldname: "name",
-					filters: {"customer": frm.doc.customer,"status":frm.doc.status}
+					filters: {"customer": frm.doc.customer,"status":frm.doc.status, "executive": ""}
                 }, 
 				callback: function (r) {
 					$.each(r.message, function(i, d) {
@@ -58,13 +127,14 @@ frappe.ui.form.on('QC Allocation', {
 								"applicant":d.name
 							},
 							callback: function (r) {
-								if(frm.doc.customer == r.message.customer && (r.message.status == frm.doc.status)){
+								if((frm.doc.customer == r.message.customer) && (r.message.status == frm.doc.status) && (r.message.executive == "")){
 								if(r.message){
 									var row = frappe.model.add_child(frm.doc, "QC Allocation Dashboard", "qc_allocation");                    
-									    row.applicant = r.message.customer;
-										row.customer = r.message.customer;
-										row.status = r.message.status;
-										refresh_field("qc_allocation");
+									row.data_entry_allocation_id = r.message.data_entry_allocation_id;	
+									row.applicant = r.message.name;
+									row.customer = r.message.customer;
+									row.status = r.message.status;
+									refresh_field("qc_allocation");
 								}							
 							}
 							}
@@ -75,31 +145,68 @@ frappe.ui.form.on('QC Allocation', {
 		    })
 		}
 	},
-	select_executive: function(frm, cdt, cdn) {		
-		if(frm.doc.select_executive != ""){
+	// select_executive: function(frm, cdt, cdn) {		
+	// 	if(frm.doc.select_executive != ""){
+	// 	frappe.call({
+	// 		"method":"frappe.client.get",
+	// 		args: {
+	// 			doctype: "User",
+	// 			name: frm.doc.select_executive
+	// 		},
+	// 		callback: function (r) {
+	// 			$.each(cur_frm.doc.qc_allocation || [], function(i, d) {
+	// 			if(r.message){
+	// 				d.allocated_to = r.message.email
+	// 			}
+	// 			});
+	// 			refresh_field("qc_allocation");				
+	// 		}
+	// 	});
+	// 	} 
+	// },
+	upto:function(frm){
 		frappe.call({
 			"method":"frappe.client.get",
 			args: {
-				doctype: "Employee",
+				doctype: "User",
 				name: frm.doc.select_executive
 			},
 			callback: function (r) {
-				$.each(cur_frm.doc.qc_allocation || [], function(i, d) {
 				if(r.message){
-					d.allocated_to = r.message.user_id
+					for(var i=0; i < frm.doc.upto; i++){					
+					var a = frm.doc.qc_allocation;
+					a[i].allocated_to = r.message.email
+					}
+					refresh_field("qc_allocation");	
+							
 				}
-				});
-				refresh_field("qc_allocation");				
 			}
-		});
-		} 
+	    })
+	},
+	to:function(frm){
+		frappe.call({
+			"method":"frappe.client.get",
+			args: {
+				doctype: "User",
+				name: frm.doc.select_executive
+			},
+			callback: function (r) {
+				if(r.message){
+					for(var i= frm.doc.from - 1; i < frm.doc.to; i++){					
+					var a = frm.doc.qc_allocation;
+					a[i].allocated_to = r.message.email
+					}
+					refresh_field("qc_allocation");	
+							
+				}
+			}
+	    })
 	},
 	assign:function(frm){	
 	frappe.call({
 		"method":"bvs.background_verification.doctype.qc_allocation.qc_allocation.set_assign_to",
 		args: {
-			"doc": frm.doc.qc_allocation,
-			"customer": frm.doc.customer
+			"doc": frm.doc.qc_allocation
 		},
 		freeze:true,
 		callback: function(r){

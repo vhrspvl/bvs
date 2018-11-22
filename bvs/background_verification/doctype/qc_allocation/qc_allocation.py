@@ -14,7 +14,7 @@ class QCAllocation(Document):
 
 @frappe.whitelist()
 def get_applicant(customer):
-    applicant = frappe.db.get_list("Applicant", {"customer": customer},
+    applicant = frappe.db.get_list("Applicant", {"customer": customer,"executive":""},
                                      ["name"])
     return applicant
 
@@ -25,7 +25,7 @@ def get_applicant_details(applicant):
     return applicant
 
 @frappe.whitelist()
-def set_assign_to(doc,customer):
+def set_assign_to(doc):
     executives = {}
     executives = json.loads(doc)
     for e in executives:
@@ -54,11 +54,11 @@ def set_assign_to(doc,customer):
                     if i == "employment_check1":
                         checks.append("Employment Check1")
                     if i == "employment_check2":
-                        checks.append("Employement Check2")
+                        checks.append("Employment Check2")
                     if i == "employment_check3":
-                        checks.append("Employement Check3")
+                        checks.append("Employment Check3")
                     if i == "employment_check4":
-                        checks.append("Employement Check4")
+                        checks.append("Employment Check4")
                     if i == "education_check1":
                         checks.append("Education Check1")
                     if i == "education_check2":
@@ -108,11 +108,31 @@ def set_assign_to(doc,customer):
                     if i == "criminal_check":
                         checks.append("Criminal Check") 
             for check in checks:
-                    docs = frappe.get_doc(check,{"applicant_id":docname})
+                docstatus = e.get("status")
+                doctype = "Applicant"
+                docname = e.get("applicant")
+                docallocate = e.get("allocated_to")
+                docs = frappe.get_doc(check,{"applicant_id":docname})
+                args = {
+                    'allocated_for': docstatus,
+                    'executive': docallocate,
+                    'assigned_date': frappe.utils.nowdate()
+                }
+                docs.update(args)
+                docs.save(ignore_permissions=True)
+                frappe.db.commit()
+            if docstatus == "QC Pending":
+                for check in checks:
+                    docstatus = e.get("status")
+                    doctype = "Applicant"
+                    docname = e.get("applicant")
+                    docallocate = e.get("allocated_to")
+                    docs = frappe.get_doc("Verify "+check,{"applicant_id":docname})
                     args = {
                         'allocated_for': docstatus,
                         'executive': docallocate,
-                        'assigned_date': frappe.utils.nowdate()
+                        'assigned_date': frappe.utils.nowdate(),
+                        'status': "Execution Completed"
                     }
                     docs.update(args)
                     docs.save(ignore_permissions=True)

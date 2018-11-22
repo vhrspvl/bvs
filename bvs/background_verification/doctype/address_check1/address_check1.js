@@ -9,9 +9,7 @@ frappe.ui.form.on("Address Check1", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
-			}
 		} 
 		if(frm.doc.tat){
 			frm.set_df_property('tat', 'read_only', 1);
@@ -26,14 +24,16 @@ frappe.ui.form.on("Address Check1", {
 					name: frm.doc.applicant_id
 				},
                 callback: function(r){
-					frm.set_value("address_line1",r.message.address_line1);
-					frm.set_value("address_line2",r.message.address_line2);
-					frm.set_value("address_line3",r.message.address_line3);
-					frm.set_value("talukdistrict",r.message.talukdistrict);
-					frm.set_value("state",r.message.state);
-					frm.set_value("city",r.message.city);
-					frm.set_value("country",r.message.country);
-					frm.set_value("pincode",r.message.pincode);
+					// if(r.message.talukdistrict){
+						frm.set_value("address_line1",r.message.address_line1);
+						frm.set_value("address_line2",r.message.address_line2);
+						frm.set_value("address_line3",r.message.address_line3);
+						frm.set_value("talukdistrict",r.message.talukdistrict);
+						frm.set_value("state",r.message.state);
+						frm.set_value("city",r.message.city);
+						frm.set_value("country",r.message.country);
+						frm.set_value("pincode",r.message.pincode);
+					// }
 				}
 
 			})
@@ -59,7 +59,11 @@ frappe.ui.form.on("Address Check1", {
 			frm.set_value("status","Allocation Completed")
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
+			if(frm.doc.status == "Insufficient"){
+				frm.set_value("status","Insufficient")
+			}else{
+				frm.set_value("status","Entry Completed")
+			}
 		}
 		
 	},

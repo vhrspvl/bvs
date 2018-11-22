@@ -9,9 +9,7 @@ frappe.ui.form.on("Employment Check3", {
 	},
 	after_save: function(frm){
 		if(frm.doc.applicant_id) {
-			if(frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager")) {
 			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
-			}
 		} 
 		if(frm.doc.tat){
 			frm.set_df_property('tat', 'read_only', 1);
@@ -47,7 +45,11 @@ frappe.ui.form.on("Employment Check3", {
 			frm.set_value("status","Allocation Completed")
 		}
 		if(frm.doc.allocated_for == "Entry Pending"){
-			frm.set_value("status","Entry Completed")
+			if(frm.doc.status == "Insufficient"){
+				frm.set_value("status","Insufficient")
+			}else{
+				frm.set_value("status","Entry Completed")
+			}
 		}
 		
 	}

@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2018-10-30 14:19:02.913720", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "VHRS BVS", 
+ "modified": "2018-11-13 12:30:16.783242", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Monthly Review Report", 
+ "owner": "Administrator", 
+ "query": "SELECT `tabApplicant`.`customer` AS \"Customer:Link/Customer:250\",\n       `tabApplicant`.`status` AS \"Status:Data:200\",\n        count(`tabApplicant`.`status`) AS \"Count:100\" \nFROM `tabApplicant`\nWHERE date(`tabApplicant`.`in_date`) BETWEEN %(from_date)s\n   AND %(to_date)s \nGROUP BY  `tabApplicant`.`status`,`tabApplicant`.`customer` ASC\nORDER BY `tabApplicant`.`customer`,\n`tabApplicant`.`status`,\n`tabApplicant`.`in_date` ASC ", 
+ "ref_doctype": "Applicant", 
+ "report_name": "Monthly Review Report", 
+ "report_type": "Query Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "BVS Manager"
+  }
+ ]
+}

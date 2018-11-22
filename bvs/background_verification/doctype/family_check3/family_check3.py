@@ -14,3 +14,8 @@ class FamilyCheck3(Document):
 def get_status(applicant_id):
     status = frappe.db.get_value("Family Check3", {"applicant_id": applicant_id}, "status")
     return status
+
+@frappe.whitelist()
+def get_vstatus(applicant_id):
+    result = frappe.db.get_value("Verify Family Check3", {"applicant_id": applicant_id}, "result")
+    return result

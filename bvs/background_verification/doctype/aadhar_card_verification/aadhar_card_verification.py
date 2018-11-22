@@ -20,3 +20,9 @@ def get_value(applicant):
 def get_status(applicant_id):
     status = frappe.db.get_value("Aadhar Card Verification", {"applicant_id": applicant_id}, "status")
     return status
+
+
+@frappe.whitelist()
+def get_vstatus(applicant_id):
+    result = frappe.db.get_value("Verify Aadhar Card Verification", {"applicant_id": applicant_id}, "result")
+    return result

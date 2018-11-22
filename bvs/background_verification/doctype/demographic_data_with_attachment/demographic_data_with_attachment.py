@@ -49,5 +49,7 @@ def update_ref_id(ref_id,demographic_id):
 	demo.update({
 		"ref_id": ref_id
 	})
-	demo.save(ignore_permissions=True)
+	# # demo.update()
+	# # frappe.db.commit()
+	# demo.save(ignore_permissions=True)
 	return "OK"

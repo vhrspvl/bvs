@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2018-10-30 14:30:48.925114", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "VHRS BVS", 
+ "modified": "2018-10-30 14:30:59.269728", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Client Weekly Report", 
+ "owner": "Administrator", 
+ "query": "SELECT `tabApplicant`.`ref_id` AS \"VHRS Ref-ID:100\",\n       `tabApplicant`.`candidate_name` AS \"Candidate Name:100\",\n       `tabApplicant`.`client_employee_code` AS \"Employee Code:100\",\n       `tabApplicant`.`in_date` AS \"In Date:100\",\n       `tabApplicant`.`status` AS \"Overall Status:100\",\n       `tabApplicant`.`end_date` AS \"Completed Date:100\"\nFROM `tabApplicant`\nWHERE DATE(`tabApplicant`.`in_date`) between %(from_date)s and %(to_date)s", 
+ "ref_doctype": "Applicant", 
+ "report_name": "Client Weekly Report", 
+ "report_type": "Query Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "BVS Manager"
+  }
+ ]
+}

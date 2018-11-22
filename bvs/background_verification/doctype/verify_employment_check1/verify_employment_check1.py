@@ -23,6 +23,12 @@ def get_status(applicant):
 	return status
 
 
+@frappe.whitelist()
+def get_client_tat(checks_group):
+	tat = frappe.get_doc("Checks Group", {"name":checks_group})
+	return tat
+
+
 
 
 
