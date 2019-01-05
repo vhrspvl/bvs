@@ -3,7 +3,7 @@
  "allow_guest_to_view": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
- "autoname": "checks_group.-.customer.-.####", 
+ "autoname": "", 
  "beta": 0, 
  "creation": "2018-01-21 15:53:33.360490", 
  "custom": 0, 
@@ -15,7 +15,6 @@
  "fields": [
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -42,12 +41,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -73,12 +70,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -106,12 +101,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -138,12 +131,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -169,12 +160,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -202,12 +191,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -233,12 +220,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -265,12 +250,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -297,12 +280,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -328,12 +309,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -360,12 +339,10 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_in_quick_entry": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
@@ -392,7 +369,6 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "translatable": 0, 
    "unique": 0
   }
  ], 
@@ -406,7 +382,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-09-22 14:19:59.627269", 
+ "modified": "2018-12-21 16:31:29.431936", 
  "modified_by": "Administrator", 
  "module": "Background Verification", 
  "name": "Bulk Excel Upload", 
@@ -415,6 +391,7 @@
  "permissions": [
   {
    "amend": 0, 
+   "apply_user_permissions": 0, 
    "cancel": 0, 
    "create": 1, 
    "delete": 1, 
@@ -440,6 +417,5 @@
  "sort_field": "modified", 
  "sort_order": "DESC", 
  "track_changes": 1, 
- "track_seen": 0, 
- "track_views": 0
+ "track_seen": 0
 }

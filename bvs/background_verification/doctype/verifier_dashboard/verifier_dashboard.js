@@ -2,128 +2,552 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Verifier Dashboard', {
-	onload: function(frm) {
+    onload: function(frm) {
+        frappe.call({
+            "method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
+            args:{
+                limit_page_length: 500,
+            },
+            callback: function (r) {
+                if(r.message)	{
+                    var b = Object.keys(r.message).length;
+                	for(var i = 0;i < b; i++){
+                        var j = i;
+                        $.each(r.message[i], function(i, d) {  
+                            var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");                       
+                			// row.pending_checks = c;
+                            row.executive = frappe.session.user;
+                            row.ref_no = d.applicant_id;
+                            row.candidate_name = d.applicant_name;
+                            row.status = d.status;
+                            row.check_name = d.name;
+                            if(row.ref_no){
+                                frappe.call({
+                                    "method": "frappe.client.get",
+                                    args: {
+                                        "doctype": "Applicant",
+                                        "name":row.ref_no
+                                    },
+                                    callback: function(r){
+                                        if(r.message){
+                                            if(r.message.client_employee_code){
+                                            row.emp_code = r.message.client_employee_code;
+                                            } else {
+                                                row.emp_code = "-";
+                                            }
+                                            row.in_date = r.message.in_date;
+                                        }
+                                        refresh_field("verify_dashboard_list");											
+                                    }
+                                })
+                            }
+                			if(j == 0){
+								row.checks = "Employment Check1";
+							}
+							if(j == 1){
+								row.checks = "Employment Check2";
+							}
+							if(j == 2){
+								row.checks = "Employment Check3";
+							}
+							if(j == 3){
+								row.checks = "Employment Check4";
+							}	
+							if(j == 4){
+								row.checks = "Education Check1";
+							}
+							if(j == 5){
+								row.checks = "Education Check2";
+							}
+							if(j == 6){
+								row.checks = "Education Check3";
+							}
+							if(j == 7){
+								row.checks = "Education Check4";
+							}
+							if(j == 8){
+								row.checks = "Address Check1";
+							}
+							if(j == 9){
+								row.checks = "Address Check2";
+							}
+							if(j == 10){
+								row.checks = "Address Check3";
+							}
+							if(j == 11){
+								row.checks = "Address Check4";
+							}	
+							if(j == 12){
+								row.checks = "Family Check1";
+							}
+							if(j == 13){
+								row.checks = "Family Check2";
+							}
+							if(j == 14){
+								row.checks = "Family Check3";
+							}
+							if(j == 15){
+								row.checks = "Family Check4";
+							}
+							if(j == 16){
+								row.checks = "Reference Check1";
+							}
+							if(j == 17){
+								row.checks = "Reference Check2";
+							}
+							if(j == 18){
+								row.checks = "Reference Check3";
+							}
+							if(j == 19){
+								row.checks = "Reference Check4";
+							}	
+							if(j == 20){
+								row.checks = "Civil Check";
+							}
+							if(j == 21){
+								row.checks = "Criminal Check";
+							}
+							if(j == 22){
+								row.checks = "Aadhar Card Verification";
+							}
+							if(j == 23){
+								row.checks = "Pan Verification";
+							}
+							if(j == 24){
+								row.checks = "Passport Verification";
+							}
+							if(j == 25){
+								row.checks = "Voters ID Verification";
+							}
+							if(j == 26){
+								row.checks = "Driving License Verification";
+							}
+							if(j == 27){
+								row.checks = "Ration Card Verification";
+							}
+                        })	                              
+                    }
+                    refresh_field("verify_dashboard_list");						     
+                }	
+                  
+            }
+        })
+	},
+	client: function(frm){
+		if(frm.doc.client){
+		frm.clear_table("verify_dashboard_list");
+		frappe.call({
+            "method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
+            args:{
+                limit_page_length: 500,
+            },
+            callback: function (r) {
+                if(r.message)	{
+                    var b = Object.keys(r.message).length;
+                	for(var i = 0;i < b; i++){
+                        var j = i;
+                        $.each(r.message[i], function(i, d) { 
+							if(d.customer == frm.doc.client){ 
+                            var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");                       
+                			// row.pending_checks = c;
+                            row.executive = frappe.session.user;
+                            row.ref_no = d.applicant_id;
+                            row.candidate_name = d.applicant_name;
+                            row.status = d.status;
+                            row.check_name = d.name;
+                            if(row.ref_no){
+                                frappe.call({
+                                    "method": "frappe.client.get",
+                                    args: {
+                                        "doctype": "Applicant",
+                                        "name":row.ref_no
+                                    },
+                                    callback: function(r){
+                                        if(r.message){
+                                            if(r.message.client_employee_code){
+                                            row.emp_code = r.message.client_employee_code;
+                                            } else {
+                                                row.emp_code = "-";
+                                            }
+                                            row.in_date = r.message.in_date;
+                                        }
+                                        refresh_field("verify_dashboard_list");											
+                                    }
+                                })
+                            }
+                			if(j == 0){
+								row.checks = "Employment Check1";
+							}
+							if(j == 1){
+								row.checks = "Employment Check2";
+							}
+							if(j == 2){
+								row.checks = "Employment Check3";
+							}
+							if(j == 3){
+								row.checks = "Employment Check4";
+							}	
+							if(j == 4){
+								row.checks = "Education Check1";
+							}
+							if(j == 5){
+								row.checks = "Education Check2";
+							}
+							if(j == 6){
+								row.checks = "Education Check3";
+							}
+							if(j == 7){
+								row.checks = "Education Check4";
+							}
+							if(j == 8){
+								row.checks = "Address Check1";
+							}
+							if(j == 9){
+								row.checks = "Address Check2";
+							}
+							if(j == 10){
+								row.checks = "Address Check3";
+							}
+							if(j == 11){
+								row.checks = "Address Check4";
+							}	
+							if(j == 12){
+								row.checks = "Family Check1";
+							}
+							if(j == 13){
+								row.checks = "Family Check2";
+							}
+							if(j == 14){
+								row.checks = "Family Check3";
+							}
+							if(j == 15){
+								row.checks = "Family Check4";
+							}
+							if(j == 16){
+								row.checks = "Reference Check1";
+							}
+							if(j == 17){
+								row.checks = "Reference Check2";
+							}
+							if(j == 18){
+								row.checks = "Reference Check3";
+							}
+							if(j == 19){
+								row.checks = "Reference Check4";
+							}	
+							if(j == 20){
+								row.checks = "Civil Check";
+							}
+							if(j == 21){
+								row.checks = "Criminal Check";
+							}
+							if(j == 22){
+								row.checks = "Aadhar Card Verification";
+							}
+							if(j == 23){
+								row.checks = "Pan Verification";
+							}
+							if(j == 24){
+								row.checks = "Passport Verification";
+							}
+							if(j == 25){
+								row.checks = "Voters ID Verification";
+							}
+							if(j == 26){
+								row.checks = "Driving License Verification";
+							}
+							if(j == 27){
+								row.checks = "Ration Card Verification";
+							}
+						}
+                        })	                              
+                    }
+                    refresh_field("verify_dashboard_list");						     
+                }	
+                  
+            }
+		})
+	}
+	},
+	ref_id: function(frm){
+		frm.clear_table("verify_dashboard_list");
 		frappe.call({
 			"method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
 			args:{
+				limit_page_length: 500,
 			},
 			callback: function (r) {
 				if(r.message)	{
 					var b = Object.keys(r.message).length;
-					console.log(b)
 					for(var i = 0;i < b; i++){
-						var c = Object.keys(r.message[i]).length;
-						if(c != 0){
-							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list"); 
-							row.pending_checks = c;
-							// if(pending_checks != 0){
-							// 	$(grid_row.row[i]).css({"font-weight": "bold"});
-							//     // $(cur_frm.fields_dict.pending_checks.input).css("font-color","Red");	
-							// }
+						var j = i;
+						$.each(r.message[i], function(i, d) {
+							if(d.applicant_id == frm.doc.ref_id){ 
+							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");                       
+							// row.pending_checks = c;
 							row.executive = frappe.session.user;
-							if(i == 0){
-								row.checks = "Verify Employment Check1";
+							row.ref_no = d.applicant_id;
+							row.candidate_name = d.applicant_name;
+							row.status = d.status;
+							row.check_name = d.name;
+							if(row.ref_no){
+								frappe.call({
+									"method": "frappe.client.get",
+									args: {
+										"doctype": "Applicant",
+										"name":row.ref_no
+									},
+									callback: function(r){
+										if(r.message){
+											if(r.message.client_employee_code){
+											row.emp_code = r.message.client_employee_code;
+											} else {
+												row.emp_code = "-";
+											}
+											row.in_date = r.message.in_date;
+										}
+										refresh_field("verify_dashboard_list");											
+									}
+								})
 							}
-							if(i == 1){
-								row.checks = "Verify Employment Check2";
+							if(j == 0){
+								row.checks = "Employment Check1";
 							}
-							if(i == 2){
-								row.checks = "Verify Employment Check2";
+							if(j == 1){
+								row.checks = "Employment Check2";
 							}
-							if(i == 3){
-								row.checks = "Verify Employment Check3";
+							if(j == 2){
+								row.checks = "Employment Check3";
+							}
+							if(j == 3){
+								row.checks = "Employment Check4";
 							}	
-							if(i == 4){
-								row.checks = "Verify Education Check1";
+							if(j == 4){
+								row.checks = "Education Check1";
 							}
-							if(i == 5){
-								row.checks = "Verify Education Check2";
+							if(j == 5){
+								row.checks = "Education Check2";
 							}
-							if(i == 6){
-								row.checks = "Verify Education Check2";
+							if(j == 6){
+								row.checks = "Education Check3";
 							}
-							if(i == 7){
-								row.checks = "Verify Education Check3";
+							if(j == 7){
+								row.checks = "Education Check4";
 							}
-							if(i == 8){
-								row.checks = "Verify Address Check1";
+							if(j == 8){
+								row.checks = "Address Check1";
 							}
-							if(i == 9){
-								row.checks = "Verify Address Check2";
+							if(j == 9){
+								row.checks = "Address Check2";
 							}
-							if(i == 10){
-								row.checks = "Verify Address Check2";
+							if(j == 10){
+								row.checks = "Address Check3";
 							}
-							if(i == 11){
-								row.checks = "Verify Address Check3";
+							if(j == 11){
+								row.checks = "Address Check4";
 							}	
-							if(i == 12){
-								row.checks = "Verify Family Check1";
+							if(j == 12){
+								row.checks = "Family Check1";
 							}
-							if(i == 13){
-								row.checks = "Verify Family Check2";
+							if(j == 13){
+								row.checks = "Family Check2";
 							}
-							if(i == 14){
-								row.checks = "Verify Family Check2";
+							if(j == 14){
+								row.checks = "Family Check3";
 							}
-							if(i == 15){
-								row.checks = "Verify Family Check3";
+							if(j == 15){
+								row.checks = "Family Check4";
 							}
-							if(i == 16){
-								row.checks = "Verify Reference Check1";
+							if(j == 16){
+								row.checks = "Reference Check1";
 							}
-							if(i == 17){
-								row.checks = "Verify Reference Check2";
+							if(j == 17){
+								row.checks = "Reference Check2";
 							}
-							if(i == 18){
-								row.checks = "Verify Reference Check2";
+							if(j == 18){
+								row.checks = "Reference Check3";
 							}
-							if(i == 19){
-								row.checks = "Verify Reference Check3";
+							if(j == 19){
+								row.checks = "Reference Check4";
 							}	
-							if(i == 20){
-								row.checks = "Verify Civil Check";
+							if(j == 20){
+								row.checks = "Civil Check";
 							}
-							if(i == 21){
-								row.checks = "Verify Criminal Check";
+							if(j == 21){
+								row.checks = "Criminal Check";
 							}
-							if(i == 22){
-								row.checks = "Verify Aadhar Card Verification";
+							if(j == 22){
+								row.checks = "Aadhar Card Verification";
 							}
-							if(i == 23){
-								row.checks = "Verify Pan Verification";
+							if(j == 23){
+								row.checks = "Pan Verification";
 							}
-							if(i == 24){
-								row.checks = "Verify Passport Verification";
+							if(j == 24){
+								row.checks = "Passport Verification";
 							}
-							if(i == 25){
-								row.checks = "Verify Voters ID Verification";
+							if(j == 25){
+								row.checks = "Voters ID Verification";
 							}
-							if(i == 26){
-								row.checks = "Verify Driving License Verification";
+							if(j == 26){
+								row.checks = "Driving License Verification";
 							}
-							if(i == 27){
-								row.checks = "Verify Ration Card Verification";
+							if(j == 27){
+								row.checks = "Ration Card Verification";
 							}
-					    }	
-				    }
-					refresh_field("verify_dashboard_list");						
+						}
+						})	                              
+					}
+					refresh_field("verify_dashboard_list");						     
 				}	
-				  
+					
 			}
 		})
 	},
-	refresh: function (frm) {
-		frm.disable_save();
-	},			
-	'onload_post_render': function(frm, cdt, cdn) {
-		var list = frm.doc.verify_dashboard_list;
-		frm.fields_dict.verify_dashboard_list.grid.wrapper.on('focus', 'input[data-fieldname="pending_checks"][data-doctype="Verify Dashboard List"]', function(e) {	
-			var current_doc = $('.data-row.editable-row').parent().attr("data-name");
-			var d = locals["Verify Dashboard List"][current_doc];
-			if(d.pending_checks != 0){
-				frappe.set_route('List',d.checks,{"executive":frappe.session.user,"status":"Allocation Completed"});
-			}		
+	candidate_name: function(frm){
+		frm.clear_table("verify_dashboard_list");
+		frappe.call({
+			"method":"bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
+			args:{
+				limit_page_length: 500,
+			},
+			callback: function (r) {
+				if(r.message)	{
+					var b = Object.keys(r.message).length;
+					for(var i = 0;i < b; i++){
+						var j = i;
+						$.each(r.message[i], function(i, d) {
+							if(d.applicant_name == frm.doc.candidate_name){ 
+							var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");                       
+							// row.pending_checks = c;
+							row.executive = frappe.session.user;
+							row.ref_no = d.applicant_id;
+							row.candidate_name = d.applicant_name;
+							row.status = d.status;
+							row.check_name = d.name;
+							if(row.ref_no){
+								frappe.call({
+									"method": "frappe.client.get",
+									args: {
+										"doctype": "Applicant",
+										"name":row.ref_no
+									},
+									callback: function(r){
+										if(r.message){
+											if(r.message.client_employee_code){
+											row.emp_code = r.message.client_employee_code;
+											} else {
+												row.emp_code = "-";
+											}
+											row.in_date = r.message.in_date;
+										}
+										refresh_field("verify_dashboard_list");											
+									}
+								})
+							}
+							if(j == 0){
+								row.checks = "Employment Check1";
+							}
+							if(j == 1){
+								row.checks = "Employment Check2";
+							}
+							if(j == 2){
+								row.checks = "Employment Check3";
+							}
+							if(j == 3){
+								row.checks = "Employment Check4";
+							}	
+							if(j == 4){
+								row.checks = "Education Check1";
+							}
+							if(j == 5){
+								row.checks = "Education Check2";
+							}
+							if(j == 6){
+								row.checks = "Education Check3";
+							}
+							if(j == 7){
+								row.checks = "Education Check4";
+							}
+							if(j == 8){
+								row.checks = "Address Check1";
+							}
+							if(j == 9){
+								row.checks = "Address Check2";
+							}
+							if(j == 10){
+								row.checks = "Address Check3";
+							}
+							if(j == 11){
+								row.checks = "Address Check4";
+							}	
+							if(j == 12){
+								row.checks = "Family Check1";
+							}
+							if(j == 13){
+								row.checks = "Family Check2";
+							}
+							if(j == 14){
+								row.checks = "Family Check3";
+							}
+							if(j == 15){
+								row.checks = "Family Check4";
+							}
+							if(j == 16){
+								row.checks = "Reference Check1";
+							}
+							if(j == 17){
+								row.checks = "Reference Check2";
+							}
+							if(j == 18){
+								row.checks = "Reference Check3";
+							}
+							if(j == 19){
+								row.checks = "Reference Check4";
+							}	
+							if(j == 20){
+								row.checks = "Civil Check";
+							}
+							if(j == 21){
+								row.checks = "Criminal Check";
+							}
+							if(j == 22){
+								row.checks = "Aadhar Card Verification";
+							}
+							if(j == 23){
+								row.checks = "Pan Verification";
+							}
+							if(j == 24){
+								row.checks = "Passport Verification";
+							}
+							if(j == 25){
+								row.checks = "Voters ID Verification";
+							}
+							if(j == 26){
+								row.checks = "Driving License Verification";
+							}
+							if(j == 27){
+								row.checks = "Ration Card Verification";
+							}
+						}
+						})	                              
+					}
+					refresh_field("verify_dashboard_list");						     
+				}	
+					
+			}
 		})
-	}
+	},
+    refresh: function (frm) {
+        frm.disable_save();
+    },			
+    'onload_post_render': function(frm, cdt, cdn) {
+        var list = frm.doc.verify_dashboard_list;
+        frm.fields_dict.verify_dashboard_list.grid.wrapper.on('focus', 'input[data-fieldname="ref_no"][data-doctype="Verify Dashboard List"]', function(e) {	
+            var current_doc = $('.data-row.editable-row').parent().attr("data-name");
+            var d = locals["Verify Dashboard List"][current_doc];
+            if(d.ref_no){
+                frappe.set_route("Form","Verify "+d.checks,d.check_name);
+            }		
+        })
+    }
 });

@@ -19,7 +19,29 @@ frappe.ui.form.on('Allocate Checks', {
 								row.status = "Allocation Pending";
 								row.reference_doctype = d.doctype;
 								row.tat = d.tat;
+								row.in_date = r.message.in_date;
+								row.candidate_name = d.applicant_name;
 								row.applicant = d.applicant_id;
+								if(row.applicant){
+									frappe.call({
+										"method": "frappe.client.get",
+										args: {
+											"doctype": "Applicant",
+											"name":row.applicant
+										},
+										callback: function(r){
+											if(r.message){
+												if(r.message.client_employee_code){
+												row.emp_code = r.message.client_employee_code;
+												} else {
+													row.emp_code = "-";
+												}
+												row.in_date = r.message.in_date;
+											}
+											refresh_field("allocate_checks_executive");											
+										}
+									})
+								}
 								if(row.status == "Allocation Pending"){
 									frappe.call({
 										"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_verifycheck",
@@ -44,7 +66,7 @@ frappe.ui.form.on('Allocate Checks', {
 												row.reference_name = r.message[0].name;
 											}
 											if(row.reference_doctype == "Verify Education Check2"){
-												row.reference_name = r.message[0].name;
+												row.reference_name = r.message[1].name;
 											}
 											if(row.reference_doctype == "Verify Education Check3"){
 												row.reference_name = r.message[2].name;
@@ -152,25 +174,31 @@ frappe.ui.form.on('Allocate Checks', {
 			}
 		})
 	},
-	// select_executive: function(frm, cdt, cdn) {		
-	// 	if(frm.doc.select_executive != ""){
-	// 	frappe.call({
-	// 		"method":"frappe.client.get",
-	// 		args: {
-	// 			doctype: "User",
-	// 			name: frm.doc.select_executive
-	// 		},
-	// 		callback: function (r) {
-	// 			$.each(cur_frm.doc.allocate_checks_executive || [], function(i, d) {
-	// 			if(r.message){
-	// 				d.allocated_to = r.message.email
-	// 			}
-	// 			});
-	// 			refresh_field("allocate_checks_executive");				
-	// 		}
-	// 	});
-	// 	} 
-	// },
+	select_executive: function(frm, cdt, cdn) {		
+		var grid = frm.fields_dict["allocate_checks_executive"].grid;
+		if(frm.doc.select_executive != ""){
+			if(grid.get_selected_children().length !== 0){
+					$.each(grid.get_selected_children(), function(i, d) {
+						frappe.call({
+							"method":"frappe.client.get",
+							args: {
+								doctype: "User",
+								name: frm.doc.select_executive
+							},
+							callback: function (r) {
+								if(r.message){
+									if(d.idx){
+										d.allocated_to = r.message.email
+								    }
+								}
+								refresh_field("allocate_checks_executive");				
+							}
+						});
+						
+					})
+			}	
+		}
+	},
 	upto:function(frm){
 		frappe.call({
 			"method":"frappe.client.get",
@@ -212,7 +240,7 @@ frappe.ui.form.on('Allocate Checks', {
 	refresh: function (frm) {
 		frm.disable_save();
 	},
-	onload:function(frm, dt,dn){
+	onload:function(frm){
 		frm.set_query("select_executive", function() {
 			return {
 				"filters": {
@@ -226,10 +254,296 @@ frappe.ui.form.on('Allocate Checks', {
 		// 	}
 		// }
 	},
-	get_selected: function() {
-		return (this.grid_rows || []).map(function(row) { return row.doc.__checked ? "hi" : "helllo"; })
-			.filter(function(d) { return d; });
-		console.log(hi)
+	client: function(frm){
+		frm.clear_table("allocate_checks_executive");
+		if(frm.doc.check != "Select"){
+			frappe.call({
+				"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_check",
+				args:{
+					"check":frm.doc.check
+				},
+				callback: function (r) {
+					$.each(r.message, function(i, d) {
+					if(r.message){
+						if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Civil Check"||"Criminal Check"){
+							if((d.status == "IQC Completed") && (d.customer == frm.doc.client)){	
+								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");							
+								row.status = "Allocation Pending";
+								row.reference_doctype = d.doctype;
+								row.tat = d.tat;
+								row.in_date = r.message.in_date;
+								row.candidate_name = d.applicant_name;
+								row.applicant = d.applicant_id;
+								if(row.applicant){
+									frappe.call({
+										"method": "frappe.client.get",
+										args: {
+											"doctype": "Applicant",
+											"name":row.applicant
+										},
+										callback: function(r){
+											if(r.message){
+												if(r.message.client_employee_code){
+												row.emp_code = r.message.client_employee_code;
+												} else {
+													row.emp_code = "-";
+												}
+												row.in_date = r.message.in_date;
+											}
+											refresh_field("allocate_checks_executive");											
+										}
+									})
+								}
+								if(row.status == "Allocation Pending"){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_verifycheck",
+										args: {
+											"check":frm.doc.check,
+											"applicant":d.applicant_id
+										},
+										callback: function (r) {
+											if(row.reference_doctype == "Verify Employment Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Education Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Education Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Education Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Education Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Address Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Address Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Address Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Address Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Family Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Family Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Family Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Family Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Aadhar Card Verification"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Pan Verification"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Passport Verification"){
+												row.reference_name = r.message[2].name;
+											}
+											if((row.reference_doctype == "Verify Driving License Verification") && (r.message[3].name != 0)){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Voters ID Verification"){
+												row.reference_name = r.message[4].name;
+											}
+											if(row.reference_doctype == "Verify Ration Card Verification"){
+												row.reference_name = r.message[5].name;
+											}
+											if(row.reference_doctype == "Verify Civil Check"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Criminal Check"){
+												row.reference_name = r.message[0].name;
+											}
+											refresh_field("allocate_checks_executive");											
+										}										
+									});									
+								}
+							
+						}
+					}
+				    }
+					});
+				}
+			});	
+		}	  
+	},
+	to_date: function(frm){
+		frm.clear_table("allocate_checks_executive");
+		if(frm.doc.check != "Select"){
+			frappe.call({
+				"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_check",
+				args:{
+					"check":frm.doc.check
+				},
+				callback: function (r) {
+					$.each(r.message, function(i, d) {
+					if(r.message){
+						if(frm.doc.check == "Address Check"||"Education Check"||"Employment Check"||"Reference Check"||"Family Check"||"Identity Check"||"Civil Check"||"Criminal Check"){
+							console.log(r.message)
+							if((d.status == "IQC Completed") && (d.in_date >= frm.doc.from_date) && (d.in_date <= frm.doc.to_date)){	
+								var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");							
+								row.status = "Allocation Pending";
+								row.reference_doctype = d.doctype;
+								row.tat = d.tat;
+								row.in_date = r.message.in_date;
+								row.candidate_name = d.applicant_name;
+								row.applicant = d.applicant_id;
+								if(row.applicant){
+									frappe.call({
+										"method": "frappe.client.get",
+										args: {
+											"doctype": "Applicant",
+											"name":row.applicant
+										},
+										callback: function(r){
+											if(r.message){
+												if(r.message.client_employee_code){
+												row.emp_code = r.message.client_employee_code;
+												} else {
+													row.emp_code = "-";
+												}
+												row.in_date = r.message.in_date;
+											}
+											refresh_field("allocate_checks_executive");											
+										}
+									})
+								}
+								if(row.status == "Allocation Pending"){
+									frappe.call({
+										"method":"bvs.background_verification.doctype.allocate_checks.allocate_checks.get_verifycheck",
+										args: {
+											"check":frm.doc.check,
+											"applicant":d.applicant_id
+										},
+										callback: function (r) {
+											if(row.reference_doctype == "Verify Employment Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Employment Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Education Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Education Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Education Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Education Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Address Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Address Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Address Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Address Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Reference Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Family Check1"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Family Check2"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Family Check3"){
+												row.reference_name = r.message[2].name;
+											}
+											if(row.reference_doctype == "Verify Family Check4"){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Aadhar Card Verification"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Pan Verification"){
+												row.reference_name = r.message[1].name;
+											}
+											if(row.reference_doctype == "Verify Passport Verification"){
+												row.reference_name = r.message[2].name;
+											}
+											if((row.reference_doctype == "Verify Driving License Verification") && (r.message[3].name != 0)){
+												row.reference_name = r.message[3].name;
+											}
+											if(row.reference_doctype == "Verify Voters ID Verification"){
+												row.reference_name = r.message[4].name;
+											}
+											if(row.reference_doctype == "Verify Ration Card Verification"){
+												row.reference_name = r.message[5].name;
+											}
+											if(row.reference_doctype == "Verify Civil Check"){
+												row.reference_name = r.message[0].name;
+											}
+											if(row.reference_doctype == "Verify Criminal Check"){
+												row.reference_name = r.message[0].name;
+											}
+											refresh_field("allocate_checks_executive");											
+										}										
+									});									
+								}
+							
+						}
+					}
+				    }
+					});
+				}
+			});	
+		}
 	},
 	assign:function(frm,cdt, cdn){	
 		frappe.call({
@@ -283,7 +597,5 @@ frappe.ui.form.on('Allocate Checks', {
 })
 
 
-
-
 	
-	
+		

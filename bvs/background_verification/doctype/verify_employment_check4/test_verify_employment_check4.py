@@ -6,5 +6,5 @@ from __future__ import unicode_literals
 import frappe
 import unittest
 
-class TestverifyEmploymentCheck4(unittest.TestCase):
+class TestVerifyEmploymentCheck4(unittest.TestCase):
 	pass

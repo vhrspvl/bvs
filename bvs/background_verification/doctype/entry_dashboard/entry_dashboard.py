@@ -32,7 +32,7 @@ def get_demographic_check(customer):
     return case
 
 
-def validate(self):
-    for i, entry_dashboard_list in enumerate(sorted(self._range, key=lambda item: entry_dashboard_list.data_entry_name), start=frappe.utils.nowdate()):
-        item.idx = i
+# def validate(self):
+#     for i, entry_dashboard_list in enumerate(sorted(self._range, key=lambda item: entry_dashboard_list.data_entry_name), start=frappe.utils.nowdate()):
+#         item.idx = i
 

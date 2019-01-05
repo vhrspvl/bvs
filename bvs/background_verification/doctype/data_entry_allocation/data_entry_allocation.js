@@ -3,11 +3,27 @@
 
 frappe.ui.form.on('Data Entry Allocation', {
 	refresh: function(frm) {
-
 	},
 	validate: function(frm){
-		frm.set_value("cases_pending", frm.doc.no_of_cases);
-		
+		if(frm.doc.status != "Updated"){
+			frm.set_value("cases_pending", frm.doc.no_of_cases);
+			frm.set_value("status", "Updated");
+		}
+		if(frm.doc.demographic_entry == 1){
+			frappe.call({
+				"method":"bvs.background_verification.doctype.data_entry_allocation.data_entry_allocation.mark_applicant",
+				args: {
+					"customer": frm.doc.customer,
+				    "data_entry_allocation_id": frm.doc.name,
+					"executive": frm.doc.executive,
+					"no": frm.doc.no_of_cases
+					},
+				callback: function(r){
+					//console.log(r.message)
+
+				}
+			})
+	    }		
 	},
 	onload: function(frm){
 		if(!frm.doc.in_date){
@@ -22,10 +38,10 @@ frappe.ui.form.on('Data Entry Allocation', {
 				if(r.message){
 					var c = Object.keys(r.message).length;
 					for(var i=0; i< c; i++){
+						console.log(r.message[i].pending_cases)
 						var row = frappe.model.add_child(frm.doc, "Data Entry Allocation Executive", "data_entry_allocation_executive");
 						row.executive = r.message[i].executive;
-						row.pending_cases = r.message[i].pending_cases;
-						console.log(r.message[i].executive)							
+						row.pending_cases = r.message[i].pending_cases;						
 					}						
 				}
 				refresh_field("data_entry_allocation_executive");					 

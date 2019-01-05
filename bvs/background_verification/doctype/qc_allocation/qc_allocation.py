@@ -20,6 +20,18 @@ def get_applicant(customer):
 
 
 @frappe.whitelist()
+def get_applicant_c(candidate_name):
+    applicant = frappe.db.get_list("Applicant", {"candidate_name": candidate_name,"executive":""},
+                                     ["name"])
+    return applicant
+
+@frappe.whitelist()
+def get_applicant_e(emp_code):
+    applicant = frappe.db.get_list("Applicant", {"client_employee_code": emp_code,"executive":""},
+                                     ["name"])
+    return applicant
+
+@frappe.whitelist()
 def get_applicant_details(applicant):
     applicant = frappe.get_doc("Applicant", {"name":applicant})
     return applicant

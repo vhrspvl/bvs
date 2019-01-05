@@ -8,12 +8,40 @@ frappe.ui.form.on("Voters ID Verification", {
 		}
 	},
 	after_save: function(frm){
-		if(frm.doc.applicant_id) {
-			frappe.set_route("Form","Applicant",frm.doc.applicant_id);
-		} 
+		if(frm.doc.checks_group){
+			frappe.confirm(
+				'Do you want to attach the File?',
+				function(){
+					window.close();
+				},
+				function(){
+					frappe.call({
+						"method": "bvs.background_verification.doctype.applicant.applicant.get_checks_group",
+						args:{
+							"applicant": frm.doc.applicant_id,
+							"checks_group": frm.doc.checks_group,
+							"doctype": doctype.name,
+							"check_status": frm.doc.status
+						},
+						callback: function(r){
+							if(r.message.doctype){
+								if(r.message.status != frm.doc.status) {
+									frappe.set_route('Form',r.message.doctype,r.message.name);
+								}
+							} else if(r.message != "Completed"){
+								frappe.set_route('Form',r.message,'New '+r.message,{"tat": frm.doc.tat,"applicant_name": frm.doc.applicant_name,"customer":frm.doc.customer,"checks_group":frm.doc.checks_group,"applicant_id":frm.doc.applicant_id});
+							} else if(r.message == "Completed"){
+								frappe.set_route('Form',"Applicant",frm.doc.applicant_id);
+							} 
+						}
+					})
+				}
+			)
+		}
 		if(frm.doc.tat){
 			frm.set_df_property('tat', 'read_only', 1);
 		}
+
 	},
 	address_same_as:function(frm){
 		if(frm.doc.address_same_as == "Present Address"){
@@ -42,6 +70,11 @@ frappe.ui.form.on("Voters ID Verification", {
 			console.log("hi");
 			// frm.set_value("address", "");
 		}
+	},
+	refresh: function(frm){
+		frm.add_custom_button(__('Back'), function () {
+			frappe.set_route("Form", "Applicant",frm.doc.applicant_id)
+		});
 	},
 	validate:function(frm){
 		if(frm.doc.tat){

@@ -104,9 +104,8 @@ def get_status(applicant,checks_group):
             status = "Allocation Completed"
         elif any(check == "Insufficient" for check in check1):
             status = "Insufficient"
-        else:
-            applicant_status = frappe.db.get_value("Applicant",{"name":applicant},"status")
-            status = applicant_status
+        elif any(check == "Entry Pending" for check in check1):
+            status = "Entry Pending"
         check2 = []
         check3 = []
         if status == "Allocation Completed":
@@ -181,3 +180,112 @@ def daterange(start_date,end_date,holiday):
         dates.append(date_object.strftime("%Y-%m-%d"))
     return dates
         
+
+
+@frappe.whitelist()
+def get_checks_group(applicant,checks_group,doctype,check_status):
+    entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
+    "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
+    "aadhar_card_verification","pan_verification","passport_verification","voters_id_verification","ration_card_verification","driving_license_verification","civil_check","criminal_check"]
+    status = "Entry Pending"
+    applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
+    for a in applicant_cg:
+        checks = []
+        for i in entry_check:
+            if a.get(i) == 1:
+                if i == "employment_check1":
+                   checks.append("Employment Check1")
+                if i == "employment_check2":
+                   checks.append("Employment Check2")
+                if i == "employment_check3":
+                   checks.append("Employment Check3")
+                if i == "employment_check4":
+                   checks.append("Employment Check4")
+                if i == "education_check1":
+                   checks.append("Education Check1")
+                if i == "education_check2":
+                   checks.append("Education Check2")
+                if i == "education_check3":
+                   checks.append("Education Check3")
+                if i == "education_check4":
+                   checks.append("Education Check4")
+                if i == "address_check1":
+                   checks.append("Address Check1")
+                if i == "address_check2":
+                   checks.append("Address Check2")
+                if i == "address_check3":
+                   checks.append("Address Check3")
+                if i == "address_check4":
+                   checks.append("Address Check4")
+                if i == "family_check1":
+                   checks.append("Family Check1")
+                if i == "family_check2":
+                   checks.append("Family Check2")
+                if i == "family_check3":
+                   checks.append("Family Check3")
+                if i == "family_check4":
+                   checks.append("Family Check4")
+                if i == "reference_check1":
+                   checks.append("Reference Check1")
+                if i == "reference_check2":
+                   checks.append("Reference Check2")
+                if i == "reference_check3":
+                   checks.append("Reference Check3")
+                if i == "reference_check4":
+                   checks.append("Reference Check4")
+                if i == "aadhar_card_verification":
+                   checks.append("Aadhar Card Verification")
+                if i == "pan_verification":
+                   checks.append("Pan Verification")
+                if i == "passport_verification":
+                   checks.append("Passport Verification")
+                if i == "voters_id_verification":
+                   checks.append("Voters ID Verification")
+                if i == "ration_card_verification":
+                   checks.append("Ration Card Verification")
+                if i == "driving_license_verification":
+                   checks.append("Driving License Verification")
+                if i == "civil_check":
+                   checks.append("Civil Check")
+                if i == "criminal_check":
+                   checks.append("Criminal Check")
+        for check in checks:
+            if check_status == "QC Completed":
+                if frappe.get_all("Verify "+check,{"applicant_id": applicant}):
+                    next_doc = frappe.get_doc("Verify "+check,{"applicant_id": applicant})
+                    if next_doc.status != check_status:
+                        return next_doc
+                        # frappe.errprint(next_doc)
+                    else:
+                        pass
+            else:
+                if frappe.get_all(check,{"applicant_id": applicant}):
+                    next_doc = frappe.get_doc(check,{"applicant_id": applicant})           
+                    if next_doc.status != check_status:
+                        return next_doc
+                    else:
+                        pass
+                else:
+                    return check
+            
+        return "Completed"
+
+
+@frappe.whitelist()
+def update_checks(checks_group,aadhar_card,pan_card,passport,ration_card,voters_id,driving_license):
+    if checks_group:
+        check_id = frappe.db.get_value("Checks Group", {"name": checks_group})
+        if check_id:
+            exist_check_id = frappe.get_doc("Checks Group", check_id)
+        else:
+            exist_check_id = frappe.new_doc("Checks Group")
+        exist_check_id.update({
+            "aadhar_card_verification": aadhar_card,
+            "pan_verification": pan_card,
+            "driving_license_verification": driving_license,
+            "passport_verification": passport,
+        	"ration_card_verification": ration_card,
+            "voters_id_verification": voters_id
+        })
+        exist_check_id.save(ignore_permissions=True)
+    return "Ok"

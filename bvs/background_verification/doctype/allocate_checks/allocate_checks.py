@@ -13,7 +13,7 @@ class AllocateChecks(Document):
 @frappe.whitelist()
 def get_check(check):
     if check == "Address Check":
-        check1 = frappe.get_list("Address Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check1 = frappe.get_list("Address Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []
         for c in check1:
             dt = {}
@@ -22,7 +22,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Address Check1'} 
             c.update(cdt)
             c1dt.append(c)
-        check2 = frappe.get_list("Address Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check2 = frappe.get_list("Address Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check2:
             dt = {}
             cdt = {'doctype':'Address Check2'}
@@ -30,7 +30,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Address Check2'} 
             c.update(cdt)
             c1dt.append(c)
-        check3 = frappe.get_list("Address Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check3 = frappe.get_list("Address Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check3:
             dt = {}
             cdt = {'doctype':'Address Check3'}
@@ -38,7 +38,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Address Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Address Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check4 = frappe.get_list("Address Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Address Check4'}
@@ -48,7 +48,7 @@ def get_check(check):
             c1dt.append(c)
         pending_checks = check1+check2+check3+check4
     elif check == "Education Check":
-        check1 = frappe.get_list("Education Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check1 = frappe.get_list("Education Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check1:
             c1dt = []    
             for c in check1:
@@ -60,7 +60,7 @@ def get_check(check):
                 c1dt.append(c)
         else:
             check1.append(0)
-        check2 = frappe.get_list("Education Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check2 = frappe.get_list("Education Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check2:
             c1dt = [] 
             for c in check2:
@@ -72,7 +72,7 @@ def get_check(check):
                 c1dt.append(c)
         else:
             check2.append(0)
-        check3 = frappe.get_list("Education Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check3 = frappe.get_list("Education Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check3:
             c1dt = []
             for c in check3:
@@ -84,7 +84,7 @@ def get_check(check):
                 c1dt.append(c)
         else:
             check3.append(0)
-        check4 = frappe.get_list("Education Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check4 = frappe.get_list("Education Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check4:
             c1dt = []
             for c in check4:
@@ -98,7 +98,7 @@ def get_check(check):
             check4.append(0)
         pending_checks = check1+check2+check3+check4
     elif check == "Employment Check":
-        check1 = frappe.get_list("Employment Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check1 = frappe.get_list("Employment Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []    
         for c in check1:
             dt = {}
@@ -107,7 +107,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Employment Check1'}  
             c.update(cdt)
             c1dt.append(c)
-        check2 = frappe.get_list("Employment Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check2 = frappe.get_list("Employment Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check2:
             dt = {}
             cdt = {'doctype':'Employment Check2'}
@@ -115,7 +115,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Employment Check2'} 
             c.update(cdt)
             c1dt.append(c)
-        check3 = frappe.get_list("Employment Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check3 = frappe.get_list("Employment Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check3:
             dt = {}
             cdt = {'doctype':'Employment Check3'}
@@ -123,7 +123,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Employment Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Employment Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check4 = frappe.get_list("Employment Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Employment Check4'}
@@ -133,7 +133,7 @@ def get_check(check):
             c1dt.append(c)
         pending_checks = check1+check2+check3+check4
     elif check == "Family Check":
-        check1 = frappe.get_list("Family Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check1 = frappe.get_list("Family Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []
         for c in check1:
             dt = {}
@@ -142,7 +142,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Family Check1'} 
             c.update(cdt)
             c1dt.append(c)
-        check2 = frappe.get_list("Family Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))        
+        check2 = frappe.get_list("Family Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))        
         for c in check2:
             dt = {}
             cdt = {'doctype':'Family Check2'}
@@ -150,7 +150,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Family Check2'} 
             c.update(cdt)
             c1dt.append(c)
-        check3 = frappe.get_list("Family Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check3 = frappe.get_list("Family Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check3:
             dt = {}
             cdt = {'doctype':'Family Check3'}
@@ -158,7 +158,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Family Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Family Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check4 = frappe.get_list("Family Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Family Check4'}
@@ -168,7 +168,7 @@ def get_check(check):
             c1dt.append(c)
         pending_checks = check1+check2+check3+check4
     elif check == "Reference Check":
-        check1 = frappe.get_list("Reference Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check1 = frappe.get_list("Reference Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []
         for c in check1:
             dt = {}
@@ -177,7 +177,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Reference Check1'} 
             c.update(cdt)
             c1dt.append(c)
-        check2 = frappe.get_list("Reference Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check2 = frappe.get_list("Reference Check2", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check2:
             dt = {}
             cdt = {'doctype':'Reference Check2'}
@@ -185,7 +185,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Reference Check2'} 
             c.update(cdt)
             c1dt.append(c)
-        check3 = frappe.get_list("Reference Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check3 = frappe.get_list("Reference Check3", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check3:
             dt = {}
             cdt = {'doctype':'Reference Check3'}
@@ -193,7 +193,7 @@ def get_check(check):
                 cdt = {'doctype':'Verify Reference Check3'} 
             c.update(cdt)
             c1dt.append(c)
-        check4 = frappe.get_list("Reference Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check4 = frappe.get_list("Reference Check4", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         for c in check4:
             dt = {}
             cdt = {'doctype':'Reference Check4'}
@@ -203,7 +203,7 @@ def get_check(check):
             c1dt.append(c)
         pending_checks = check1+check2+check3+check4
     elif check == "Civil Check":
-        pending_checks = frappe.get_list("Civil Check",  filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        pending_checks = frappe.get_list("Civil Check",  filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []
         for c in pending_checks:
             dt = {}
@@ -213,7 +213,7 @@ def get_check(check):
             c.update(cdt)
             c1dt.append(c)    
     elif check == "Criminal Check":		
-        pending_checks = frappe.get_list("Criminal Check", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        pending_checks = frappe.get_list("Criminal Check", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []
         for c in pending_checks:
             dt = {}
@@ -223,7 +223,7 @@ def get_check(check):
             c.update(cdt)
             c1dt.append(c)  
     elif check == "Identity Check":
-        check1 = frappe.get_list("Aadhar Card Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check1 = frappe.get_list("Aadhar Card Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check1:
             c1dt = []
             for c in check1:
@@ -235,7 +235,7 @@ def get_check(check):
                 c1dt.append(c)
         else:
             check1.append(0)
-        check2 = frappe.get_list("Voters ID Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check2 = frappe.get_list("Voters ID Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check2:
             c1dt = []
             for c in check2:
@@ -247,7 +247,7 @@ def get_check(check):
                 c1dt.append(c)
             else:
                 check2.append(0)
-        check3 = frappe.get_list("Pan Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check3 = frappe.get_list("Pan Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check3:
             c1dt = []
             for c in check3:
@@ -259,7 +259,7 @@ def get_check(check):
                 c1dt.append(c)
             else:
                 check3.append(0)
-        check4 = frappe.get_list("Ration Card Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check4 = frappe.get_list("Ration Card Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check4:
             c1dt = []
             for c in check4:
@@ -271,7 +271,7 @@ def get_check(check):
                 c1dt.append(c)
         else:
             check4.append(0)
-        check5 = frappe.get_list("Passport Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check5 = frappe.get_list("Passport Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check5:
             c1dt = []
             for c in check5:
@@ -283,7 +283,7 @@ def get_check(check):
                 c1dt.append(c)
         else:
             check5.append(0)
-        check6 = frappe.get_list("Driving License Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat"))
+        check6 = frappe.get_list("Driving License Verification", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check6:
             c1dt = []
             for c in check6:
@@ -310,25 +310,9 @@ def get_verifycheck(applicant,check):
         verify_checks = check1+check2+check3+check4
     if check == "Education Check":
         check1 = frappe.db.get_list("Verify Education Check1", filters ={"applicant_id": applicant}, fields=("name","tat"))
-        if check1:
-            check1 = check1
-        else:
-            check1 = [0]
         check2 = frappe.db.get_list("Verify Education Check2", filters ={"applicant_id": applicant}, fields=("name","tat"))
-        if check2:
-            check2 = check2
-        else:
-            check2 = [0]
         check3 = frappe.db.get_list("Verify Education Check3", filters ={"applicant_id": applicant}, fields=("name","tat"))
-        if check3:
-            check3 = check3
-        else:
-            check3 = [0]
         check4 = frappe.db.get_list("Verify Education Check4", filters ={"applicant_id": applicant}, fields=("name","tat"))
-        if check4:
-            check4 = check4
-        else:
-            check4 = [0]
         verify_checks = check1+check2+check3+check4
     if check == "Address Check":
         check1 = frappe.db.get_list("Verify Address Check1", filters ={"applicant_id": applicant}, fields=("name","tat"))

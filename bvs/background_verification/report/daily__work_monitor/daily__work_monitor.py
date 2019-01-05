@@ -19,7 +19,7 @@ def execute(filters=None):
     conditions, filters = get_conditions(filters)
     app = get_applicants(filters)
     for a in app:
-        row = [a.ref_id,a.customer,a.data_entry_allocation_id,a.in_date,a.in_time,a.entry_Completed_executive,a.iqc_completed_executive,a.execution_completed_executive,a.qc_completed_executive,a.status]
+        row = [a.ref_id,a.customer,a.data_entry_allocation_id,a.in_date,a.in_time,a.entry_completed_executive,a.iqc_completed_executive,a.execution_completed_executive,a.qc_completed_executive,a.status]
         data.append(row)
         if not a.end_date:
             today_date = date.today()
@@ -42,7 +42,7 @@ def get_columns(filters):
         _("Execution Completed Executive") + ":Data:150",
         _("QC Completed Executive") + ":Data:150",
         _("Status") + ":Data:150",
-        _("Ageing") + ":Int:180",
+        _("Ageing") + ":Int:150",
         _("Insuff Raised Date") + ":Date:150",
         _("Insuff Cleared Date") + ":Date:150",
         _("Closed Date") + ":Date:150"

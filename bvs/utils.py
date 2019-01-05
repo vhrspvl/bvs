@@ -73,4 +73,6 @@ def get_group_checks(checks_group):
         checklist.append('civil_check')
     if cg.criminal_check:
         checklist.append('criminal_check')
+    if cg.id_check:
+        checklist.append('id_check')
     return checklist
