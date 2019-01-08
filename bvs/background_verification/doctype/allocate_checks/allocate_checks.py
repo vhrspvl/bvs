@@ -335,15 +335,16 @@ def get_verifycheck(applicant,check):
     if check == "Identity Check":
         check1 = frappe.db.get_list("Verify ID Check1", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
         check2 = frappe.db.get_list("Verify ID Check2", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check4 = frappe.db.get_list("Verify ID Check3", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check3 = frappe.db.get_list("Verify ID Check4", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check6 = frappe.db.get_list("Verify ID Check5", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check5 = frappe.db.get_list("Verify ID Check6", filters ={"applicant_id": applicant}, fields=("name","client_tat"))       
+        check3 = frappe.db.get_list("Verify ID Check3", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
+        check4 = frappe.db.get_list("Verify ID Check4", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
+        check5 = frappe.db.get_list("Verify ID Check5", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
+        check6 = frappe.db.get_list("Verify ID Check6", filters ={"applicant_id": applicant}, fields=("name","client_tat"))       
         verify_checks = check1+check2+check3+check4+check5+check6
     if check == "Civil Check":
         verify_checks = frappe.db.get_list("Verify Civil Check", filters ={"applicant_id": applicant}, fields=("name","client_tat"))      
     if check == "Criminal Check":
         verify_checks = frappe.db.get_list("Verify Criminal Check", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
+    frappe.errprint(verify_checks)
     return verify_checks
 
 

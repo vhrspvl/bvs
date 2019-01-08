@@ -24,6 +24,11 @@ def get_data():
                     },
                     {
                         "type": "doctype",
+                        "name": "BG Profile",
+                        "description": _("Checks records"),
+                    },
+                    {
+                        "type": "doctype",
                         "name": "Add Applicant",
                         "description": _("Applicant records."),
                     },
@@ -94,6 +99,11 @@ def get_data():
                     },
                     {
                         "type": "doctype",
+                        "name": "BG Profile",
+                        "description": _("Checks records"),
+                    },
+                    {
+                        "type": "doctype",
                         "name": "Client Data",
                         "description": _("Client records."),
                     },
@@ -152,6 +162,11 @@ def get_data():
                     },
                     {
                         "type": "doctype",
+                        "name": "BG Profile",
+                        "description": _("Checks records"),
+                    },
+                    {
+                        "type": "doctype",
                         "name": "Verifier Dashboard",
                         "description": _("Verify Dashboard Records"),
                     },
@@ -175,6 +190,11 @@ def get_data():
                     },
                     {
                         "type": "doctype",
+                        "name": "BG Profile",
+                        "description": _("Checks records"),
+                    },
+                    {
+                        "type": "doctype",
                         "name": "Entry Dashboard",
                         "description": _("Entry Dashboard Records"),
                     }
@@ -189,6 +209,11 @@ def get_data():
                     {
                         "type": "doctype",
                         "name": "Checks Group",
+                        "description": _("Checks records"),
+                    },
+                    {
+                        "type": "doctype",
+                        "name": "BG Profile",
                         "description": _("Checks records"),
                     },
                     {

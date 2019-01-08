@@ -51,6 +51,7 @@ frappe.ui.form.on('Allocate Checks', {
                                                 "applicant": d.applicant_id
                                             },
                                             callback: function (r) {
+                                                // console.log(r.message)
                                                 if (row.reference_doctype == "Verify Employment Check1") {
                                                     row.reference_name = r.message[0].name;
                                                 }

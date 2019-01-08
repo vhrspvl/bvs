@@ -6,5 +6,22 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 
+
 class VerifyIDCheck4(Document):
-	pass
+    pass
+
+
+@frappe.whitelist()
+def get_check(applicant_id):
+    family_check2_id = frappe.get_list(
+        "ID Check4", filters={"applicant_id": applicant_id}, fields=("name"))
+    # frappe.errprint(employment_check1_id)
+    return family_check2_id
+
+
+@frappe.whitelist()
+def get_status(applicant):
+    status = frappe.db.get_value(
+        "Verify ID Check4", {"applicant_id": applicant}, "status")
+    # frappe.errprint(status)
+    return status
