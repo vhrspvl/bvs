@@ -84,6 +84,11 @@ def get_data():
                         "name": "Archive",
                         "description": _("Case Data"),
                     },
+                    {
+                        "type": "doctype",
+                        "name": "Generate SO",
+                        "description": _("Generate SO"),
+                    },
                 ]
             },
         ]
@@ -146,6 +151,11 @@ def get_data():
                         "type": "doctype",
                         "name": "Archive",
                         "description": _("Case Data"),
+                    },
+                    {
+                        "type": "doctype",
+                        "name": "Generate SO",
+                        "description": _("Generate SO"),
                     },
                 ]
             },

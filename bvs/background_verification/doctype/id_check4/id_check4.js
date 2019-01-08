@@ -69,7 +69,7 @@ frappe.ui.form.on('ID Check4', {
     same_as_present_address: function (frm) {
         if (frm.doc.same_as_present_address == "Yes") {
             frappe.call({
-                "method": "bvs.background_verification.doctype.aadhar_card_verification.aadhar_card_verification.get_value",
+                "method": "bvs.background_verification.doctype.id_check4.id_check4.get_value",
                 args: {
                     "applicant": frm.doc.applicant_id,
                 },
@@ -107,7 +107,7 @@ frappe.ui.form.on('ID Check4', {
     onload: function (frm) {
         if (frm.doc.applicant_id) {
             frappe.call({
-                "method": "bvs.background_verification.doctype.aadhar_card_verification.aadhar_card_verification.get_value",
+                "method": "bvs.background_verification.doctype.id_check4.id_check4.get_value",
                 args: {
                     "applicant": frm.doc.applicant_id,
                 },

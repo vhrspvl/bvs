@@ -156,7 +156,6 @@ def create_verify(doc, method):
             "applicant_name": doc.applicant_name,
             "status": "Allocation Pending",
             "client_tat": doc.tat
-
         })
         verify_ref1.save(ignore_permissions=True)
     if doc.name1 == "Reference Check2":

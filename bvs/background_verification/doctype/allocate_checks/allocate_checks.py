@@ -344,7 +344,6 @@ def get_verifycheck(applicant,check):
         verify_checks = frappe.db.get_list("Verify Civil Check", filters ={"applicant_id": applicant}, fields=("name","client_tat"))      
     if check == "Criminal Check":
         verify_checks = frappe.db.get_list("Verify Criminal Check", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-    frappe.errprint(verify_checks)
     return verify_checks
 
 
@@ -355,202 +354,231 @@ def set_assign_to(doc,check):
     executives = json.loads(doc)
     for e in executives:
         allocated_to = e.get("allocated_to")
-        docstatus = e.get("status")
-        doctype = e.get("reference_doctype")
-        docname = e.get("reference_name")
-        in_date = e.get("in_date")
-        doc = frappe.get_doc(doctype,docname)
-        args = {
-            'allocated_for': "Execution Pending",
-            'executive': allocated_to,
-            'in_date': in_date,
-            'assigned_date': frappe.utils.nowdate(),
-            'status': "Allocation Completed"
-        }
-        doc.update(args)
-        doc.save(ignore_permissions=True)
-        frappe.db.commit()
-        docstatus = e.get("status")
-        docapplicant = e.get("applicant")
-        # doc = frappe.get_doc(doctype,docname)  
-        if allocated_to:     
-            if check == "Employment Check":
-                emp1 = frappe.db.get_value("Employment Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if emp1:
-                    emp1_doc = frappe.get_doc("Employment Check1",emp1["name"])
-                    emp1_doc.status = "Allocation Completed"
-                    emp1_doc.db_update()
-                    frappe.db.commit()
-                emp2 = frappe.db.get_value("Employment Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if emp2:
-                    emp2_doc = frappe.get_doc("Employment Check2",emp2["name"])
-                    emp2_doc.status = "Allocation Completed"
-                    emp2_doc.db_update()
-                    frappe.db.commit()
-                emp3 = frappe.db.get_value("Employment Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if emp3:
-                    emp3_doc = frappe.get_doc("Employment Check3",emp3["name"])
-                    emp3_doc.status = "Allocation Completed"
-                    emp3_doc.db_update()
-                    frappe.db.commit()
-                emp4 = frappe.db.get_value("Employment Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if emp4:
-                    emp4_doc = frappe.get_doc("Employment Check4",emp4["name"])
-                    emp4_doc.status = "Allocation Completed"
-                    emp4_doc.db_update()
-                    frappe.db.commit()
-            if check == "Education Check":
-                edu1 = frappe.db.get_value("Education Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if edu1:
-                    edu1_doc = frappe.get_doc("Education Check1",edu1["name"])
-                    edu1_doc.status = "Allocation Completed"
-                    edu1_doc.db_update()
-                    frappe.db.commit()
-                edu2 = frappe.db.get_value("Education Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if edu2:
-                    edu2_doc = frappe.get_doc("Education Check2",edu2["name"])
-                    edu2_doc.status = "Allocation Completed"
-                    edu2_doc.db_update()
-                    frappe.db.commit()
-                edu3 = frappe.db.get_value("Education Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if edu3:
-                    edu3_doc = frappe.get_doc("Education Check3",edu3["name"])
-                    edu3_doc.status = "Allocation Completed"
-                    edu3_doc.db_update()
-                    frappe.db.commit()
-                edu4 = frappe.db.get_value("Education Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if edu4:
-                    edu4_doc = frappe.get_doc("Education Check4",edu4["name"])
-                    edu4_doc.status = "Allocation Completed"
-                    edu4_doc.db_update()
-                    frappe.db.commit()
-            if check == "Address Check":
-                add1 = frappe.db.get_value("Address Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if add1:
-                    add1_doc = frappe.get_doc("Address Check1",add1["name"])
-                    add1_doc.status = "Allocation Completed"
-                    add1_doc.db_update()
-                    frappe.db.commit()
-                add2 = frappe.db.get_value("Address Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if add2:
-                    add2_doc = frappe.get_doc("Address Check2",add2["name"])
-                    add2_doc.status = "Allocation Completed"
-                    add2_doc.db_update()
-                    frappe.db.commit()
-                add3 = frappe.db.get_value("Address Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if add3:
-                    add3_doc = frappe.get_doc("Address Check3",add3["name"])
-                    add3_doc.status = "Allocation Completed"
-                    add3_doc.db_update()
-                    frappe.db.commit()
-                add4 = frappe.db.get_value("Address Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if add4:
-                    add4_doc = frappe.get_doc("Address Check4",add4["name"])
-                    add4_doc.status = "Allocation Completed"
-                    add4_doc.db_update()
-                    frappe.db.commit()
-            if check == "Reference Check":
-                ref1 = frappe.db.get_value("Reference Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if ref1:
-                    ref1_doc = frappe.get_doc("Reference Check1",ref1["name"])
-                    ref1_doc.status = "Allocation Completed"
-                    ref1_doc.db_update()
-                    frappe.db.commit()
-                ref2 = frappe.db.get_value("Reference Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if ref2:
-                    ref2_doc = frappe.get_doc("Reference Check2",ref2["name"])
-                    ref2_doc.status = "Allocation Completed"
-                    ref2_doc.db_update()
-                    frappe.db.commit()
-                ref3 = frappe.db.get_value("Reference Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if ref3:
-                    ref3_doc = frappe.get_doc("Reference Check3",ref3["name"])
-                    ref3_doc.status = "Allocation Completed"
-                    ref3_doc.db_update()
-                    frappe.db.commit()
-                ref4 = frappe.db.get_value("Reference Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if ref4:
-                    ref4_doc = frappe.get_doc("Reference Check4",ref4["name"])
-                    ref4_doc.status = "Allocation Completed"
-                    ref4_doc.db_update()
-                    frappe.db.commit()
-                
-            if check == "Family Check":
-                fam1 = frappe.db.get_value("Family Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if fam1:
-                    fam1_doc = frappe.get_doc("Family Check1",fam1["name"])
-                    fam1_doc.status = "Allocation Completed"
-                    fam1_doc.db_update()
-                    frappe.db.commit()
-                fam2 = frappe.db.get_value("Family Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if fam2:
-                    fam2_doc = frappe.get_doc("Family Check2",fam2["name"])
-                    fam2_doc.status = "Allocation Completed"
-                    fam2_doc.db_update()
-                    frappe.db.commit()
-                fam3 = frappe.db.get_value("Family Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if fam3:
-                    fam3_doc = frappe.get_doc("Family Check3",fam3["name"])
-                    fam3_doc.status = "Allocation Completed"
-                    fam3_doc.db_update()
-                    frappe.db.commit()
-                fam4 = frappe.db.get_value("Family Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if fam4:
-                    fam4_doc = frappe.get_doc("Family Check4",fam4["name"])
-                    fam4_doc.status = "Allocation Completed"
-                    fam4_doc.db_update()
-                    frappe.db.commit()
-            if check == "Identity Check":
-                aad = frappe.db.get_value("ID Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if aad:
-                    aad_doc = frappe.get_doc("ID Check1",aad["name"])
-                    aad_doc.status = "Allocation Completed"
-                    aad_doc.db_update()
-                    frappe.db.commit()
-                pan = frappe.db.get_value("ID Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if pan:
-                    pan_doc = frappe.get_doc("ID Check2",pan["name"])
-                    pan_doc.status = "Allocation Completed"
-                    pan_doc.db_update()
-                    frappe.db.commit()
-                pas = frappe.db.get_value("ID Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if pas:
-                    pas_doc = frappe.get_doc("ID Check3",pas["name"])
-                    pas_doc.status = "Allocation Completed"
-                    pas_doc.db_update()
-                    frappe.db.commit()
-                vot = frappe.db.get_value("ID Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if vot:
-                    vot_doc = frappe.get_doc("ID Check4",vot["name"])
-                    vot_doc.status = "Allocation Completed"
-                    vot_doc.db_update()
-                    frappe.db.commit()
-                rat = frappe.db.get_value("ID Check5", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if rat:
-                    rat_doc = frappe.get_doc("ID Check5",rat["name"])
-                    rat_doc.status = "Allocation Completed"
-                    rat_doc.db_update()
-                    frappe.db.commit()
-                dri = frappe.db.get_value("ID Check6", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if dri:
-                    dri_doc = frappe.get_doc("ID Check6",dri["name"])
-                    dri_doc.status = "Allocation Completed"
-                    dri_doc.db_update()
-                    frappe.db.commit()
-            if check == "Civil Check":
-                cvl = frappe.db.get_value("Civil Check", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if cvl:
-                    cvl_doc = frappe.get_doc("Civil Check",cvl["name"])
-                    cvl_doc.status = "Allocation Completed"
-                    cvl_doc.db_update()
-                    frappe.db.commit()
-            if check == "Criminal Check":
-                cml = frappe.db.get_value("Criminal Check", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
-                if cml:
-                    cml_doc = frappe.get_doc("Criminal Check",cml["name"])
-                    cml_doc.status = "Allocation Completed"
-                    cml_doc.db_update()
-                    frappe.db.commit()
+        if allocated_to:
+            docstatus = e.get("status")
+            doctype = e.get("reference_doctype")
+            docname = e.get("reference_name")
+            in_date = e.get("in_date")
+            doc = frappe.get_doc(doctype,docname)
+            args = {
+                'allocated_for': "Execution Pending",
+                'executive': allocated_to,
+                'in_date': in_date,
+                'assigned_date': frappe.utils.nowdate(),
+                'status': "Allocation Completed"
+            }
+            doc.update(args)
+            doc.save(ignore_permissions=True)
+            frappe.db.commit()
+            docstatus = e.get("status")
+            docapplicant = e.get("applicant")
+            doc = frappe.get_doc(doctype,docname)  
+            if allocated_to: 
+                if check == "Employment Check":
+                    if doctype == "Verify Employment Check1":
+                        emp1 = frappe.db.get_value("Employment Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if emp1:
+                            emp1_doc = frappe.get_doc("Employment Check1",emp1["name"])
+                            emp1_doc.status = "Allocation Completed"
+                            emp1_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Employment Check2":
+                        emp2 = frappe.db.get_value("Employment Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if emp2:
+                            emp2_doc = frappe.get_doc("Employment Check2",emp2["name"])
+                            emp2_doc.status = "Allocation Completed"
+                            emp2_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Employment Check3":
+                        emp3 = frappe.db.get_value("Employment Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if emp3:
+                            emp3_doc = frappe.get_doc("Employment Check3",emp3["name"])
+                            emp3_doc.status = "Allocation Completed"
+                            emp3_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Employment Check4":
+                        emp4 = frappe.db.get_value("Employment Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if emp4:
+                            emp4_doc = frappe.get_doc("Employment Check4",emp4["name"])
+                            emp4_doc.status = "Allocation Completed"
+                            emp4_doc.db_update()
+                            frappe.db.commit()
+                if check == "Education Check":
+                    if doctype == "Verify Education Check1":
+                        edu1 = frappe.db.get_value("Education Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if edu1:
+                            edu1_doc = frappe.get_doc("Education Check1",edu1["name"])
+                            edu1_doc.status = "Allocation Completed"
+                            edu1_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Education Check2":
+                        edu2 = frappe.db.get_value("Education Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if edu2:
+                            edu2_doc = frappe.get_doc("Education Check2",edu2["name"])
+                            edu2_doc.status = "Allocation Completed"
+                            edu2_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Education Check3":
+                        edu3 = frappe.db.get_value("Education Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if edu3:
+                            edu3_doc = frappe.get_doc("Education Check3",edu3["name"])
+                            edu3_doc.status = "Allocation Completed"
+                            edu3_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Education Check4":
+                        edu4 = frappe.db.get_value("Education Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if edu4:
+                            edu4_doc = frappe.get_doc("Education Check4",edu4["name"])
+                            edu4_doc.status = "Allocation Completed"
+                            edu4_doc.db_update()
+                            frappe.db.commit()
+                if check == "Address Check":
+                    if doctype == "Verify Address Check1":
+                        add1 = frappe.db.get_value("Address Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if add1:
+                            add1_doc = frappe.get_doc("Address Check1",add1["name"])
+                            add1_doc.status = "Allocation Completed"
+                            add1_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Address Check2":
+                        add2 = frappe.db.get_value("Address Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if add2:
+                            add2_doc = frappe.get_doc("Address Check2",add2["name"])
+                            add2_doc.status = "Allocation Completed"
+                            add2_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Address Check3":
+                        add3 = frappe.db.get_value("Address Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if add3:
+                            add3_doc = frappe.get_doc("Address Check3",add3["name"])
+                            add3_doc.status = "Allocation Completed"
+                            add3_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Address Check4":
+                        add4 = frappe.db.get_value("Address Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if add4:
+                            add4_doc = frappe.get_doc("Address Check4",add4["name"])
+                            add4_doc.status = "Allocation Completed"
+                            add4_doc.db_update()
+                            frappe.db.commit()
+                if check == "Reference Check":
+                    if doctype == "Verify Reference Check1":
+                        ref1 = frappe.db.get_value("Reference Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if ref1:
+                            ref1_doc = frappe.get_doc("Reference Check1",ref1["name"])
+                            ref1_doc.status = "Allocation Completed"
+                            ref1_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Reference Check2":
+                        ref2 = frappe.db.get_value("Reference Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if ref2:
+                            ref2_doc = frappe.get_doc("Reference Check2",ref2["name"])
+                            ref2_doc.status = "Allocation Completed"
+                            ref2_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Reference Check3":
+                        ref3 = frappe.db.get_value("Reference Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if ref3:
+                            ref3_doc = frappe.get_doc("Reference Check3",ref3["name"])
+                            ref3_doc.status = "Allocation Completed"
+                            ref3_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Reference Check4":
+                        ref4 = frappe.db.get_value("Reference Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if ref4:
+                            ref4_doc = frappe.get_doc("Reference Check4",ref4["name"])
+                            ref4_doc.status = "Allocation Completed"
+                            ref4_doc.db_update()
+                            frappe.db.commit()                    
+                if check == "Family Check":
+                    if doctype == "Verify Family Check1":
+                        fam1 = frappe.db.get_value("Family Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if fam1:
+                            fam1_doc = frappe.get_doc("Family Check1",fam1["name"])
+                            fam1_doc.status = "Allocation Completed"
+                            fam1_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Family Check2":
+                        fam2 = frappe.db.get_value("Family Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if fam2:
+                            fam2_doc = frappe.get_doc("Family Check2",fam2["name"])
+                            fam2_doc.status = "Allocation Completed"
+                            fam2_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Family Check3":
+                        fam3 = frappe.db.get_value("Family Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if fam3:
+                            fam3_doc = frappe.get_doc("Family Check3",fam3["name"])
+                            fam3_doc.status = "Allocation Completed"
+                            fam3_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify Family Check4":
+                        fam4 = frappe.db.get_value("Family Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if fam4:
+                            fam4_doc = frappe.get_doc("Family Check4",fam4["name"])
+                            fam4_doc.status = "Allocation Completed"
+                            fam4_doc.db_update()
+                            frappe.db.commit()
+                if check == "Identity Check":
+                    if doctype == "Verify ID Check1":
+                        aad = frappe.db.get_value("ID Check1", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if aad:
+                            aad_doc = frappe.get_doc("ID Check1",aad["name"])
+                            aad_doc.status = "Allocation Completed"
+                            aad_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify ID Check2":
+                        pan = frappe.db.get_value("ID Check2", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if pan:
+                            pan_doc = frappe.get_doc("ID Check2",pan["name"])
+                            pan_doc.status = "Allocation Completed"
+                            pan_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify ID Check3":
+                        pas = frappe.db.get_value("ID Check3", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if pas:
+                            pas_doc = frappe.get_doc("ID Check3",pas["name"])
+                            pas_doc.status = "Allocation Completed"
+                            pas_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify ID Check4":
+                        vot = frappe.db.get_value("ID Check4", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if vot:
+                            vot_doc = frappe.get_doc("ID Check4",vot["name"])
+                            vot_doc.status = "Allocation Completed"
+                            vot_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify ID Check5":
+                        rat = frappe.db.get_value("ID Check5", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if rat:
+                            rat_doc = frappe.get_doc("ID Check5",rat["name"])
+                            rat_doc.status = "Allocation Completed"
+                            rat_doc.db_update()
+                            frappe.db.commit()
+                    if doctype == "Verify ID Check6":
+                        dri = frappe.db.get_value("ID Check6", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if dri:
+                            dri_doc = frappe.get_doc("ID Check6",dri["name"])
+                            dri_doc.status = "Allocation Completed"
+                            dri_doc.db_update()
+                            frappe.db.commit()
+                if check == "Civil Check":
+                    if doctype == "Verify Civil Check":
+                        cvl = frappe.db.get_value("Civil Check", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if cvl:
+                            cvl_doc = frappe.get_doc("Civil Check",cvl["name"])
+                            cvl_doc.status = "Allocation Completed"
+                            cvl_doc.db_update()
+                            frappe.db.commit()
+                    
+                if check == "Criminal Check":
+                    if doctype == "Verify Criminal Check":
+                        cml = frappe.db.get_value("Criminal Check", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if cml:
+                            cml_doc = frappe.get_doc("Criminal Check",cml["name"])
+                            cml_doc.status = "Allocation Completed"
+                            cml_doc.db_update()
+                            frappe.db.commit()
     return "ok"
 
 

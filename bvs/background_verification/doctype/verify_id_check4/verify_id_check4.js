@@ -50,9 +50,6 @@ frappe.ui.form.on('Verify ID Check4', {
         }
     },
     onload: function (frm) {
-        if (!frm.doc.in_date) {
-            frm.set_value("in_date", (frappe.datetime.nowdate()));
-        }
         frappe.call({
             "method": "bvs.background_verification.doctype.verify_id_check4.verify_id_check4.get_check",
             args: {
@@ -98,9 +95,6 @@ frappe.ui.form.on('Verify ID Check4', {
 
         // });
         // }
-        if (frm.doc.tat) {
-            frm.set_df_property('tat', 'read_only', 1);
-        }
         if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber") || (frm.doc.result == "Insufficient")) {
             frm.set_value("end_date", (frappe.datetime.nowdate()))
         }
@@ -160,7 +154,7 @@ frappe.ui.form.on('Verify ID Check4', {
             frappe.call({
                 "method": "frappe.client.get",
                 args: {
-                    doctype: "ID Check1",
+                    doctype: "ID Check4",
                     filters: {
                         "name": frm.doc.id_check_id
                     }
@@ -178,7 +172,7 @@ frappe.ui.form.on('Verify ID Check4', {
                         frm.set_value('ver_country', r.message.country);
                         frm.set_value('ver_pincode', r.message.pincode);
                         frm.set_value('ver_dob', r.message.dob);
-
+                        frm.set_value('ver_father_name', r.message.father_name);
                     }
                 }
             })
