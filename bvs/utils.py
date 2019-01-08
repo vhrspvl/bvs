@@ -17,40 +17,62 @@ def get_groups(doctype, txt, searchfield, start, page_len, filters):
 def get_group_checks(checks_group):
     cg = frappe.get_doc("Checks Group", checks_group)
     checklist = []
-    if cg.employment_check:
-        checklist.append('employment1')
-    if cg.second_employment:
-        checklist.append('employment2')
-    if cg.third_employment:
-        checklist.append('employment3')
-    if cg.education_check:
-        checklist.append('education1')
-    if cg.second_education:
-        checklist.append('education2')
-    if cg.third_education:
-        checklist.append('education3')
-    if cg.reference_check:
-        checklist.append('reference1')
-    if cg.second_reference:
-        checklist.append('reference2')
-    if cg.third_reference:
-        checklist.append('reference3')
-    if cg.identity_check:
-        checklist.append('aadhar')
-    if cg.driving_license_verification:
-        checklist.append('driving')
-    if cg.voter_id_verification:
-        checklist.append('voter')
-    if cg.pan_card_verification:
-        checklist.append('pan')
-    if cg.passport_verification:
-        checklist.append('passport')
-    if cg.family_detail_check:
-        checklist.append('family')
+    if cg.employment_check1:
+        checklist.append('employment_check1')
+    if cg.employment_check2:
+        checklist.append('employment_check2')
+    if cg.employment_check3:
+        checklist.append('employment_check3')
+    if cg.employment_check4:
+        checklist.append('employment_check4')
+    if cg.education_check1:
+        checklist.append('education_check1')
+    if cg.education_check2:
+        checklist.append('education_check2')
+    if cg.education_check3:
+        checklist.append('education_check3')
+    if cg.education_check4:
+        checklist.append('education_check4')
+    if cg.address_check1:
+        checklist.append('address_check1')
+    if cg.address_check2:
+        checklist.append('address_check2')
+    if cg.address_check3:
+        checklist.append('address_check3')
+    if cg.address_check4:
+        checklist.append('address_check4')
+    if cg.reference_check1:
+        checklist.append('reference_check1')
+    if cg.reference_check2:
+        checklist.append('reference_check2')
+    if cg.reference_check3:
+        checklist.append('reference_check3')
+    if cg.reference_check4:
+        checklist.append('reference_check4')
+    if cg.id_check1:
+        checklist.append('id_check1')
+    if cg.id_check2:
+        checklist.append('id_check2')
+    if cg.id_check3:
+        checklist.append('id_check3')
+    if cg.id_check4:
+        checklist.append('id_check4')
+    if cg.id_check5:
+        checklist.append('id_check5')
+    if cg.id_check6:
+        checklist.append('id_check6')
+    if cg.family_check1:
+        checklist.append('family_check1')
+    if cg.family_check2:
+        checklist.append('family_check2')
+    if cg.family_check3:
+        checklist.append('family_check3')
+    if cg.family_check4:
+        checklist.append('family_check4')
+    if cg.civil_check:
+        checklist.append('civil_check')
     if cg.criminal_check:
-        checklist.append('criminal')
-    if cg.court_record_check:
-        checklist.append('court')
-    if cg.address_check:
-        checklist.append('address')
+        checklist.append('criminal_check')
+    if cg.id_check:
+        checklist.append('id_check')
     return checklist

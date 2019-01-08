@@ -8,3 +8,15 @@ from frappe.model.document import Document
 
 class FamilyCheck1(Document):
 	pass
+
+
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Family Check1", {"applicant_id": applicant_id}, "status")
+    return status
+
+@frappe.whitelist()
+def get_vstatus(applicant_id):
+    result = frappe.db.get_value("Verify Family Check1", {"applicant_id": applicant_id}, "result")
+    return result

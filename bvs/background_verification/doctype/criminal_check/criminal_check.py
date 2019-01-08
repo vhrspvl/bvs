@@ -8,3 +8,20 @@ from frappe.model.document import Document
 
 class CriminalCheck(Document):
 	pass
+
+
+@frappe.whitelist()
+def get_doc(applicant):
+	address = frappe.db.get_value("Address Check1", {"applicant_id":applicant}, ["address_line1","address_line2","address_line3","talukdistrict","state","city","country","pincode"])
+	# frappe.errprint(status)
+	return address
+
+@frappe.whitelist()
+def get_status(applicant_id):
+    status = frappe.db.get_value("Criminal Check", {"applicant_id": applicant_id}, "status")
+    return status
+
+@frappe.whitelist()
+def get_vstatus(applicant_id):
+    result = frappe.db.get_value("Verify Criminal Check", {"applicant_id": applicant_id}, "result")
+    return result

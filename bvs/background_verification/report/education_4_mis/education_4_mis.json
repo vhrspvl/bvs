@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2018-10-30 14:26:39.044251", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "VHRS BVS", 
+ "modified": "2018-10-30 14:27:00.902622", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Education 4 MIS", 
+ "owner": "Administrator", 
+ "query": "SELECT `tabVerify Education Check4`.`executive` AS \"SPOC Name\",\n       `tabVerify Education Check4`.`applicant_id` AS \"VHRS Ref ID\",\n       `tabVerify Education Check4`.`ver_student_name` AS \"Candidate Name\",\n       `tabVerify Education Check4`.`assigned_date` AS \"Assigned Date\",\n       `tabVerify Education Check4`.`in_date` AS \"Start Date\",\n       `tabVerify Education Check4`.`ver_reg_no` AS \"Reg.No\",\n       `tabVerify Education Check4`.`ver_university_name` AS \"University Name\",\n       `tabVerify Education Check4`.`ver_institutioncollege_name` AS \"Institute Name\",\n       `tabVerify Education Check4`.`ver_course` AS \"Course\",\n       `tabVerify Education Check4`.`ver_mode_of_education` AS \"Mode of Education\",\n       `tabVerify Education Check4`.`ver_year_of_passing` AS \"YOP\"\nFROM `tabVerify Education Check4` \nWHERE (`tabVerify Education Check4`.`executive` <> '') AND (DATE(`tabVerify Education Check4`.`in_date`) between %(from_date)s and %(to_date)s)\nORDER BY\n     `tabVerify Education Check4`.`in_date` asc", 
+ "ref_doctype": "Verify Education Check4", 
+ "report_name": "Education 4 MIS", 
+ "report_type": "Query Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "BVS Manager"
+  }
+ ]
+}

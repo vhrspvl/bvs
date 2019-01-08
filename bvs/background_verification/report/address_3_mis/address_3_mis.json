@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2018-10-30 14:28:58.918252", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "VHRS BVS", 
+ "modified": "2018-10-30 14:29:13.758201", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Address 3 MIS", 
+ "owner": "Administrator", 
+ "query": "SELECT `tabVerify Address Check3`.`executive` AS \"SPOC Name\",\n       `tabVerify Address Check3`.`applicant_id` AS \"VHRS Ref ID\",\n       `tabVerify Address Check3`.`applicant_name` AS \"Candidate Name\",\n       `tabVerify Address Check3`.`assigned_date` AS \"Assigned Date\",\n       `tabVerify Address Check3`.`in_date` AS \"Start Date\",\n       concat(`tabVerify Address Check3`.`address_line1`,',',`tabVerify Address Check3`.`address_line2`,',',`tabVerify Address Check3`.`address_line3`,',',`tabVerify Address Check3`.`talukdistrict`,',',`tabVerify Address Check3`.`city`,',',`tabVerify Address Check3`.`state`,',',`tabVerify Address Check3`.`country`,',',`tabVerify Address Check3`.`pincode`) AS \"Address\"\nFROM `tabVerify Address Check3` \nWHERE (`tabVerify Address Check3`.`executive` <> '') AND (DATE(`tabVerify Address Check3`.`in_date`) between %(from_date)s and %(to_date)s)\nORDER BY\n     `tabVerify Address Check3`.`in_date` asc", 
+ "ref_doctype": "Verify Address Check3", 
+ "report_name": "Address 3 MIS", 
+ "report_type": "Query Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "BVS Manager"
+  }
+ ]
+}

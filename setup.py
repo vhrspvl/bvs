@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-import re
-import ast
+import re, ast
 
 with open('requirements.txt') as f:
-    install_requires = f.read().strip().split('\n')
+	install_requires = f.read().strip().split('\n')
 
 # get version from __version__ variable in bvs/__init__.py
 _version_re = re.compile(r'__version__\s+=\s+(.*)')
@@ -14,13 +13,13 @@ with open('bvs/__init__.py', 'rb') as f:
         f.read().decode('utf-8')).group(1)))
 
 setup(
-    name='bvs',
-    version=version,
-    description='VHRS Background Verification Service',
-    author='VHRS',
-    author_email='erp@voltechgroup.com',
-    packages=find_packages(),
-    zip_safe=False,
-    include_package_data=True,
-    install_requires=install_requires
+	name='bvs',
+	version=version,
+	description='VHRS Background Verification Service',
+	author='VHRS',
+	author_email='erp@voltechgroup.com',
+	packages=find_packages(),
+	zip_safe=False,
+	include_package_data=True,
+	install_requires=install_requires
 )

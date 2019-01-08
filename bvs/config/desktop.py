@@ -10,5 +10,13 @@ def get_data():
 			"icon": "octicon octicon-search",
 			"type": "module",
 			"label": _("Background Verification")
-		}
+		},
+		# {
+		# 	"module_name": "Entry Dashboard",
+		# 	"color": "#589494",
+		# 	"icon": "octicon octicon-graph",
+		# 	"type": "page",
+		# 	"link": "entry_dashboard",
+		# 	"label": _("Entry Dashboard")
+		# }
 	]
