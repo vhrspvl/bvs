@@ -86,6 +86,11 @@ def get_data():
                     },
                     {
                         "type": "doctype",
+                        "name": "Insufficient Case Details",
+                        "description": _("Insufficient Case Details"),
+                    },
+                    {
+                        "type": "doctype",
                         "name": "Generate SO",
                         "description": _("Generate SO"),
                     },
@@ -151,6 +156,11 @@ def get_data():
                         "type": "doctype",
                         "name": "Archive",
                         "description": _("Case Data"),
+                    },
+                    {
+                        "type": "doctype",
+                        "name": "Insufficient Case Details",
+                        "description": _("Insufficient Case Details"),
                     },
                     {
                         "type": "doctype",
