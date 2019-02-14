@@ -6,46 +6,63 @@
 frappe.ui.form.on("Verify Education Check1", {
     after_save: function (frm) {
         if (frm.doc.status == "QC Completed") {
-            frappe.confirm(
-                'Do you want to attach the File?',
-                function () {
-                    window.close();
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_checks_group",
+                args: {
+                    "applicant": frm.doc.applicant_id,
+                    "checks_group": frm.doc.checks_group,
+                    "doctype": doctype.name,
+                    "check_status": frm.doc.status
                 },
-                function () {
-                    frappe.call({
-                        "method": "bvs.background_verification.doctype.applicant.applicant.get_checks_group",
-                        args: {
-                            "applicant": frm.doc.applicant_id,
-                            "checks_group": frm.doc.checks_group,
-                            "doctype": doctype.name,
-                            "check_status": frm.doc.status
-                        },
-                        callback: function (r) {
-                            if (frm.doc.status == "QC Completed") {
-                                if (r.message.doctype) {
-                                    if (r.message.status != frm.doc.status) {
-                                        frappe.set_route('Form', r.message.doctype, r.message.name);
-                                    }
-                                } else if (r.message != "Completed") {
-                                    frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
-                                } else if (r.message == "Completed") {
-                                    frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
-                                }
-                            } else {
-                                if (r.message.doctype) {
-                                    if (r.message.status != frm.doc.status) {
-                                        frappe.set_route('Form', r.message.doctype, r.message.name);
-                                    }
-                                } else if (r.message != "Completed") {
-                                    frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
-                                } else if (r.message == "Completed") {
-                                    frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
+                callback: function (r) {
+                    if (frm.doc.status == "QC Completed") {
+                        if (r.message.doctype) {
+                            if (r.message.status != frm.doc.status) {
+                                frappe.set_route('Form', r.message.doctype, r.message.name);
+                            }
+                        } else if (r.message != "Completed") {
+                            frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
+                        } else if (r.message == "Completed") {
+                            frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
+                        }
+                    } else {
+                        if (r.message.doctype) {
+                            if (r.message.status != frm.doc.status) {
+                                frappe.set_route('Form', r.message.doctype, r.message.name);
+                            }
+                        } else if (r.message != "Completed") {
+                            frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
+                        } else if (r.message == "Completed") {
+                            frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
+                        }
+                    }
+                }
+            })
+        }
+        if (frm.doc.status == "Execution Completed") {
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
+                args: {
+                    "applicant": frm.doc.applicant_id,
+                    "checks_group": frm.doc.checks_group
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.call({
+                            "method": "bvs.background_verification.doctype.applicant.applicant.save_applicant",
+                            "args": {
+                                "status": r.message,
+                                "ref_id": frm.doc.applicant_id
+                            },
+                            callback: function (r) {
+                                if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber")) {
+                                    frappe.set_route("List", "Verifier Dashboard");
                                 }
                             }
-                        }
-                    })
+                        });
+                    }
                 }
-            )
+            })
         }
     },
     onload: function (frm) {
@@ -110,73 +127,81 @@ frappe.ui.form.on("Verify Education Check1", {
             // 	}else{
             // 		$(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Red");
             // 	}
-            // }
-            if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber") || (frm.doc.result == "Insufficient")) {
-                frm.set_value("end_date", (frappe.datetime.nowdate()))
+        }
+        if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber") || (frm.doc.result == "Insufficient")) {
+            frm.set_value("end_date", (frappe.datetime.nowdate()))
+        }
+        if (frm.doc.executive == frappe.session.user) {
+            if (frm.doc.allocated_for == "QC Pending") {
+                frm.set_value("status", "QC Completed")
+                frm.set_value("allocated_for", "QC Completed")
             }
-            if (frm.doc.executive == frappe.session.user) {
-                if (frm.doc.allocated_for == "QC Pending") {
-                    frm.set_value("status", "QC Completed")
-                    frm.set_value("allocated_for", "QC Completed")
-                }
-                if (frm.doc.allocated_for == "Execution Pending") {
-                    frm.set_value("status", "Execution Completed")
-                    frappe.call({
-                        "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
-                        args: {
-                            "applicant": frm.doc.applicant_id,
-                            "checks_group": frm.doc.checks_group
-                        },
-                        callback: function (r) {
-                            if (r.message) {
-                                frappe.call({
-                                    "method": "frappe.client.set_value",
-                                    "args": {
-                                        "doctype": "Applicant",
-                                        "name": frm.doc.applicant_id,
-                                        "fieldname": "status",
-                                        "value": r.message
-                                    }
-                                });
-                            }
-                        }
-                    })
-                }
-            }
-            if (frm.doc.status == "Execution Completed") {
-                if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber")) {
-                    frappe.set_route("List", "Verifier Dashboard");
-                }
-            }
-        },
-        refresh: function(frm) {
-            if (frm.doc.allocated_for) {
-                $(cur_frm.fields_dict.allocated_for.input).css("backgroundColor", "DeepPink");
-            }
-            if (frm.doc.applicant_id) {
-                frappe.call({
-                    "method": "frappe.client.get",
-                    args: {
-                        doctype: "Education Check1",
-                        filters: {
-                            "name": frm.doc.education_check1_id
-                        }
-                    },
-                    callback: function (r) {
-                        if (r.message) {
-                            frm.set_value('ver_reg_no', r.message.reg_no);
-                            frm.set_value('ver_student_name', r.message.student_name);
-                            frm.set_value('ver_university_name', r.message.university_name);
-                            frm.set_value('ver_institutioncollege_name', r.message.institutioncollege_name);
-                            frm.set_value('ver_course', r.message.course);
-                            frm.set_value('ver_mode_of_education', r.message.mode_of_education);
-                            frm.set_value('ver_period_of_study', r.message.period_of_study);
-                            frm.set_value('ver_year_of_passing', r.message.year_of_passing);
-
-                        }
-                    }
-                })
+            if (frm.doc.allocated_for == "Execution Pending") {
+                frm.set_value("status", "Execution Completed")
+                // frappe.call({
+                //     "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
+                //     args: {
+                //         "applicant": frm.doc.applicant_id,
+                //         "checks_group": frm.doc.checks_group
+                //     },
+                //     callback: function (r) {
+                //         if (r.message) {
+                //             frappe.call({
+                //                 "method": "frappe.client.set_value",
+                //                 "args": {
+                //                     "doctype": "Applicant",
+                //                     "name": frm.doc.applicant_id,
+                //                     "fieldname": "status",
+                //                     "value": r.message
+                //                 }
+                //             });
+                //         }
+                //     }
+                // })
             }
         }
 
-    });
+
+    },
+    refresh: function (frm) {
+        if (frm.doc.allocated_for) {
+            $(cur_frm.fields_dict.allocated_for.input).css("backgroundColor", "DeepPink");
+        }
+        if (frm.doc.fields != "Updated") {
+            frappe.call({
+                "method": "frappe.client.get",
+                args: {
+                    doctype: "Education Check1",
+                    filters: {
+                        "name": frm.doc.education_check1_id
+                    }
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frm.set_value('ver_reg_no', r.message.reg_no);
+                        frm.set_value('ver_student_name', r.message.student_name);
+                        frm.set_value('ver_university_name', r.message.university_name);
+                        frm.set_value('ver_institutioncollege_name', r.message.institutioncollege_name);
+                        frm.set_value('ver_course', r.message.course);
+                        frm.set_value('ver_mode_of_education', r.message.mode_of_education);
+                        frm.set_value('ver_period_of_study', r.message.period_of_study);
+                        frm.set_value('ver_year_of_passing', r.message.year_of_passing);
+                        frm.set_value("fields", "Updated")
+                    }
+                }
+            })
+        }
+        if ((frm.doc.allocated_for == "QC Pending") || (frm.doc.status == "QC Completed")) {
+            frm.set_df_property('ver_reg_no', 'read_only', 0);
+            frm.set_df_property('ver_student_name', 'read_only', 0);
+            frm.set_df_property('ver_university_name', 'read_only', 0);
+            frm.set_df_property('ver_institutioncollege_name', 'read_only', 0);
+            frm.set_df_property('ver_course', 'read_only', 0);
+            frm.set_df_property('ver_mode_of_education', 'read_only', 0);
+            frm.set_df_property('ver_period_of_study', 'read_only', 0);
+            frm.set_df_property('ver_year_of_passing', 'read_only', 0);
+        }
+
+    }
+
+});

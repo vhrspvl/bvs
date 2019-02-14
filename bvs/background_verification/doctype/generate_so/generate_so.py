@@ -30,3 +30,16 @@ def create_so(customer, delivery_date, project, item_code, qty):
         })
         so.save(ignore_permissions=True)
     return so
+
+
+@frappe.whitelist()
+def update_so_status(ref_id):
+    if ref_id:
+        app_id = frappe.get_doc("Applicant", ref_id)
+        if app_id:
+            app_id.update({
+                "sale_order_status": "Confirmed"
+            })
+            app_id.save(ignore_permissions=True)
+            frappe.db.commit()
+    return "OK"

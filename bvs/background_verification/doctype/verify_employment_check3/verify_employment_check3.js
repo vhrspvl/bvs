@@ -4,46 +4,63 @@
 frappe.ui.form.on("Verify Employment Check3", {
     after_save: function (frm) {
         if (frm.doc.status == "QC Completed") {
-            frappe.confirm(
-                'Do you want to attach the File?',
-                function () {
-                    window.close();
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_checks_group",
+                args: {
+                    "applicant": frm.doc.applicant_id,
+                    "checks_group": frm.doc.checks_group,
+                    "doctype": doctype.name,
+                    "check_status": frm.doc.status
                 },
-                function () {
-                    frappe.call({
-                        "method": "bvs.background_verification.doctype.applicant.applicant.get_checks_group",
-                        args: {
-                            "applicant": frm.doc.applicant_id,
-                            "checks_group": frm.doc.checks_group,
-                            "doctype": doctype.name,
-                            "check_status": frm.doc.status
-                        },
-                        callback: function (r) {
-                            if (frm.doc.status == "QC Completed") {
-                                if (r.message.doctype) {
-                                    if (r.message.status != frm.doc.status) {
-                                        frappe.set_route('Form', r.message.doctype, r.message.name);
-                                    }
-                                } else if (r.message != "Completed") {
-                                    frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
-                                } else if (r.message == "Completed") {
-                                    frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
-                                }
-                            } else {
-                                if (r.message.doctype) {
-                                    if (r.message.status != frm.doc.status) {
-                                        frappe.set_route('Form', r.message.doctype, r.message.name);
-                                    }
-                                } else if (r.message != "Completed") {
-                                    frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
-                                } else if (r.message == "Completed") {
-                                    frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
+                callback: function (r) {
+                    if (frm.doc.status == "QC Completed") {
+                        if (r.message.doctype) {
+                            if (r.message.status != frm.doc.status) {
+                                frappe.set_route('Form', r.message.doctype, r.message.name);
+                            }
+                        } else if (r.message != "Completed") {
+                            frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
+                        } else if (r.message == "Completed") {
+                            frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
+                        }
+                    } else {
+                        if (r.message.doctype) {
+                            if (r.message.status != frm.doc.status) {
+                                frappe.set_route('Form', r.message.doctype, r.message.name);
+                            }
+                        } else if (r.message != "Completed") {
+                            frappe.set_route('Form', r.message, 'New ' + r.message, { "tat": frm.doc.tat, "applicant_name": frm.doc.applicant_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.applicant_id });
+                        } else if (r.message == "Completed") {
+                            frappe.set_route('Form', "Applicant", frm.doc.applicant_id);
+                        }
+                    }
+                }
+            })
+        }
+        if (frm.doc.status == "Execution Completed") {
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
+                args: {
+                    "applicant": frm.doc.applicant_id,
+                    "checks_group": frm.doc.checks_group
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.call({
+                            "method": "bvs.background_verification.doctype.applicant.applicant.save_applicant",
+                            "args": {
+                                "status": r.message,
+                                "ref_id": frm.doc.applicant_id
+                            },
+                            callback: function (r) {
+                                if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber")) {
+                                    frappe.set_route("List", "Verifier Dashboard");
                                 }
                             }
-                        }
-                    })
+                        });
+                    }
                 }
-            )
+            })
         }
     },
     onload: function (frm) {
@@ -115,31 +132,6 @@ frappe.ui.form.on("Verify Employment Check3", {
             }
             if (frm.doc.allocated_for == "Execution Pending") {
                 frm.set_value("status", "Execution Completed")
-                frappe.call({
-                    "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
-                    args: {
-                        "applicant": frm.doc.applicant_id,
-                        "checks_group": frm.doc.checks_group
-                    },
-                    callback: function (r) {
-                        if (r.message) {
-                            frappe.call({
-                                "method": "frappe.client.set_value",
-                                "args": {
-                                    "doctype": "Applicant",
-                                    "name": frm.doc.applicant_id,
-                                    "fieldname": "status",
-                                    "value": r.message
-                                }
-                            });
-                        }
-                    }
-                })
-            }
-        }
-        if (frm.doc.status == "Execution Completed") {
-            if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber")) {
-                frappe.set_route("List", "Verifier Dashboard");
             }
         }
     },
@@ -147,7 +139,7 @@ frappe.ui.form.on("Verify Employment Check3", {
         if (frm.doc.allocated_for) {
             $(cur_frm.fields_dict.allocated_for.input).css("backgroundColor", "DeepPink");
         }
-        if (frm.doc.applicant_id) {
+        if (frm.doc.fields != "Updated") {
             frappe.call({
                 "method": "frappe.client.get",
                 args: {
@@ -174,9 +166,29 @@ frappe.ui.form.on("Verify Employment Check3", {
                         frm.set_value('reporting_managers_name', r.message.reporting_managers_name);
                         frm.set_value('reporting_managers_designation', r.message.reporting_managers_designation);
                         frm.set_value('reason_for_leaving', r.message.reason_for_leaving);
+                        frm.set_value("fields", "Updated")
                     }
                 }
             })
+        }
+        if ((frm.doc.allocated_for == "QC Pending") || (frm.doc.status == "QC Completed")) {
+            frm.set_df_property('employee_code', 'read_only', 0);
+            frm.set_df_property('employee_name', 'read_only', 0);
+            frm.set_df_property('employer_name', 'read_only', 0);
+            frm.set_df_property('location', 'read_only', 0);
+            frm.set_df_property('contact_number', 'read_only', 0);
+            frm.set_df_property('employment_type', 'read_only', 0);
+            frm.set_df_property('from', 'read_only', 0);
+            frm.set_df_property('to', 'read_only', 0);
+            frm.set_df_property('designationjoining', 'read_only', 0);
+            frm.set_df_property('designationleaving', 'read_only', 0);
+            frm.set_df_property('remunerations', 'read_only', 0);
+            frm.set_df_property('amount', 'read_only', 0);
+            frm.set_df_property('amount1', 'read_only', 0);
+            frm.set_df_property('reporting_managers_name', 'read_only', 0);
+            frm.set_df_property('reporting_managers_designation', 'read_only', 0);
+            frm.set_df_property('reason_for_leaving', 'read_only', 0);
+
         }
     }
 

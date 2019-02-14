@@ -10,7 +10,15 @@ frappe.ui.form.on("Applicant", {
             }
         }
         if ((frappe.user.has_role("BVS Verifier") || frappe.user.has_role("BVS Manager")) && (frm.doc.ref_id) && ((frm.doc.status == "Allocation Pending") || (frm.doc.status == "Positive") || (frm.doc.status == "Negative") || (frm.doc.status == "Amber"))) {
-            frappe.set_route("Form", "QC Verification");
+            frappe.confirm(
+                'Do you want to Print the File?',
+                function () {
+                    window.close();
+                },
+                function () {
+                    frappe.set_route("Form", "QC Verification")
+                }
+            )
         }
     },
     validate: function (frm) {
@@ -130,7 +138,7 @@ frappe.ui.form.on("Applicant", {
                                 "method": "frappe.client.get",
                                 args: {
                                     doctype: "Holiday List",
-                                    name: "BVS Holiday List"
+                                    name: "VHRS Common Leaves"
                                 },
                                 callback: function (r) {
                                     if (r.message) {

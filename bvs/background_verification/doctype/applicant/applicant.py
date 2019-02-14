@@ -126,7 +126,9 @@ def get_status(applicant,checks_group):
                 status = "Amber"
             if any(check == "Insufficient" for check in check2):
                 status = "Insufficient"
-        # frappe.get_doc("Applicant", applicant) 
+        # else:
+        #     applicant_status = frappe.db.get_value("Applicant",{"name":applicant},"status")
+        #     status = applicant_status
     return status
 
 
@@ -269,6 +271,20 @@ def get_checks_group(applicant,checks_group,doctype,check_status):
                     return check
             
         return "Completed"
+
+
+
+
+@frappe.whitelist()
+def save_applicant(status,ref_id):
+    app = frappe.get_doc("Applicant",ref_id)
+    if app:
+        app.update({
+            "status": status
+        })    
+        app.save(ignore_permissions=True)
+        frappe.db.commit()
+    return "Ok"
 
 
 # @frappe.whitelist()

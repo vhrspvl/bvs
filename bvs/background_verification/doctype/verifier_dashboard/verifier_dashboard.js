@@ -2,12 +2,149 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Verifier Dashboard', {
-    onload: function (frm) {
+    // onload: function (frm) {
+    //     frappe.call({
+    //         "method": "bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
+    //         args: {
+    //         },
+    //         // limit_page_length: 10,
+    //         freeze: true,
+    //         freeze_message: "Loading....",
+    //         callback: function (r) {
+    //             if (r.message) {
+    //                 var b = Object.keys(r.message).length;
+    //                 for (var i = 0; i < b; i++) {
+    //                     var j = i;
+    //                     $.each(r.message[i], function (i, d) {
+    //                         var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");
+    //                         // row.pending_checks = c;
+    //                         row.executive = frappe.session.user;
+    //                         row.ref_no = d.applicant_id;
+    //                         row.candidate_name = d.applicant_name;
+    //                         row.status = d.status;
+    //                         row.check_name = d.name;
+    //                         if (row.ref_no) {
+    //                             frappe.call({
+    //                                 "method": "frappe.client.get",
+    //                                 args: {
+    //                                     "doctype": "Applicant",
+    //                                     "name": row.ref_no,
+    //                                 },
+    //                                 freeze: true,
+    //                                 freeze_message: "Loading....",
+    //                                 callback: function (r) {
+    //                                     if (r.message) {
+    //                                         if (r.message.client_employee_code) {
+    //                                             row.emp_code = r.message.client_employee_code;
+    //                                         } else {
+    //                                             row.emp_code = "-";
+    //                                         }
+    //                                         row.in_date = r.message.in_date;
+    //                                     }
+    //                                     refresh_field("verify_dashboard_list");
+    //                                 }
+    //                             })
+    //                         }
+    //                         if (j == 0) {
+    //                             row.checks = "Employment Check1";
+    //                         }
+    //                         if (j == 1) {
+    //                             row.checks = "Employment Check2";
+    //                         }
+    //                         if (j == 2) {
+    //                             row.checks = "Employment Check3";
+    //                         }
+    //                         if (j == 3) {
+    //                             row.checks = "Employment Check4";
+    //                         }
+    //                         if (j == 4) {
+    //                             row.checks = "Education Check1";
+    //                         }
+    //                         if (j == 5) {
+    //                             row.checks = "Education Check2";
+    //                         }
+    //                         if (j == 6) {
+    //                             row.checks = "Education Check3";
+    //                         }
+    //                         if (j == 7) {
+    //                             row.checks = "Education Check4";
+    //                         }
+    //                         if (j == 8) {
+    //                             row.checks = "Address Check1";
+    //                         }
+    //                         if (j == 9) {
+    //                             row.checks = "Address Check2";
+    //                         }
+    //                         if (j == 10) {
+    //                             row.checks = "Address Check3";
+    //                         }
+    //                         if (j == 11) {
+    //                             row.checks = "Address Check4";
+    //                         }
+    //                         if (j == 12) {
+    //                             row.checks = "Family Check1";
+    //                         }
+    //                         if (j == 13) {
+    //                             row.checks = "Family Check2";
+    //                         }
+    //                         if (j == 14) {
+    //                             row.checks = "Family Check3";
+    //                         }
+    //                         if (j == 15) {
+    //                             row.checks = "Family Check4";
+    //                         }
+    //                         if (j == 16) {
+    //                             row.checks = "Reference Check1";
+    //                         }
+    //                         if (j == 17) {
+    //                             row.checks = "Reference Check2";
+    //                         }
+    //                         if (j == 18) {
+    //                             row.checks = "Reference Check3";
+    //                         }
+    //                         if (j == 19) {
+    //                             row.checks = "Reference Check4";
+    //                         }
+    //                         if (j == 20) {
+    //                             row.checks = "Civil Check";
+    //                         }
+    //                         if (j == 21) {
+    //                             row.checks = "Criminal Check";
+    //                         }
+    //                         if (j == 22) {
+    //                             row.checks = "ID Check1";
+    //                         }
+    //                         if (j == 23) {
+    //                             row.checks = "ID Check2";
+    //                         }
+    //                         if (j == 24) {
+    //                             row.checks = "ID Check3";
+    //                         }
+    //                         if (j == 25) {
+    //                             row.checks = "ID Check4";
+    //                         }
+    //                         if (j == 26) {
+    //                             row.checks = "ID Check5";
+    //                         }
+    //                         if (j == 27) {
+    //                             row.checks = "ID Check6";
+    //                         }
+    //                     })
+    //                 }
+    //                 refresh_field("verify_dashboard_list");
+    //             }
+
+    //         }
+    //     })
+    // },
+    emp_code: function (frm) {
         frappe.call({
             "method": "bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
             args: {
-                limit_page_length: 500,
             },
+            // limit_page_length: 10,
+            freeze: true,
+            freeze_message: "Loading....",
             callback: function (r) {
                 if (r.message) {
                     var b = Object.keys(r.message).length;
@@ -16,20 +153,22 @@ frappe.ui.form.on('Verifier Dashboard', {
                         $.each(r.message[i], function (i, d) {
                             var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");
                             // row.pending_checks = c;
-                            row.executive = frappe.session.user;
-                            row.ref_no = d.applicant_id;
-                            row.candidate_name = d.applicant_name;
-                            row.status = d.status;
-                            row.check_name = d.name;
                             if (row.ref_no) {
                                 frappe.call({
                                     "method": "frappe.client.get",
                                     args: {
                                         "doctype": "Applicant",
-                                        "name": row.ref_no
+                                        "name": row.ref_no,
                                     },
+                                    freeze: true,
+                                    freeze_message: "Loading....",
                                     callback: function (r) {
-                                        if (r.message) {
+                                        if (r.message.client_employee_code == frm.doc.emp_code) {
+                                            row.executive = frappe.session.user;
+                                            row.ref_no = d.applicant_id;
+                                            row.candidate_name = d.applicant_name;
+                                            row.status = d.status;
+                                            row.check_name = d.name;
                                             if (r.message.client_employee_code) {
                                                 row.emp_code = r.message.client_employee_code;
                                             } else {
@@ -139,8 +278,9 @@ frappe.ui.form.on('Verifier Dashboard', {
             frappe.call({
                 "method": "bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
                 args: {
-                    limit_page_length: 500,
                 },
+                freeze: true,
+                freeze_message: "Loading....",
                 callback: function (r) {
                     if (r.message) {
                         var b = Object.keys(r.message).length;
@@ -160,8 +300,10 @@ frappe.ui.form.on('Verifier Dashboard', {
                                             "method": "frappe.client.get",
                                             args: {
                                                 "doctype": "Applicant",
-                                                "name": row.ref_no
+                                                "name": row.ref_no,
                                             },
+                                            freeze: true,
+                                            freeze_message: "Loading....",
                                             callback: function (r) {
                                                 if (r.message) {
                                                     if (r.message.client_employee_code) {
@@ -274,15 +416,18 @@ frappe.ui.form.on('Verifier Dashboard', {
         frappe.call({
             "method": "bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
             args: {
-                limit_page_length: 500,
             },
+            freeze: true,
+            freeze_message: "Loading....",
             callback: function (r) {
                 if (r.message) {
                     var b = Object.keys(r.message).length;
                     for (var i = 0; i < b; i++) {
                         var j = i;
                         $.each(r.message[i], function (i, d) {
-                            if (d.applicant_id == frm.doc.ref_id) {
+
+                            if (frm.doc.ref_id == d.applicant_id) {
+                                // console.log(d)
                                 var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");
                                 // row.pending_checks = c;
                                 row.executive = frappe.session.user;
@@ -295,8 +440,10 @@ frappe.ui.form.on('Verifier Dashboard', {
                                         "method": "frappe.client.get",
                                         args: {
                                             "doctype": "Applicant",
-                                            "name": row.ref_no
+                                            "name": row.ref_no,
                                         },
+                                        freeze: true,
+                                        freeze_message: "Loading....",
                                         callback: function (r) {
                                             if (r.message) {
                                                 if (r.message.client_employee_code) {
@@ -408,8 +555,9 @@ frappe.ui.form.on('Verifier Dashboard', {
         frappe.call({
             "method": "bvs.background_verification.doctype.verifier_dashboard.verifier_dashboard.get_checks",
             args: {
-                limit_page_length: 500,
             },
+            freeze: true,
+            freeze_message: "Loading....",
             callback: function (r) {
                 if (r.message) {
                     var b = Object.keys(r.message).length;
@@ -429,8 +577,10 @@ frappe.ui.form.on('Verifier Dashboard', {
                                         "method": "frappe.client.get",
                                         args: {
                                             "doctype": "Applicant",
-                                            "name": row.ref_no
+                                            "name": row.ref_no,
                                         },
+                                        freeze: true,
+                                        freeze_message: "Loading....",
                                         callback: function (r) {
                                             if (r.message) {
                                                 if (r.message.client_employee_code) {

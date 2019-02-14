@@ -10,6 +10,10 @@ frappe.ui.form.on('Generate SO', {
             "method": "frappe.client.get_list",
             args: {
                 "doctype": "Applicant",
+                filters: {
+                    "status": "Positive",
+                    "sale_order_status": "Waiting"
+                }
             },
             callback: function (r) {
                 if (r.message) {
@@ -39,13 +43,17 @@ frappe.ui.form.on('Generate SO', {
         })
     },
     client: function (frm) {
+        frm.clear_table("generate_so_details")
+        refresh_field("generate_so_details")
         if (frm.doc.client) {
             frappe.call({
                 "method": "frappe.client.get_list",
                 args: {
                     "doctype": "Applicant",
                     filters: {
-                        "customer": frm.doc.client
+                        "customer": frm.doc.client,
+                        "status": "Positive",
+                        "sale_order_status": "Waiting"
                     }
                 },
                 callback: function (r) {
@@ -83,7 +91,9 @@ frappe.ui.form.on('Generate SO', {
                 args: {
                     "doctype": "Applicant",
                     filters: {
-                        "customer": frm.doc.client
+                        "customer": frm.doc.client,
+                        "status": "Positive",
+                        "sale_order_status": "Waiting"
                     }
                 },
                 callback: function (r) {
@@ -123,7 +133,9 @@ frappe.ui.form.on('Generate SO', {
                 args: {
                     "doctype": "Applicant",
                     filters: {
-                        "customer": frm.doc.client
+                        "customer": frm.doc.client,
+                        "status": "Positive",
+                        "sale_order_status": "Waiting"
                     }
                 },
                 callback: function (r) {
@@ -163,6 +175,17 @@ frappe.ui.form.on('Generate SO', {
             if (grid.get_selected_children().length !== 0) {
                 if (frm.doc.client) {
                     var len = grid.get_selected_children().length;
+                    $.each(grid.get_selected_children(), function (i, d) {
+                        frappe.call({
+                            "method": "bvs.background_verification.doctype.generate_so.generate_so.update_so_status",
+                            args: {
+                                "ref_id": d.ref_id
+                            },
+                            callback: function (r) {
+
+                            }
+                        })
+                    })
                     frappe.call({
                         "method": "frappe.client.get",
                         args: {

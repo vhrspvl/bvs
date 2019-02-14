@@ -7,8 +7,24 @@ import frappe,json
 from frappe.model.document import Document
 from frappe.utils.global_search import search
 
-class AllocateChecks(Document):
+class AllocateChecks(Document): 
     pass
+
+@frappe.whitelist()
+def sort(table):
+    in_time = {}
+    in_time = json.loads(table)
+    sort = sorted(in_time, key=lambda k: k['emp_code'])
+    return sort
+
+
+@frappe.whitelist()
+def sort_r(table):
+    in_time = {}
+    in_time = json.loads(table)
+    sort = sorted(in_time, key=lambda k: k['emp_code'],reverse=True)
+    return sort
+
 
 @frappe.whitelist()
 def get_check(check):
@@ -328,10 +344,11 @@ def get_verifycheck(applicant,check):
         verify_checks = check1+check2+check3+check4
     if check == "Family Check":
         check1 = frappe.db.get_list("Verify Family Check1", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check2 = frappe.db.get_list("Verify Family Check2", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check3 = frappe.db.get_list("Verify Family Check3", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
-        check4 = frappe.db.get_list("Verify Family Check4", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
+        check2 = frappe.db.get_list("Verify Family Check2", filters ={"applicant_id": applicant}, fields=("name","tat"))
+        check3 = frappe.db.get_list("Verify Family Check3", filters ={"applicant_id": applicant}, fields=("name","tat"))
+        check4 = frappe.db.get_list("Verify Family Check4", filters ={"applicant_id": applicant}, fields=("name","tat"))
         verify_checks = check1+check2+check3+check4
+        # frappe.errprint(verify_checks)
     if check == "Identity Check":
         check1 = frappe.db.get_list("Verify ID Check1", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
         check2 = frappe.db.get_list("Verify ID Check2", filters ={"applicant_id": applicant}, fields=("name","client_tat"))
@@ -380,6 +397,7 @@ def set_assign_to(doc,check):
                         if emp1:
                             emp1_doc = frappe.get_doc("Employment Check1",emp1["name"])
                             emp1_doc.status = "Allocation Completed"
+                            emp1_doc.allocated_for = ""
                             emp1_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Employment Check2":
@@ -387,6 +405,7 @@ def set_assign_to(doc,check):
                         if emp2:
                             emp2_doc = frappe.get_doc("Employment Check2",emp2["name"])
                             emp2_doc.status = "Allocation Completed"
+                            emp2_doc.allocated_for = ""
                             emp2_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Employment Check3":
@@ -394,6 +413,7 @@ def set_assign_to(doc,check):
                         if emp3:
                             emp3_doc = frappe.get_doc("Employment Check3",emp3["name"])
                             emp3_doc.status = "Allocation Completed"
+                            emp3_doc.allocated_for = ""
                             emp3_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Employment Check4":
@@ -401,6 +421,7 @@ def set_assign_to(doc,check):
                         if emp4:
                             emp4_doc = frappe.get_doc("Employment Check4",emp4["name"])
                             emp4_doc.status = "Allocation Completed"
+                            emp4_doc.allocated_for = ""
                             emp4_doc.db_update()
                             frappe.db.commit()
                 if check == "Education Check":
@@ -409,6 +430,7 @@ def set_assign_to(doc,check):
                         if edu1:
                             edu1_doc = frappe.get_doc("Education Check1",edu1["name"])
                             edu1_doc.status = "Allocation Completed"
+                            edu1_doc.allocated_for = ""
                             edu1_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Education Check2":
@@ -416,6 +438,7 @@ def set_assign_to(doc,check):
                         if edu2:
                             edu2_doc = frappe.get_doc("Education Check2",edu2["name"])
                             edu2_doc.status = "Allocation Completed"
+                            edu2_doc.allocated_for = ""
                             edu2_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Education Check3":
@@ -423,6 +446,7 @@ def set_assign_to(doc,check):
                         if edu3:
                             edu3_doc = frappe.get_doc("Education Check3",edu3["name"])
                             edu3_doc.status = "Allocation Completed"
+                            edu3_doc.allocated_for = ""
                             edu3_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Education Check4":
@@ -430,6 +454,7 @@ def set_assign_to(doc,check):
                         if edu4:
                             edu4_doc = frappe.get_doc("Education Check4",edu4["name"])
                             edu4_doc.status = "Allocation Completed"
+                            edu4_doc.allocated_for = ""
                             edu4_doc.db_update()
                             frappe.db.commit()
                 if check == "Address Check":
@@ -438,6 +463,7 @@ def set_assign_to(doc,check):
                         if add1:
                             add1_doc = frappe.get_doc("Address Check1",add1["name"])
                             add1_doc.status = "Allocation Completed"
+                            add1_doc.allocated_for = ""
                             add1_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Address Check2":
@@ -445,6 +471,7 @@ def set_assign_to(doc,check):
                         if add2:
                             add2_doc = frappe.get_doc("Address Check2",add2["name"])
                             add2_doc.status = "Allocation Completed"
+                            add2_doc.allocated_for = ""
                             add2_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Address Check3":
@@ -452,6 +479,7 @@ def set_assign_to(doc,check):
                         if add3:
                             add3_doc = frappe.get_doc("Address Check3",add3["name"])
                             add3_doc.status = "Allocation Completed"
+                            add3_doc.allocated_for = ""
                             add3_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Address Check4":
@@ -459,6 +487,7 @@ def set_assign_to(doc,check):
                         if add4:
                             add4_doc = frappe.get_doc("Address Check4",add4["name"])
                             add4_doc.status = "Allocation Completed"
+                            add4_doc.allocated_for = ""
                             add4_doc.db_update()
                             frappe.db.commit()
                 if check == "Reference Check":
@@ -467,6 +496,7 @@ def set_assign_to(doc,check):
                         if ref1:
                             ref1_doc = frappe.get_doc("Reference Check1",ref1["name"])
                             ref1_doc.status = "Allocation Completed"
+                            ref1_doc.allocated_for = ""
                             ref1_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Reference Check2":
@@ -474,6 +504,7 @@ def set_assign_to(doc,check):
                         if ref2:
                             ref2_doc = frappe.get_doc("Reference Check2",ref2["name"])
                             ref2_doc.status = "Allocation Completed"
+                            ref2_doc.allocated_for = ""
                             ref2_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Reference Check3":
@@ -481,6 +512,7 @@ def set_assign_to(doc,check):
                         if ref3:
                             ref3_doc = frappe.get_doc("Reference Check3",ref3["name"])
                             ref3_doc.status = "Allocation Completed"
+                            ref3_doc.allocated_for = ""
                             ref3_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Reference Check4":
@@ -488,6 +520,7 @@ def set_assign_to(doc,check):
                         if ref4:
                             ref4_doc = frappe.get_doc("Reference Check4",ref4["name"])
                             ref4_doc.status = "Allocation Completed"
+                            ref4_doc.allocated_for = ""
                             ref4_doc.db_update()
                             frappe.db.commit()                    
                 if check == "Family Check":
@@ -496,6 +529,7 @@ def set_assign_to(doc,check):
                         if fam1:
                             fam1_doc = frappe.get_doc("Family Check1",fam1["name"])
                             fam1_doc.status = "Allocation Completed"
+                            fam1_doc.allocated_for = ""
                             fam1_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Family Check2":
@@ -503,6 +537,7 @@ def set_assign_to(doc,check):
                         if fam2:
                             fam2_doc = frappe.get_doc("Family Check2",fam2["name"])
                             fam2_doc.status = "Allocation Completed"
+                            fam2_doc.allocated_for = ""
                             fam2_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Family Check3":
@@ -510,6 +545,7 @@ def set_assign_to(doc,check):
                         if fam3:
                             fam3_doc = frappe.get_doc("Family Check3",fam3["name"])
                             fam3_doc.status = "Allocation Completed"
+                            fam3_doc.allocated_for = ""
                             fam3_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify Family Check4":
@@ -517,6 +553,7 @@ def set_assign_to(doc,check):
                         if fam4:
                             fam4_doc = frappe.get_doc("Family Check4",fam4["name"])
                             fam4_doc.status = "Allocation Completed"
+                            fam4_doc.allocated_for = ""
                             fam4_doc.db_update()
                             frappe.db.commit()
                 if check == "Identity Check":
@@ -525,6 +562,7 @@ def set_assign_to(doc,check):
                         if aad:
                             aad_doc = frappe.get_doc("ID Check1",aad["name"])
                             aad_doc.status = "Allocation Completed"
+                            aad_doc.allocated_for = ""
                             aad_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify ID Check2":
@@ -532,6 +570,7 @@ def set_assign_to(doc,check):
                         if pan:
                             pan_doc = frappe.get_doc("ID Check2",pan["name"])
                             pan_doc.status = "Allocation Completed"
+                            pan_doc.allocated_for = ""
                             pan_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify ID Check3":
@@ -539,6 +578,7 @@ def set_assign_to(doc,check):
                         if pas:
                             pas_doc = frappe.get_doc("ID Check3",pas["name"])
                             pas_doc.status = "Allocation Completed"
+                            pas_doc.allocated_for = ""
                             pas_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify ID Check4":
@@ -546,6 +586,7 @@ def set_assign_to(doc,check):
                         if vot:
                             vot_doc = frappe.get_doc("ID Check4",vot["name"])
                             vot_doc.status = "Allocation Completed"
+                            vot_doc.allocated_for = ""
                             vot_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify ID Check5":
@@ -553,6 +594,7 @@ def set_assign_to(doc,check):
                         if rat:
                             rat_doc = frappe.get_doc("ID Check5",rat["name"])
                             rat_doc.status = "Allocation Completed"
+                            rat_doc.allocated_for = ""
                             rat_doc.db_update()
                             frappe.db.commit()
                     if doctype == "Verify ID Check6":
@@ -560,6 +602,7 @@ def set_assign_to(doc,check):
                         if dri:
                             dri_doc = frappe.get_doc("ID Check6",dri["name"])
                             dri_doc.status = "Allocation Completed"
+                            dri_doc.allocated_for = ""
                             dri_doc.db_update()
                             frappe.db.commit()
                 if check == "Civil Check":
@@ -568,6 +611,7 @@ def set_assign_to(doc,check):
                         if cvl:
                             cvl_doc = frappe.get_doc("Civil Check",cvl["name"])
                             cvl_doc.status = "Allocation Completed"
+                            cvl_doc.allocated_for = ""
                             cvl_doc.db_update()
                             frappe.db.commit()
                     
@@ -577,6 +621,7 @@ def set_assign_to(doc,check):
                         if cml:
                             cml_doc = frappe.get_doc("Criminal Check",cml["name"])
                             cml_doc.status = "Allocation Completed"
+                            cml_doc.allocated_for = ""
                             cml_doc.db_update()
                             frappe.db.commit()
     return "ok"
