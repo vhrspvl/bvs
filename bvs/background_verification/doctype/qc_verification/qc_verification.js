@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('QC Verification', {
     onload: function (frm) {
+        frm.set_value("form", "Refresh")
         frappe.call({
             "method": "frappe.client.get_list",
             args: {
@@ -92,6 +93,9 @@ frappe.ui.form.on('QC Verification', {
     },
     refresh: function (frm) {
         frm.disable_save();
+        // if (!frm.doc.form) {
+        //     setTimeout(function () { location.reload() }, 1000);
+        // }
     },
     customer: function (frm) {
         frm.clear_table("qc_verification_dashboard");
@@ -261,6 +265,7 @@ frappe.ui.form.on('QC Verification', {
     'onload_post_render': function (frm, cdt, cdn) {
         var list = frm.doc.qc_verification_dashboard;
         frm.fields_dict.qc_verification_dashboard.grid.wrapper.on('focus', 'input[data-fieldname="applicant"][data-doctype="QC Verification Dashboard"]', function (e) {
+            frm.set_value("form", "")
             var current_doc = $('.data-row.editable-row').parent().attr("data-name");
             var d = locals["QC Verification Dashboard"][current_doc];
             frappe.set_route('Form', "Applicant", d.applicant);

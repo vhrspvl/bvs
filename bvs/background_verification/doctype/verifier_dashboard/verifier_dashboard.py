@@ -20,8 +20,8 @@ def get_checks():
     check1 = []
     for check in checks:
         if check:
-            check1.append(frappe.get_list(check, filters={"executive": frappe.session.user, "status": "Allocation Completed"}, fields=(
-                "status", "applicant_id", "applicant_name", "name", "customer", "in_date")))
+            check1.append(frappe.get_list(check, filters={
+                          "executive": frappe.session.user, "status": "Allocation Completed"}, fields=("status")))
         else:
             check1.append(0)
     return check1

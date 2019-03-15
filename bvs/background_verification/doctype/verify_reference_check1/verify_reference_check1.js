@@ -37,30 +37,8 @@ frappe.ui.form.on("Verify Reference Check1", {
                 }
             })
         }
-        if (frm.doc.status == "Execution Completed") {
-            frappe.call({
-                "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
-                args: {
-                    "applicant": frm.doc.applicant_id,
-                    "checks_group": frm.doc.checks_group
-                },
-                callback: function (r) {
-                    if (r.message) {
-                        frappe.call({
-                            "method": "bvs.background_verification.doctype.applicant.applicant.save_applicant",
-                            "args": {
-                                "status": r.message,
-                                "ref_id": frm.doc.applicant_id
-                            },
-                            callback: function (r) {
-                                if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber")) {
-                                    frappe.set_route("List", "Verifier Dashboard");
-                                }
-                            }
-                        });
-                    }
-                }
-            })
+        if ((frm.doc.status == "Execution Completed") && ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber") || (frm.doc.result == "Insufficient"))) {
+            frappe.set_route("List", "Verify Reference Check1");
         }
         if (frm.doc.tat) {
             frm.set_df_property('tat', 'read_only', 1);
@@ -141,6 +119,7 @@ frappe.ui.form.on("Verify Reference Check1", {
             }
             if (frm.doc.allocated_for == "Execution Pending") {
                 frm.set_value("status", "Execution Completed")
+                frappe.set_route("List", "Verify Reference Check1");
                 // frappe.call({
                 //     "method": "bvs.background_verification.doctype.applicant.applicant.get_status",
                 //     args: {
@@ -165,6 +144,8 @@ frappe.ui.form.on("Verify Reference Check1", {
         }
     },
     refresh: function (frm) {
+        frm.set_df_property('applicant_id', 'read_only', 1);
+        frm.set_df_property('applicant_name', 'read_only', 1);
         if (frm.doc.allocated_for) {
             $(cur_frm.fields_dict.allocated_for.input).css("backgroundColor", "DeepPink");
         }

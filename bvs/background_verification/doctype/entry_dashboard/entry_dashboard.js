@@ -69,22 +69,19 @@ frappe.ui.form.on('Entry Dashboard', {
                                     args: {
                                         doctype: "Applicant",
                                         filters: {
-                                            "customer": r.message.customer,
-                                            "in_date": r.message.in_date,
+                                            // "customer": r.message.customer,
+                                            // "in_date": r.message.in_date,
                                             "data_entry_allocation_id": r.message.name,
-                                            "status": ["!=", "Entry Pending"],
-                                            "entry_completed_executive": r.message.executive
+                                            // "status": ["!=", "Entry Pending"],
+                                            // "entry_completed_executive": r.message.executive
                                         },
-                                        group_by: "data_entry_allocation_id"
+                                        // group_by: "data_entry_allocation_id"
 
                                     },
                                     callback: function (r) {
                                         if (r.message) {
                                             // $.each(r.message, function(i, d) {
                                             var c = Object.keys(r.message).length;
-                                            if (row.customer == "Lapiz") {
-                                                console.log(c)
-                                            }
                                             if (c != 0) {
                                                 row.completed = c;
                                             }
@@ -101,7 +98,7 @@ frappe.ui.form.on('Entry Dashboard', {
                                                     cur_frm.get_field("entry_dashboard_list").grid.grid_rows[i].remove();
                                                 }
                                             }
-                                            cur_frm.refres();
+                                            cur_frm.refresh();
                                             refresh_field("entry_dashboard_list");
                                         }
                                         if (row.in_date < frappe.datetime.nowdate()) {

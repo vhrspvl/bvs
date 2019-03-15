@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('QC Allocation', {
     onload: function (frm) {
+        frm.set_value("form", "Refresh")
         frm.clear_table("qc_allocation");
         frappe.call({
             "method": "frappe.client.get_list",
@@ -265,6 +266,9 @@ frappe.ui.form.on('QC Allocation', {
     },
     refresh: function (frm) {
         frm.disable_save();
+        if (!frm.doc.form) {
+            setTimeout(function () { location.reload() }, 1000);
+        }
     },
     status: function (frm) {
         frm.clear_table("qc_allocation");
@@ -400,6 +404,7 @@ frappe.ui.form.on('QC Allocation', {
                     frm.clear_table("qc_allocation");
                 }
                 cur_frm.refresh()
+                frm.set_value("form", "")
             }
         })
     }

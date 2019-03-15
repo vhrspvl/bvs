@@ -27,28 +27,29 @@ frappe.ui.form.on('Allocate Checks', {
                                         row.in_date = r.message.in_date;
                                         row.candidate_name = d.applicant_name;
                                         row.applicant = d.applicant_id;
-                                        if (row.applicant) {
-                                            frappe.call({
-                                                "method": "frappe.client.get",
-                                                args: {
-                                                    "doctype": "Applicant",
-                                                    "name": row.applicant
-                                                },
-                                                freeze: true,
-                                                freeze_message: "Fetching....",
-                                                callback: function (r) {
-                                                    if (r.message) {
-                                                        if (r.message.client_employee_code) {
-                                                            row.emp_code = r.message.client_employee_code;
-                                                        } else {
-                                                            row.emp_code = "-";
-                                                        }
-                                                        row.in_date = r.message.in_date;
-                                                    }
-                                                    refresh_field("allocate_checks_executive");
-                                                }
-                                            })
-                                        }
+                                        row.emp_code = d.emp_code;
+                                        // if (row.applicant) {
+                                        //     frappe.call({
+                                        //         "method": "frappe.client.get",
+                                        //         args: {
+                                        //             "doctype": "Applicant",
+                                        //             "name": row.applicant
+                                        //         },
+                                        //         freeze: true,
+                                        //         freeze_message: "Fetching....",
+                                        //         callback: function (r) {
+                                        //             if (r.message) {
+                                        //                 if (r.message.client_employee_code) {
+                                        //                     row.emp_code = r.message.client_employee_code;
+                                        //                 } else {
+                                        //                     row.emp_code = "-";
+                                        //                 }
+                                        //                 row.in_date = r.message.in_date;
+                                        //             }
+                                        //             refresh_field("allocate_checks_executive");
+                                        //         }
+                                        //     })
+                                        // }
                                         if (row.status == "Allocation Pending") {
                                             frappe.call({
                                                 "method": "bvs.background_verification.doctype.allocate_checks.allocate_checks.get_verifycheck",

@@ -31,7 +31,8 @@ def get_status(applicant,checks_group):
     entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
     "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
     "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check"]
-    status = "Entry Pending"
+    applicant_status = frappe.db.get_value("Applicant",{"name":applicant},"status")
+    status = applicant_status
     applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
     for a in applicant_cg:
         checks = []
@@ -104,8 +105,8 @@ def get_status(applicant,checks_group):
             status = "Allocation Completed"
         elif any(check == "Insufficient" for check in check1):
             status = "Insufficient"
-        elif any(check == "Entry Pending" for check in check1):
-            status = "Entry Pending"
+        # elif any(check == "Entry Pending" for check in check1):
+        #     status = "Entry Pending"
         check2 = []
         check3 = []
         if status == "Allocation Completed":
@@ -127,8 +128,7 @@ def get_status(applicant,checks_group):
             if any(check == "Insufficient" for check in check2):
                 status = "Insufficient"
         # else:
-        #     applicant_status = frappe.db.get_value("Applicant",{"name":applicant},"status")
-        #     status = applicant_status
+        #     
     return status
 
 
