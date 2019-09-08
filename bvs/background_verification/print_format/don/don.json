@@ -1,0 +1,22 @@
+{
+ "align_labels_right": 0, 
+ "creation": "2019-05-15 15:57:13.346874", 
+ "custom_format": 1, 
+ "disabled": 0, 
+ "doc_type": "Dashboard", 
+ "docstatus": 0, 
+ "doctype": "Print Format", 
+ "font": "Default", 
+ "html": "<table>\n<table border=\"1\">\n<colgroup span=\"2\">\n<col width=\"50\"></col>\n<col width=\"50\"></col>\n</colgroup>\n<tr>\n<td>executive</td>\n<td>address</td>\n</tr>\n<td>customer</td>\n<td>dob</td>\n</tr>\n</tr>\n<td>vhrs ref no</td>\n<td>age</td>\n</tr>\n</tr>\n<td>indate</td>\n<td>father name</td>\n</tr>\n</tr>\n<td>intime</td>\n<td>gender</td>\n</tr>\n</table>", 
+ "idx": 0, 
+ "line_breaks": 0, 
+ "modified": "2019-05-16 09:30:02.217313", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Don", 
+ "owner": "Administrator", 
+ "print_format_builder": 0, 
+ "print_format_type": "Server", 
+ "show_section_headings": 0, 
+ "standard": "Yes"
+}

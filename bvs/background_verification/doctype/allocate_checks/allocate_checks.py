@@ -31,6 +31,7 @@ def sort_r(table):
 
 @frappe.whitelist()
 def get_check(check):
+    pending_checks = ""
     if check == "Address Check":
         check1 = frappe.get_list("Address Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         c1dt = []
@@ -240,7 +241,27 @@ def get_check(check):
             if c.status == "IQC Completed":
                 cdt = {'doctype':'Verify Criminal Check'} 
             c.update(cdt)
-            c1dt.append(c)  
+            c1dt.append(c)
+    elif check == "Neighbourhood Check":		
+        pending_checks = frappe.get_list("Neighbourhood Check", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
+        c1dt = []
+        for c in pending_checks:
+            dt = {}
+            cdt = {'doctype':'Neighbourhood Check'}
+            if c.status == "IQC Completed":
+                cdt = {'doctype':'Verify Neighbourhood Check'} 
+            c.update(cdt)
+            c1dt.append(c)
+    elif check == "Political Check":		
+        pending_checks = frappe.get_list("Political Affiliations Check", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
+        c1dt = []
+        for c in pending_checks:
+            dt = {}
+            cdt = {'doctype':'Political Affiliations Check'}
+            if c.status == "IQC Completed":
+                cdt = {'doctype':'Verify Political Affiliations Check'} 
+            c.update(cdt)
+            c1dt.append(c) 
     elif check == "Identity Check":
         check1 = frappe.get_list("ID Check1", filters = {"executive": "", "status": ("=","IQC Completed")}, fields =("applicant_id","name","status","tat","applicant_name","customer"))
         if check1:
@@ -364,6 +385,10 @@ def get_verifycheck(applicant,check):
         verify_checks = frappe.db.get_list("Verify Civil Check", filters ={"applicant_id": applicant}, fields=("name","client_tat","emp_code"))      
     if check == "Criminal Check":
         verify_checks = frappe.db.get_list("Verify Criminal Check", filters ={"applicant_id": applicant}, fields=("name","client_tat","emp_code"))
+    if check == "Neighbourhood Check":
+        verify_checks = frappe.db.get_list("Verify Neighbourhood Check", filters ={"applicant_id": applicant}, fields=("name","client_tat","emp_code"))
+    if check == "Political Check":
+        verify_checks = frappe.db.get_list("Verify Political Affiliations Check", filters ={"applicant_id": applicant}, fields=("name","client_tat","emp_code"))
     return verify_checks
 
 
@@ -627,6 +652,25 @@ def set_assign_to(doc,check):
                             cml_doc.allocated_for = ""
                             cml_doc.db_update()
                             frappe.db.commit()
+                if check == "Neighbourhood Check":
+                    if doctype == "Verify Neighbourhood Check":
+                        cml = frappe.db.get_value("Neighbourhood Check", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if cml:
+                            cml_doc = frappe.get_doc("Neighbourhood Check",cml["name"])
+                            cml_doc.status = "Allocation Completed"
+                            cml_doc.allocated_for = ""
+                            cml_doc.db_update()
+                            frappe.db.commit()
+
+                if check == "Political Check":
+                    if doctype == "Verify Political Affiliations Check":
+                        cml = frappe.db.get_value("Political Affiliations Check", {"applicant_id": docapplicant}, ["name","status"],as_dict=1)
+                        if cml:
+                            cml_doc = frappe.get_doc("Political Affiliations Check",cml["name"])
+                            cml_doc.status = "Allocation Completed"
+                            cml_doc.allocated_for = ""
+                            cml_doc.db_update()
+                            frappe.db.commit()
     return "ok"
 
 
@@ -641,7 +685,7 @@ def get_applicant(batch_id):
 def get_status(applicant,checks_group):
     entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
     "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
-    "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check"]
+    "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check","neighbourhood_check","political_check"]
     status = "Entry Pending"
     applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
     for a in applicant_cg:
@@ -704,6 +748,10 @@ def get_status(applicant,checks_group):
                    checks.append("Civil Check")
                 if i == "criminal_check":
                    checks.append("Criminal Check")
+                if i == "neighbourhood_check":
+                    checks.append("Neighbourhood Check")
+                if i == "political_check":
+                    checks.append("Political Affiliations Check")
         check1 = []
         for c in checks:
                 check1.append(frappe.get_list("Verify "+c, {"applicant_id": applicant,"status": "Allocation Pending"}, ["name","applicant_id","status"]))

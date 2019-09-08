@@ -4,6 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
+import json
 from frappe.model.document import Document
 
 
@@ -12,11 +13,8 @@ class GenerateSO(Document):
 
 
 @frappe.whitelist()
-def create_so(customer, delivery_date, project, item_code, qty):
+def create_so(customer, delivery_date, project, item_code, qty, child):
     if customer:
-        # selected_children = json.loads(selected_children)
-        # for sc in selected_children:
-                    # if __checked:
         so = frappe.new_doc("Sales Order")
         # so_items = so
         so.update({
@@ -24,9 +22,10 @@ def create_so(customer, delivery_date, project, item_code, qty):
             "delivery_date": delivery_date,
             "project": project
         })
-        row = so.append("items", {
+        so.append("items", {
             "item_code": item_code,
-            "qty": qty
+            "qty": qty,
+            "description": child
         })
         so.save(ignore_permissions=True)
     return so

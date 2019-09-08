@@ -106,7 +106,7 @@ frappe.ui.form.on("Verify Family Check2", {
                 frm.set_value("status", "QC Completed")
                 frm.set_value("allocated_for", "QC Completed")
             }
-            if (frm.doc.allocated_for == "Execution Pending") {
+            if (frm.doc.allocated_for == "Execution Pending" || frm.doc.status == "Execution Completed") {
                 frm.set_value("status", "Execution Completed")
                 frappe.call({
                     "method": "bvs.background_verification.doctype.applicant.applicant.get_status",

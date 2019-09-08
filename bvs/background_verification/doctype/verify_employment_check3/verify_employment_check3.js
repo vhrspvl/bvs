@@ -87,18 +87,18 @@ frappe.ui.form.on("Verify Employment Check3", {
 
             });
         }
-        // if(frm.doc.checks_group){
-        // 	var tomorrow = moment(frm.doc.in_date).add(frm.doc.tat, 'days');
-        // 	frm.set_value("actual_end_date", tomorrow);
-        // 	var diff = frm.doc.actual_end_date - frappe.datetime.nowdate();
-        // 	if(frm.doc.actual_end_date.get > frappe.datetime.nowdate()){
-        // 		$(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Blue");
-        // 	} else if(frm.doc.actual_end_date.get = frappe.datetime.nowdate()){
-        // 		$(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Blue");
-        // 		frappe.msgprint("Today is TAT End Day")
-        // 	}else{
-        // 		$(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Red");
-        // 	}
+        // if (frm.doc.checks_group) {
+        //     var tomorrow = moment(frm.doc.in_date).add(frm.doc.tat, 'days');
+        //     frm.set_value("actual_end_date", tomorrow);
+        //     var diff = frm.doc.actual_end_date - frappe.datetime.nowdate();
+        //     if (frm.doc.actual_end_date.get > frappe.datetime.nowdate()) {
+        //         $(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Blue");
+        //     } else if (frm.doc.actual_end_date.get = frappe.datetime.nowdate()) {
+        //         $(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Blue");
+        //         frappe.msgprint("Today is TAT End Day")
+        //     } else {
+        //         $(cur_frm.fields_dict.actual_end_date.input).css("borderColor", "Red");
+        //     }
         // }
         if ((frm.doc.result == "Positive") || (frm.doc.result == "Negative") || (frm.doc.result == "Amber") || (frm.doc.result == "Insufficient")) {
             frm.set_value("end_date", (frappe.datetime.nowdate()))
@@ -108,9 +108,20 @@ frappe.ui.form.on("Verify Employment Check3", {
                 frm.set_value("status", "QC Completed")
                 frm.set_value("allocated_for", "QC Completed")
             }
-            if (frm.doc.allocated_for == "Execution Pending") {
+            if (frm.doc.allocated_for == "Execution Pending" || frm.doc.status == "Execution Completed") {
                 frm.set_value("status", "Execution Completed")
-                frappe.set_route("List", "Verify Employment Check3");
+                frappe.call({
+                    "method": "bvs.background_verification.doctype.applicant.applicant.update_status",
+                    args: {
+                        "applicant": frm.doc.applicant_id,
+                        "checks_group": frm.doc.checks_group
+                    },
+                    callback: function (r) {
+                        if (r.message == "OK") {
+                            frappe.set_route("List", "Verify Employment Check3");
+                        }
+                    }
+                })
             }
         }
     },

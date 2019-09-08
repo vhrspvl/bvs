@@ -61,8 +61,7 @@ def set_assign_to(doc):
             frappe.db.commit()
             entry_check = ["employment_check1", "employment_check2", "employment_check3", "employment_check4", "education_check1", "education_check2", "education_check3", "education_check4",
                            "address_check1", "address_check2", "address_check3", "address_check4", "family_check1", "family_check2", "family_check3", "family_check4", "reference_check1", "reference_check2", "reference_check3", "reference_check4",
-                           "id_check1", "id_check2", "id_check3", "id_check4", "id_check5", "id_check6", "civil_check", "criminal_check"]
-            status = "Entry Pending"
+                           "id_check1", "id_check2", "id_check3", "id_check4", "id_check5", "id_check6", "civil_check", "criminal_check","neighbourhood_check", "political_check"]
             applicant_cg = frappe.get_all(
                 "Checks Group", ["*"], {"name": doc.checks_group})
             for a in applicant_cg:
@@ -125,26 +124,31 @@ def set_assign_to(doc):
                             checks.append("Civil Check")
                         if i == "criminal_check":
                             checks.append("Criminal Check")
-                for check in checks:
-                    docstatus = e.get("status")
-                    doctype = "Applicant"
-                    docname = e.get("applicant")
-                    docallocate = e.get("allocated_to")
-                    docs = frappe.get_doc(check, {"applicant_id": docname})
-                    args = {
-                        'allocated_for': docstatus,
-                        'executive': docallocate,
-                        'assigned_date': frappe.utils.nowdate()
-                    }
-                    docs.update(args)
-                    docs.save(ignore_permissions=True)
-                    frappe.db.commit()
+                        if i == "neighbourhood_check":
+                            checks.append("Neighbourhood Check")
+                        if i == "political_check":
+                            checks.append("Political Affiliations Check")
+                if docstatus == "IQC Pending":
+                    for check in checks:
+                        # docstatus = e.get("status")
+                        # doctype = "Applicant"
+                        # docname = e.get("applicant")
+                        # docallocate = e.get("allocated_to")
+                        docs = frappe.get_doc(check, {"applicant_id": docname})
+                        args = {
+                            'allocated_for': docstatus,
+                            'executive': docallocate,
+                            'assigned_date': frappe.utils.nowdate()
+                        }
+                        docs.update(args)
+                        docs.save(ignore_permissions=True)
+                        frappe.db.commit()
                 if docstatus == "QC Pending":
                     for check in checks:
-                        docstatus = e.get("status")
-                        doctype = "Applicant"
-                        docname = e.get("applicant")
-                        docallocate = e.get("allocated_to")
+                        # docstatus = e.get("status")
+                        # doctype = "Applicant"
+                        # docname = e.get("applicant")
+                        # docallocate = e.get("allocated_to")
                         docs = frappe.get_doc(
                             "Verify " + check, {"applicant_id": docname})
                         args = {

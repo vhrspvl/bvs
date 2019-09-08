@@ -21,16 +21,30 @@ class Applicant(Document):
 
 @frappe.whitelist()
 def get_check(applicant,check):
-    check = frappe.db.get_value(check, {"applicant_id": applicant},
-                                     ["name"])
-    return check					   
+    check = frappe.db.get_value(check, {"applicant_id": applicant},["name"])
+    frappe.errprint(check)
+    return check
+
+
+@frappe.whitelist()
+def update_status(applicant,checks_group):
+    applicant = applicant
+    checks_group = checks_group
+    status = get_status(applicant,checks_group)
+    app = frappe.get_doc("Applicant",applicant)
+    app.update({
+        "status": status
+    })
+    app.save(ignore_permissions=True)
+    frappe.db.commit()
+    return "OK"
 
 
 @frappe.whitelist()
 def get_status(applicant,checks_group):
     entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
     "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
-    "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check"]
+    "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check","political_check","neighbourhood_check"]
     applicant_status = frappe.db.get_value("Applicant",{"name":applicant},"status")
     status = applicant_status
     applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
@@ -94,6 +108,10 @@ def get_status(applicant,checks_group):
                    checks.append("Civil Check")
                 if i == "criminal_check":
                    checks.append("Criminal Check")
+                if i == "neighbourhood_check":
+                    checks.append("Neighbourhood Check")
+                if i == "political_check":
+                    checks.append("Political Affiliations Check")
         check1 = []
         for e in checks:
             check1.append(frappe.db.get_value(e, {"applicant_id": applicant}, "status"))
@@ -111,11 +129,18 @@ def get_status(applicant,checks_group):
         check3 = []
         if status == "Allocation Completed":
             for c in checks:
+                check2.append(frappe.db.get_value("Verify "+c, {"applicant_id": applicant}, "result"))
                 check3.append(frappe.db.get_value("Verify "+c, {"applicant_id": applicant}, "status"))
             if all(check == "QC Completed" for check in check3):
                 status = "QC Completed" 
             if all(check == "Execution Completed" for check in check3):
                 status = "QC Pending" 
+            if any(check == "Insufficient" for check in check2):
+                status = "Insufficient"
+            # if any(check == "Amber" for check in check2):
+            #     status = "Amber"
+            # if any(check == "Negative" for check in check2):
+            #     status = "Negative" 
         if status == "QC Completed":
             for c in checks:
                 check2.append(frappe.db.get_value("Verify "+c, {"applicant_id": applicant}, "result")) 
@@ -128,7 +153,7 @@ def get_status(applicant,checks_group):
             if any(check == "Insufficient" for check in check2):
                 status = "Insufficient"
         # else:
-        #     
+            
     return status
 
 
@@ -151,7 +176,7 @@ def get_tat():
     test = ["Verify Employment Check1","Verify Employment Check2","Verify Employment Check3","Verify Employment Check4","Verify Education Check1","Verify Education Check2","Verify Education Check3","Verify Education Check4",
     "Verify Address Check1","Verify Address Check2","Verify Address Check3","Verify Address Check4","Verify Family Check1","Verify Family Check2","Verify Family Check3","Verify Family Check4","Verify Reference Check1","Verify Reference Check2",
     "Verify Reference Check3","Verify Reference Check4","Verify Civil Check","Verify Criminal Check","Verify ID Check1","Verify ID Check2","Verify ID Check3","Verify ID Check4","Verify ID Check5",
-    "Verify ID6"]         
+    "Verify ID6","Verify Neighbourhood Check5"]         
     for t in test:
         query = """select name from `tab%s` where status = 'Allocation Pending'"""% (t)   
         checks = frappe.db.sql(query,as_dict = 1)
@@ -188,7 +213,7 @@ def daterange(start_date,end_date,holiday):
 def get_checks_group(applicant,checks_group,doctype,check_status):
     entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
     "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
-    "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check"]
+    "id_check1","id_check2","id_check3","id_check4","id_check5","id_check6","civil_check","criminal_check","political_check","neighbourhood_check"]
     status = "Entry Pending"
     applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
     for a in applicant_cg:
@@ -251,6 +276,10 @@ def get_checks_group(applicant,checks_group,doctype,check_status):
                    checks.append("Civil Check")
                 if i == "criminal_check":
                    checks.append("Criminal Check")
+                if i == "neighbourhood_check":
+                    checks.append("Neighbourhood Check")
+                if i == "political_check":
+                    checks.append("Political Affiliations Check")
         for check in checks:
             if check_status == "QC Completed":
                 if frappe.get_all("Verify "+check,{"applicant_id": applicant}):
@@ -305,3 +334,14 @@ def save_applicant(status,ref_id):
 #         })
 #         exist_check_id.save(ignore_permissions=True)
 #     return "Ok"
+
+
+
+@frappe.whitelist()
+def refresh_cases():
+    applicant = frappe.db.get_list("Applicant",{"status": "Allocation Completed"},["name","checks_group"])
+    for a in applicant:
+        # app = frappe.get_doc("Applicant", a)
+        # cg = app.checks_group
+        app_status = update_status(a.name,a.checks_group)       
+    return "Ok"

@@ -15,7 +15,7 @@ class ChecksGroup(Document):
 def get_status(applicant,checks_group):
     entry_check = ["employment_check1","employment_check2","employment_check3","employment_check4","education_check1","education_check2","education_check3","education_check4",
     "address_check1","address_check2","address_check3","address_check4","family_check1","family_check2","family_check3","family_check4","reference_check1","reference_check2","reference_check3","reference_check4",
-    "aadhar_card_verification","pan_verification","passport_verification","voters_id_verification","ration_card_verification","driving_license_verification","civil_check","criminal_check"]
+    "aadhar_card_verification","pan_verification","passport_verification","voters_id_verification","ration_card_verification","driving_license_verification","civil_check","criminal_check","neighbourhood_check"]
     status = "Entry Pending"
     applicant_cg = frappe.get_all("Checks Group", ["*"], {"name":checks_group})
     for a in applicant_cg:
@@ -78,6 +78,8 @@ def get_status(applicant,checks_group):
                    checks.append("Civil Check")
                 if i == "criminal_check":
                    checks.append("Criminal Check")
+                if i == "neighbourhood_check":
+                    checks.append("Neighbourhood Check")
         status_list = []
         for e in checks:
             status1 = frappe.db.get_value(e, {"applicant_id": applicant}, "status")
@@ -222,6 +224,11 @@ def get_status(applicant,checks_group):
                         "check": "driving_license_verification",
                         "status": status1
                     }))
+                if e == "Neighbourhood Check":
+                    status_list.append(frappe._dict({                    
+                        "check": "neighbourhood_check",
+                        "status": status1
+                    }))
             else:
                 status2 = frappe.db.get_value("Verify "+e, {"applicant_id": applicant}, "status")
                 if e == "Employment Check1":
@@ -362,6 +369,11 @@ def get_status(applicant,checks_group):
                 if e == "Driving License Verification":
                     status_list.append(frappe._dict({                    
                         "check": "driving_license_verification",
+                        "status": status2
+                    }))
+                if e == "Neighbourhood Check":
+                    status_list.append(frappe._dict({                    
+                        "check": "neighbourhood_check",
                         "status": status2
                     }))
         return status_list   

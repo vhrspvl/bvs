@@ -18,7 +18,7 @@ frappe.ui.form.on('Allocate Checks', {
                     callback: function (r) {
                         $.each(r.message, function (i, d) {
                             if (r.message) {
-                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check") {
+                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check" || "Neighbourhood Check") {
                                     if (d.status == "IQC Completed") {
                                         var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
                                         row.status = "Allocation Pending";
@@ -145,6 +145,12 @@ frappe.ui.form.on('Allocate Checks', {
                                                     if (row.reference_doctype == "Verify Criminal Check") {
                                                         row.reference_name = r.message[0].name;
                                                     }
+                                                    if (row.reference_doctype == "Verify Neighbourhood Check") {
+                                                        row.reference_name = r.message[0].name;
+                                                    }
+                                                    if (row.reference_doctype == "Verify Political Affiliations Check") {
+                                                        row.reference_name = r.message[0].name;
+                                                    }
                                                     refresh_field("allocate_checks_executive");
                                                 }
                                             });
@@ -171,7 +177,7 @@ frappe.ui.form.on('Allocate Checks', {
                     callback: function (r) {
                         $.each(r.message, function (i, d) {
                             if (d.customer == frm.doc.client) {
-                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check") {
+                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check" || "Neighbourhood Check") {
                                     if (d.status == "IQC Completed") {
                                         var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
                                         row.status = "Allocation Pending";
@@ -295,6 +301,12 @@ frappe.ui.form.on('Allocate Checks', {
                                                         row.reference_name = r.message[0].name;
                                                     }
                                                     if (row.reference_doctype == "Verify Criminal Check") {
+                                                        row.reference_name = r.message[0].name;
+                                                    }
+                                                    if (row.reference_doctype == "Verify Neighbourhood Check") {
+                                                        row.reference_name = r.message[0].name;
+                                                    }
+                                                    if (row.reference_doctype == "Verify Political Affiliations Check") {
                                                         row.reference_name = r.message[0].name;
                                                     }
                                                     refresh_field("allocate_checks_executive");
@@ -439,7 +451,7 @@ frappe.ui.form.on('Allocate Checks', {
                 callback: function (r) {
                     $.each(r.message, function (i, d) {
                         if (r.message) {
-                            if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check") {
+                            if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check" || "Neighbourhood Check") {
                                 if (d.status == "IQC Completed") {
                                     if (d.applicant_id) {
                                         frappe.call({
@@ -578,6 +590,12 @@ frappe.ui.form.on('Allocate Checks', {
                                                                 if (row.reference_doctype == "Verify Criminal Check") {
                                                                     row.reference_name = r.message[0].name;
                                                                 }
+                                                                if (row.reference_doctype == "Verify Neighbourhood Check") {
+                                                                    row.reference_name = r.message[0].name;
+                                                                }
+                                                                if (row.reference_doctype == "Verify Political Affiliations Check") {
+                                                                    row.reference_name = r.message[0].name;
+                                                                }
                                                                 refresh_field("allocate_checks_executive");
                                                             }
                                                         });
@@ -610,7 +628,7 @@ frappe.ui.form.on('Allocate Checks', {
                     callback: function (r) {
                         $.each(r.message, function (i, d) {
                             if (r.message) {
-                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check") {
+                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check" || "Neighbourhood Check") {
                                     if (d.status == "IQC Completed") {
                                         if (d.applicant_id) {
                                             frappe.call({
@@ -749,6 +767,12 @@ frappe.ui.form.on('Allocate Checks', {
                                                                     if (row.reference_doctype == "Verify Criminal Check") {
                                                                         row.reference_name = r.message[0].name;
                                                                     }
+                                                                    if (row.reference_doctype == "Verify Neighbourhood Check") {
+                                                                        row.reference_name = r.message[0].name;
+                                                                    }
+                                                                    if (row.reference_doctype == "Verify Political Affiliations Check") {
+                                                                        row.reference_name = r.message[0].name;
+                                                                    }
                                                                     refresh_field("allocate_checks_executive");
                                                                 }
                                                             });
@@ -779,7 +803,7 @@ frappe.ui.form.on('Allocate Checks', {
                     callback: function (r) {
                         $.each(r.message, function (i, d) {
                             if (r.message) {
-                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check") {
+                                if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check" || "Neighbourhood Check") {
                                     if (d.status == "IQC Completed") {
                                         if (d.applicant_id) {
                                             frappe.call({
@@ -918,6 +942,12 @@ frappe.ui.form.on('Allocate Checks', {
                                                                     if (row.reference_doctype == "Verify Criminal Check") {
                                                                         row.reference_name = r.message[0].name;
                                                                     }
+                                                                    if (row.reference_doctype == "Verify Neighbourhood Check") {
+                                                                        row.reference_name = r.message[0].name;
+                                                                    }
+                                                                    if (row.reference_doctype == "Verify Political Affiliations Check") {
+                                                                        row.reference_name = r.message[0].name;
+                                                                    }
                                                                     refresh_field("allocate_checks_executive");
                                                                 }
                                                             });
@@ -1012,7 +1042,7 @@ frappe.ui.form.on('Allocate Checks', {
                 callback: function (r) {
                     $.each(r.message, function (i, d) {
                         if (r.message) {
-                            if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check") {
+                            if (frm.doc.check == "Address Check" || "Education Check" || "Employment Check" || "Reference Check" || "Family Check" || "Identity Check" || "Civil Check" || "Criminal Check" || "Neighbourhood Check") {
                                 if ((d.status == "IQC Completed") && (d.in_date >= frm.doc.from_date) && (d.in_date <= frm.doc.to_date)) {
                                     var row = frappe.model.add_child(frm.doc, "Allocate Checks Executive", "allocate_checks_executive");
                                     row.status = "Allocation Pending";
@@ -1135,6 +1165,12 @@ frappe.ui.form.on('Allocate Checks', {
                                                     row.reference_name = r.message[0].name;
                                                 }
                                                 if (row.reference_doctype == "Verify Criminal Check") {
+                                                    row.reference_name = r.message[0].name;
+                                                }
+                                                if (row.reference_doctype == "Verify Neighbourhood Check") {
+                                                    row.reference_name = r.message[0].name;
+                                                }
+                                                if (row.reference_doctype == "Verify Political Affiliations Check") {
                                                     row.reference_name = r.message[0].name;
                                                 }
                                                 refresh_field("allocate_checks_executive");

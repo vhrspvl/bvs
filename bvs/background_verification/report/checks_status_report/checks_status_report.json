@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2019-03-26 18:21:27.604664", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "VHRS", 
+ "modified": "2019-03-27 11:00:17.010078", 
+ "modified_by": "Administrator", 
+ "module": "Background Verification", 
+ "name": "Checks Status Report", 
+ "owner": "Administrator", 
+ "ref_doctype": "Applicant", 
+ "report_name": "Checks Status Report", 
+ "report_type": "Script Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "BVS Manager"
+  }
+ ]
+}

@@ -202,13 +202,19 @@ doc_events = {
     "Criminal Check": {
         "on_update": "bvs.api.create_verify"
     },
+    "Political Affiliations Check": {
+        "on_update": "bvs.api.create_verify"
+    },
     "Demographic Data With Attachment": {
         "on_update": "bvs.background_verification.doctype.demographic_data_with_attachment.demographic_data_with_attachment.create_applicant",
+    },
+    "Neighbourhood Check": {
+        "on_update": "bvs.api.create_verify"
     }
     # "Task Candidate": {
     #     "on_update": "recruitment.api.create_closure"
     # },
-    #"Project": {
+    # "Project": {
     #    "on_update": "recruitment.utils.apply_perm"
-    #}
+    # }
 }

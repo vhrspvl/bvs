@@ -75,4 +75,8 @@ def get_group_checks(checks_group):
         checklist.append('criminal_check')
     if cg.id_check:
         checklist.append('id_check')
+    if cg.political_check:
+        checklist.append('political_check')
+    if cg.neighbourhood_check:
+        checklist.append('neighbourhood_check')
     return checklist

@@ -9,7 +9,7 @@ frappe.ui.form.on("Applicant", {
                 frappe.set_route("Form", "Entry Dashboard");
             }
         }
-        if ((frappe.user.has_role("BVS Verifier") || frappe.user.has_role("BVS Manager")) && (frm.doc.ref_id) && ((frm.doc.status == "Allocation Pending") || (frm.doc.status == "Positive") || (frm.doc.status == "Negative") || (frm.doc.status == "Amber"))) {
+        if ((frappe.user.has_role("BVS Verifier") || frappe.user.has_role("BVS Manager")) && (frm.doc.ref_id) && ((frm.doc.status == "Positive") || (frm.doc.status == "Negative") || (frm.doc.status == "Amber"))) {
             frappe.confirm(
                 'Do you want to Print the File?',
                 function () {
@@ -20,8 +20,12 @@ frappe.ui.form.on("Applicant", {
                 }
             )
         }
+        if ((frappe.user.has_role("BVS Verifier") || frappe.user.has_role("BVS Manager")) && (frm.doc.ref_id) && frm.doc.status == "Allocation Pending") {
+            frappe.set_route("Form", "QC Verification")
+        }
     },
     validate: function (frm) {
+        frm.trigger("checks_group")
         if (frm.doc.ref_id_status != "Updated") {
             frm.set_value("ref_id_status", "Updated");
         } else {
@@ -70,7 +74,7 @@ frappe.ui.form.on("Applicant", {
                             frm.set_value("iqc_completed_executive", frm.doc.executive);
                             frm.set_value("executive", "");
                         }
-                        if (frm.doc.status == "Allocation Pending" && r.message == "QC Pending") {
+                        if ((frm.doc.status == "Allocation Pending" || frm.doc.status == "Allocation Completed") && r.message == "QC Pending") {
                             frm.set_value("allocation_completed_date", frappe.datetime.nowdate())
                             frm.set_value("execution_completed_executive", frm.doc.executive);
                             frm.set_value("executive", "");
@@ -251,7 +255,84 @@ frappe.ui.form.on("Applicant", {
         }
 
     },
+    client_sms: function (frm) {
+        // var new_actual_end_date = " "
+        frm.add_custom_button(__('Send SMS'), function () {
+            var d = new frappe.ui.Dialog({
+                title: __("Please Enter the Mob.No"),
+                fields: [
+                    { fieldname: "mob_no", fieldtype: "Data", label: __("Mob.No") },
+                ],
+                primary_action: function () {
+                    var data = d.get_values();
+                    if (data.mob_no) {
+                        frappe.call({
+                            "method": "frappe.client.get",
+                            args: {
+                                doctype: "Holiday List",
+                                name: "VHRS Common Leaves"
+                            },
+                            callback: function (r) {
+                                if (r.message) {
+                                    var holidays = r.message.holidays;
+                                    var list = r.message.holidays.length;
+                                    var holiday = []
+                                    for (var i = 0; i < list; i++) {
+                                        holiday.push(holidays[i].holiday_date)
+                                    }
+                                    var end_date = frappe.datetime.add_days(frm.doc.in_date, 7);
+                                    frappe.call({
+                                        "method": "bvs.background_verification.doctype.applicant.applicant.daterange",
+                                        args: {
+                                            start_date: frm.doc.in_date,
+                                            end_date: end_date,
+                                            holiday: holiday
+                                        },
+                                        callback: function (r) {
+                                            if (r.message) {
+                                                var betdate = r.message.length;
+                                                dates = []
+                                                for (var i = 0; i < betdate; i++) {
+                                                    dates.push(r.message[i])
+                                                }
+                                                sunday = []
+                                                dates.forEach((e1) => holiday.forEach((e2) => {
+                                                    if (e1 === e2) {
+                                                        sunday.push(e1)
+                                                    }
+                                                }
+                                                ))
+                                                var holiday_list = sunday.length;
+                                                if (holiday_list != 0) {
+                                                    var new_actual_end_date = frappe.datetime.add_days(end_date, holiday_list);
+                                                    frappe.call({
+                                                        method: "vhrs.bvs_sms.send_clientsms",
+                                                        args: {
+                                                            "candidate_name": frm.doc.candidate_name,
+                                                            "status": frm.doc.status,
+                                                            "number": data.mob_no,
+                                                            "bed": new_actual_end_date
+                                                        },
+                                                        callback: function (r) {
+                                                            d.hide();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    }
+                },
+                primary_action_label: __('Send')
+            });
+            d.show();
+        })
+    },
     refresh: function (frm) {
+        frm.trigger("checks_group")
         if (frm.doc.status) {
             frm.trigger("check_status");
             if (frm.doc.status == "QC  Pending") {
@@ -271,15 +352,19 @@ frappe.ui.form.on("Applicant", {
             }
             if (frm.doc.status == "Positive") {
                 $(cur_frm.fields_dict.status.input).css("backgroundColor", "Green");
+                frm.trigger("client_sms")
             }
             if (frm.doc.status == "Negative") {
                 $(cur_frm.fields_dict.status.input).css("backgroundColor", "Red");
+                frm.trigger("client_sms")
             }
             if (frm.doc.status == "Amber") {
                 $(cur_frm.fields_dict.status.input).css("backgroundColor", "Yellow");
+                frm.trigger("client_sms")
             }
             if (frm.doc.status == "Insufficient") {
                 $(cur_frm.fields_dict.status.input).css("backgroundColor", "Orange");
+                frm.trigger("client_sms")
             }
         }
         if (frm.doc.customer && frm.doc.satus == "Entry Pending" && (frappe.user.has_role("BVS DEO") || frappe.user.has_role("BVS Manager"))) {
@@ -1460,6 +1545,59 @@ frappe.ui.form.on("Applicant", {
                                 }
                             })
                         }
+                        if (r.message.neighbourhood_check) {
+                            frappe.call({
+                                "method": "bvs.background_verification.doctype.neighbourhood_check.neighbourhood_check.get_status",
+                                args: {
+                                    "applicant_id": frm.doc.name
+                                },
+                                callback: function (r) {
+                                    if (r.message) {
+                                        if (r.message == "Allocation Completed") {
+                                            $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Chocolate");
+                                            frappe.call({
+                                                "method": "bvs.background_verification.doctype.neighbourhood_check.neighbourhood_check.get_vstatus",
+                                                args: {
+                                                    "applicant_id": frm.doc.name
+                                                },
+                                                callback: function (r) {
+                                                    if (r.message == "Positive") {
+                                                        $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Green");
+                                                    }
+                                                    if (r.message == "Negative") {
+                                                        $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Red");
+                                                    }
+                                                    if (r.message == "Amber") {
+                                                        $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Yellow");
+                                                    }
+                                                    if (r.message == "Insufficient") {
+                                                        $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Orange");
+                                                        frm.set_value("tat_stop_date", frappe.datetime.nowdate());
+                                                        $(cur_frm.fields_dict.tat_stop_date.input).css("borderColor", "Orange");
+                                                    }
+                                                }
+                                            })
+                                        }
+                                        if (r.message == "Entry Pending") {
+                                            $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Aquamarine");
+                                        }
+                                        if (r.message == "Entry Completed") {
+                                            $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "DeepSkyBlue");
+                                        }
+                                        if (r.message == "IQC Completed") {
+                                            $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Fuchsia");
+                                        }
+                                        if (r.message == "Insufficient") {
+                                            frm.set_value("tat_stop_date", frappe.datetime.nowdate());
+                                            $(cur_frm.fields_dict.tat_stop_date.input).css("borderColor", "Orange");
+                                            $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Orange");
+                                        }
+                                    } else {
+                                        $(cur_frm.fields_dict.neighbourhood_check.input).css("backgroundColor", "Aquamarine");
+                                    }
+                                }
+                            })
+                        }
                         if (r.message.id_check1) {
                             frappe.call({
                                 "method": "bvs.background_verification.doctype.id_check1.id_check1.get_status",
@@ -1778,11 +1916,65 @@ frappe.ui.form.on("Applicant", {
                                 }
                             })
                         }
+                        if (r.message.political_check) {
+                            frappe.call({
+                                "method": "bvs.background_verification.doctype.political_affiliations_check.political_affiliations_check.get_status",
+                                args: {
+                                    "applicant_id": frm.doc.name
+                                },
+                                callback: function (r) {
+                                    if (r.message) {
+                                        if (r.message == "Allocation Completed") {
+                                            $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Chocolate");
+                                            frappe.call({
+                                                "method": "bvs.background_verification.doctype.political_affiliations_check.political_affiliations_check.get_vstatus",
+                                                args: {
+                                                    "applicant_id": frm.doc.name
+                                                },
+                                                callback: function (r) {
+                                                    if (r.message == "Positive") {
+                                                        $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Green");
+                                                    }
+                                                    if (r.message == "Negative") {
+                                                        $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Red");
+                                                    }
+                                                    if (r.message == "Amber") {
+                                                        $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Yellow");
+                                                    }
+                                                    if (r.message == "Insufficient") {
+                                                        $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Orange");
+                                                        frm.set_value("tat_stop_date", frappe.datetime.nowdate());
+                                                        $(cur_frm.fields_dict.tat_stop_date.input).css("borderColor", "Orange");
+                                                    }
+                                                }
+                                            })
+                                        }
+                                        if (r.message == "Entry Pending") {
+                                            $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Aquamarine");
+                                        }
+                                        if (r.message == "Entry Completed") {
+                                            $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "DeepSkyBlue");
+                                        }
+                                        if (r.message == "IQC Completed") {
+                                            $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Fuchsia");
+                                        }
+                                        if (r.message == "Insufficient") {
+                                            frm.set_value("tat_stop_date", frappe.datetime.nowdate());
+                                            $(cur_frm.fields_dict.tat_stop_date.input).css("borderColor", "Orange");
+                                            $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Orange");
+                                        }
+                                    } else {
+                                        $(cur_frm.fields_dict.political_check.input).css("backgroundColor", "Aquamarine");
+                                    }
+                                }
+                            })
+                        }
 
                     }
                 }
             })
         }
+
         frm.set_query("checks_group", function () {
             return {
                 query: "bvs.utils.get_groups",
@@ -1883,8 +2075,14 @@ frappe.ui.form.on("Applicant", {
                         if (d === "criminal_check") {
                             frm.toggle_display('criminal_check', d === "criminal_check");
                         }
+                        if (d === "neighbourhood_check") {
+                            frm.toggle_display('neighbourhood_check', d === "neighbourhood_check");
+                        }
                         if (d === "id_check") {
                             frm.toggle_display('id_check', d === "id_check");
+                        }
+                        if (d === "political_check") {
+                            frm.toggle_display('political_check', d === "political_check");
                         }
                     });
 
@@ -1893,17 +2091,17 @@ frappe.ui.form.on("Applicant", {
         }
     },
     onload: function (frm) {
-        if (frm.doc.status == "QC Pending" && frm.doc.executive != "") {
-            frm.set_value("qc_completed_date", frappe.datetime.nowdate())
-            frm.set_value("qc_completed_executive", frappe.session.user)
-        }
-        if (frm.doc.status == "Allocation Pending" && frm.doc.executive != "") {
-            frm.set_value("allocation_completed_date", frappe.datetime.nowdate())
-            frm.set_value("execution_completed_executive", frm.doc.executive);
-        }
+        // if (frm.doc.status == "QC Pending" && frm.doc.executive != "") {
+        //     frm.set_value("qc_completed_date", frappe.datetime.nowdate())
+        //     frm.set_value("qc_completed_executive", frappe.session.user)
+        // }
+        // if (frm.doc.status == "Allocation Pending" && frm.doc.executive != "") {
+        //     frm.set_value("allocation_completed_date", frappe.datetime.nowdate())
+        //     frm.set_value("execution_completed_executive", frm.doc.executive);
+        // }
         status = frm.doc.status;
-        frm.toggle_display(["id_check", 'employment_check1', 'employment_check2', 'employment_check3', 'employment_check4', 'education_check1', 'education_check2', 'education_check3', 'education_check4', 'reference_check1', 'reference_check2', 'reference_check3', 'reference_check4',
-            'address_check1', 'address_check2', 'address_check3', 'address_check4', 'id_check1', 'id_check2', 'id_check3', 'id_check4', 'id_check5', 'id_check6', 'family_check1', 'family_check2', 'family_check3', 'family_check4', 'civil_check', 'criminal_check']);
+        frm.toggle_display(["political_check", "id_check", 'employment_check1', 'employment_check2', 'employment_check3', 'employment_check4', 'education_check1', 'education_check2', 'education_check3', 'education_check4', 'reference_check1', 'reference_check2', 'reference_check3', 'reference_check4',
+            'address_check1', 'address_check2', 'address_check3', 'address_check4', 'id_check1', 'id_check2', 'id_check3', 'id_check4', 'id_check5', 'id_check6', 'family_check1', 'family_check2', 'family_check3', 'family_check4', 'civil_check', 'criminal_check', 'neighbourhood_check']);
         if (frm.doc.status == "Insufficient") {
             frm.set_value("modified_actual_end_date", "TAT Resumed")
         }
@@ -2002,8 +2200,14 @@ frappe.ui.form.on("Applicant", {
                         if (d === "criminal_check") {
                             frm.toggle_display('criminal_check', d === "criminal_check");
                         }
+                        if (d === "neighbourhood_check") {
+                            frm.toggle_display('neighbourhood_check', d === "neighbourhood_check");
+                        }
                         if (d === "id_check") {
                             frm.toggle_display('id_check', d === "id_check");
+                        }
+                        if (d === "political_check") {
+                            frm.toggle_display('political_check', d === "political_check");
                         }
                     });
 
@@ -2932,6 +3136,72 @@ frappe.ui.form.on("Applicant", {
                         frappe.set_route('Form', 'Verify Criminal Check', r.message);
                     } else {
                         frappe.set_route('Form', 'Verify Criminal Check', 'New Verify Criminal Check', { "applicant_name": frm.doc.candidate_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.name });
+                    }
+                }
+            });
+        }
+    },
+    "neighbourhood_check": function (frm) {
+        if (frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_check",
+                args: {
+                    "applicant": frm.doc.name,
+                    "check": "Neighbourhood Check"
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.set_route('Form', 'Neighbourhood Check', r.message);
+                    } else {
+                        frappe.set_route('Form', 'Neighbourhood Check', 'New Neighbourhood Check', { "tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.name });
+                    }
+                }
+            });
+        } else {
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_check",
+                args: {
+                    "applicant": frm.doc.name,
+                    "check": "Verify Neighbourhood Check"
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.set_route('Form', 'Verify Neighbourhood Check', r.message);
+                    } else {
+                        frappe.set_route('Form', 'Verify Neighbourhood Check', 'New Verify Neighbourhood Check', { "applicant_name": frm.doc.candidate_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.name });
+                    }
+                }
+            });
+        }
+    },
+    "political_check": function (frm) {
+        if (frappe.user.has_role("BVS DEO") || (frm.doc.allocated_for == "IQC Pending")) {
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_check",
+                args: {
+                    "applicant": frm.doc.name,
+                    "check": "Political Affiliations Check"
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.set_route('Form', 'Political Affiliations Check', r.message);
+                    } else {
+                        frappe.set_route('Form', 'Political Affiliations Check', 'New Political Affiliations Check', { "tat": frm.doc.tat, "applicant_name": frm.doc.candidate_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.name });
+                    }
+                }
+            });
+        } else {
+            frappe.call({
+                "method": "bvs.background_verification.doctype.applicant.applicant.get_check",
+                args: {
+                    "applicant": frm.doc.name,
+                    "check": "Verify Political Affiliations Check"
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.set_route('Form', 'Verify Political Affiliations Check', r.message);
+                    } else {
+                        frappe.set_route('Form', 'Verify Political Affiliations Check', 'New Verify Political Affiliations Check', { "applicant_name": frm.doc.candidate_name, "customer": frm.doc.customer, "checks_group": frm.doc.checks_group, "applicant_id": frm.doc.name });
                     }
                 }
             });

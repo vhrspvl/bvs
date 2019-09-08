@@ -10,9 +10,9 @@ frappe.ui.form.on('Verifier Dashboard', {
             callback: function (r) {
                 if (r.message) {
                     var b = Object.keys(r.message).length;
-                    console.log(b)
                     for (var i = 0; i < b; i++) {
                         var c = Object.keys(r.message[i]).length;
+                        console.log(i)
                         if (c != 0) {
                             var row = frappe.model.add_child(frm.doc, "Verify Dashboard List", "verify_dashboard_list");
                             row.pending_checks = c;
@@ -104,6 +104,12 @@ frappe.ui.form.on('Verifier Dashboard', {
                             }
                             if (i == 27) {
                                 row.checks = "Verify ID Check6";
+                            }
+                            if (i == 28) {
+                                row.checks = "Verify Political Affiliations Check";
+                            }
+                            if (i == 29) {
+                                row.checks = "Verify Neighbourhood Check";
                             }
                         }
                     }

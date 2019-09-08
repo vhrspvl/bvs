@@ -11,22 +11,24 @@ from datetime import date
 import datetime
 from calendar import monthrange
 
+
 def execute(filters=None):
     if not filters:
         filters = {}
-    columns = get_columns(filters) 
+    columns = get_columns(filters)
     data = []
     conditions, filters = get_conditions(filters)
     app = get_applicants(filters)
     for a in app:
-        row = [a.ref_id,a.customer,a.data_entry_allocation_id,a.in_date,a.in_time,a.entry_completed_executive,a.iqc_completed_executive,a.execution_completed_executive,a.qc_completed_executive,a.status]
+        row = [a.ref_id, a.customer, a.data_entry_allocation_id, a.in_date, a.in_time,
+               a.entry_completed_executive, a.iqc_completed_executive, a.qc_completed_executive, a.status]
         data.append(row)
         if not a.end_date:
             today_date = date.today()
             row += [today_date - a.in_date]
         else:
             row += [a.end_date - a.in_date]
-        row += [a.tat_stop_date,a.tat_resume_date,a.end_date]
+        row += [a.tat_stop_date, a.tat_resume_date, a.end_date]
     return columns, data
 
 
@@ -39,7 +41,6 @@ def get_columns(filters):
         _("Case Received Time") + ":Time:150",
         _("Entry Completed Executive") + ":Data:150",
         _("IQC Completed Executive") + ":Data:150",
-        _("Execution Completed Executive") + ":Data:150",
         _("QC Completed Executive") + ":Data:150",
         _("Status") + ":Data:150",
         _("Ageing") + ":Int:150",
@@ -53,10 +54,10 @@ def get_columns(filters):
 def get_applicants(filters):
     applicant = frappe.db.sql(
         """select  app.ref_id,app.customer,app.data_entry_allocation_id,app.entry_completed_executive,app.iqc_completed_executive,app.execution_completed_executive,app.qc_completed_executive,app.in_date,app.in_time,app.end_date,app.status,app.tat_stop_date,app.tat_resume_date from `tabApplicant` app where
-                app.in_date between %(start_date)s and %(end_date)s order by app.in_date""",{
-                "start_date": filters.get("from_date"),
-                "end_date": filters.get("to_date")
-        }, as_dict = 1)
+                app.in_date between %(start_date)s and %(end_date)s order by app.in_date""", {
+            "start_date": filters.get("from_date"),
+            "end_date": filters.get("to_date")
+        }, as_dict=1)
     return applicant
 
 
