@@ -1992,6 +1992,7 @@ frappe.ui.form.on("Applicant", {
                 callback: function (r) {
                     (r.message || []).forEach(function (d) {
                         if (d === "employment_check1") {
+                            console.log(d)
                             frm.toggle_display('employment_check1', d === "employment_check1");
                         }
                         if (d === "employment_check2") {
@@ -2085,7 +2086,6 @@ frappe.ui.form.on("Applicant", {
                             frm.toggle_display('political_check', d === "political_check");
                         }
                     });
-
                 }
             });
         }
@@ -2100,12 +2100,11 @@ frappe.ui.form.on("Applicant", {
         //     frm.set_value("execution_completed_executive", frm.doc.executive);
         // }
         status = frm.doc.status;
-        frm.toggle_display(["political_check", "id_check", 'employment_check1', 'employment_check2', 'employment_check3', 'employment_check4', 'education_check1', 'education_check2', 'education_check3', 'education_check4', 'reference_check1', 'reference_check2', 'reference_check3', 'reference_check4',
+        frm.toggle_display(["employment_check1", "id_check", 'employment_check2', 'employment_check3', 'employment_check4', 'education_check1', 'education_check2', 'education_check3', 'education_check4', 'reference_check1', 'reference_check2', 'reference_check3', 'reference_check4',
             'address_check1', 'address_check2', 'address_check3', 'address_check4', 'id_check1', 'id_check2', 'id_check3', 'id_check4', 'id_check5', 'id_check6', 'family_check1', 'family_check2', 'family_check3', 'family_check4', 'civil_check', 'criminal_check', 'neighbourhood_check']);
         if (frm.doc.status == "Insufficient") {
             frm.set_value("modified_actual_end_date", "TAT Resumed")
         }
-
     },
     checks_group: function (frm) {
         if (frm.doc.checks_group) {
@@ -2115,9 +2114,12 @@ frappe.ui.form.on("Applicant", {
                     "checks_group": frm.doc.checks_group
                 },
                 callback: function (r) {
+                    // console.log(r.message)
                     (r.message || []).forEach(function (d) {
+                        // console.log(r.message)
                         if (d === "employment_check1") {
-                            frm.toggle_display('employment_check1', d === "employment_check1");
+                            frm.toggle_display('employment_check1', true)
+                            // unhide_field(['checks', 'employment_check1']);
                         }
                         if (d === "employment_check2") {
                             frm.toggle_display('employment_check2', d === "employment_check2");
@@ -2129,6 +2131,8 @@ frappe.ui.form.on("Applicant", {
                             frm.toggle_display('employment_check4', d === "employment_check4");
                         }
                         if (d === "education_check1") {
+                            // console.log(d)
+                            // console.log("hi")
                             frm.toggle_display('education_check1', d === "education_check1");
                         }
                         if (d === "education_check2") {

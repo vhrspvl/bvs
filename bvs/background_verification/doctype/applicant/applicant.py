@@ -221,7 +221,7 @@ def get_checks_group(applicant,checks_group,doctype,check_status):
         for i in entry_check:
             if a.get(i) == 1:
                 if i == "employment_check1":
-                       checks.append("Employment Check1")
+                    checks.append("Employment Check1")
                 if i == "employment_check2":
                    checks.append("Employment Check2")
                 if i == "employment_check3":
